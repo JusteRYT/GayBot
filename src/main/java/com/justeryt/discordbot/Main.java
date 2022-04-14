@@ -9,13 +9,13 @@ import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.entities.Activity;
-import net.dv8tion.jda.api.entities.Guild;
-import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
+import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 import net.dv8tion.jda.api.requests.restaction.CommandListUpdateAction;
+import org.w3c.dom.Text;
 
 import javax.security.auth.login.LoginException;
 import java.util.Timer;
@@ -26,10 +26,11 @@ public class Main extends ListenerAdapter {
     private static JDABuilder jdaBuilder;
     public static AudioPlayerManager audioPlayerManager;
     private static AudioManager audioManager;
+    private  static TextChannel textChannel;
 
     public static void main(String[] args) {
         //Вставляем ключ от бота (Нельзя проебать, а то заного его придется делать)
-        jdaBuilder = JDABuilder.createDefault("OTM2NTQxMTcxMjM5NTAxODM0.YfOr7w.EsVXnbTUld-oWNfo1EJSXpR0x7Y");
+        jdaBuilder = JDABuilder.createDefault("OTM2NTQxMTcxMjM5NTAxODM0.YfOr7w.CC8RsEFqRoQFVjD3mUSVM171vnw");
         //Статус бота (Онлайн, спящий или оффлайн)
         jdaBuilder.setStatus(OnlineStatus.ONLINE);
         //Статус бота (Во что играет или просто цитатка)

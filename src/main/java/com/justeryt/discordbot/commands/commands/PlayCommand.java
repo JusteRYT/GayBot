@@ -49,7 +49,7 @@ public class PlayCommand implements ServerCommand {
                                 embedBuilder.setTitle("Трек загружен: " + audioTrack.getInfo().title);
                                 embedBuilder.setThumbnail(member.getUser().getAvatarUrl());
                                 embedBuilder.addField("Добавил", String.valueOf(member.getUser().getName()), true);
-                                embedBuilder.addField("Длительность", Utils.formatDuration(audioTrack.getDuration()), true);
+                                embedBuilder.addField("Длительность", Utils.formatLongDuration(audioTrack.getDuration()), true);
                                 textChannel.sendMessageEmbeds(embedBuilder.build()).queue();
                                 scheduler.addToQueue(audioTrack);
                             }
@@ -60,7 +60,6 @@ public class PlayCommand implements ServerCommand {
                             textChannel.sendMessage("Аудиоплейлист загружен: " +  audioPlaylist.getName()).queue();
                             for (AudioTrack audioTrack : audioPlaylist.getTracks()) {
                                     scheduler.addToQueue(audioTrack);
-
                                 }
                             }
 

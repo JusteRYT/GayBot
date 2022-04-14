@@ -1,16 +1,13 @@
 package com.justeryt.discordbot.commands.music;
 
+import com.justeryt.discordbot.Main;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import com.sedmelluq.discord.lavaplayer.player.event.AudioEventAdapter;
 import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackEndReason;
-import net.dv8tion.jda.api.JDA;
-import net.dv8tion.jda.api.MessageBuilder;
-import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.TextChannel;
-import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
-import net.dv8tion.jda.core.events.Event;
+
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -46,7 +43,8 @@ public class TrackScheduler extends AudioEventAdapter {
     @Override
     public void onTrackStart(AudioPlayer player, AudioTrack track) {
         super.onTrackStart(player, track);
-
+        TextChannel textChannel = Main.getJda().getTextChannelById(953926413113769987L);
+        textChannel.sendMessage("Трек" + track.getInfo().title).queue();
     }
 
     @Override
