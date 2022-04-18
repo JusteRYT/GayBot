@@ -90,8 +90,8 @@ public class TrackScheduler extends AudioEventAdapter {
         }
     }
 
-    public List<AudioTrack> drainQueue() {
-        List<AudioTrack> drainQueue = new ArrayList<>();
+    public LinkedBlockingDeque<AudioTrack> drainQueue() {
+        LinkedBlockingDeque<AudioTrack> drainQueue = new LinkedBlockingDeque<>();
         queue.drainTo(drainQueue);
         return drainQueue;
     }
@@ -106,5 +106,21 @@ public class TrackScheduler extends AudioEventAdapter {
 
     public void skip() {
         startNextTrack(false);
+    }
+    public void shuffle(){
+        ArrayList<AudioTrack> list = getList();
+        Collections.shuffle(list);
+        queue.clear();
+        for (AudioTrack track: list){
+            queue.offer(track);
+        }
+    }
+    public ArrayList<AudioTrack> getList(){
+        Iterator<AudioTrack> i = queue.iterator();
+        ArrayList<AudioTrack> al = new ArrayList<>();
+        while (i.hasNext()){
+            al.add(i.next());
+        }
+        return al;
     }
 }
