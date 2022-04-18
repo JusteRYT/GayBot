@@ -51,7 +51,7 @@ public class TrackScheduler extends AudioEventAdapter {
     public void onTrackStart(AudioPlayer player, AudioTrack track) {
         super.onTrackStart(player, track);
         embedBuilder.setTitle("Сейчас ебашит: " + track.getInfo().title);
-        textChannel.sendMessageEmbeds(embedBuilder.build()).queue(message -> message.delete().queueAfter(30, TimeUnit.SECONDS));
+        textChannel.sendMessageEmbeds(embedBuilder.build()).queue(message -> message.delete().queueAfter(60, TimeUnit.SECONDS));
     }
 
     @Override
@@ -106,17 +106,5 @@ public class TrackScheduler extends AudioEventAdapter {
 
     public void skip() {
         startNextTrack(false);
-    }
-    public void shuffle(){
-        Iterator<AudioTrack> x = queue.iterator();
-        while (x.hasNext()){
-            AudioTrack track = x.next();
-            queue.add(track);
-        }
-        Collections.shuffle((List<AudioTrack>) queue);
-        queue.clear();
-        for (AudioTrack track:queue){
-            queue.offer(track);
-        }
     }
 }
