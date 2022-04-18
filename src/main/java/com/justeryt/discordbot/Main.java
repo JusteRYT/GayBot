@@ -1,5 +1,6 @@
 package com.justeryt.discordbot;
 
+import com.justeryt.discordbot.commands.Listener.onJoin;
 import com.justeryt.discordbot.commands.commands.CommandManager;
 import com.justeryt.discordbot.commands.music.AudioManager;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
@@ -30,12 +31,13 @@ public class Main extends ListenerAdapter {
 
     public static void main(String[] args) {
         //Вставляем ключ от бота (Нельзя проебать, а то заного его придется делать)
-        jdaBuilder = JDABuilder.createDefault("OTM2NTQxMTcxMjM5NTAxODM0.YfOr7w.CC8RsEFqRoQFVjD3mUSVM171vnw");
+        jdaBuilder = JDABuilder.createDefault("OTM2NTQxMTcxMjM5NTAxODM0.YfOr7w.6zZ_f3OV3ASw8suinYQ9DOzYb30");
         //Статус бота (Онлайн, спящий или оффлайн)
         jdaBuilder.setStatus(OnlineStatus.ONLINE);
         //Статус бота (Во что играет или просто цитатка)
         jdaBuilder.setActivity(Activity.playing("Привет я твой персональный бот!"));
         //Делаем обработку ошибки
+        jdaBuilder.addEventListeners(new onJoin());
         try {
             jda = jdaBuilder.build();
         } catch (LoginException exception) {

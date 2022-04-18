@@ -1,11 +1,13 @@
 package com.justeryt.discordbot.commands.music;
 
 import com.justeryt.discordbot.Main;
+import com.justeryt.discordbot.commands.Utils.Utils;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import com.sedmelluq.discord.lavaplayer.player.event.AudioEventAdapter;
 import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackEndReason;
+import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.TextChannel;
 
 
@@ -15,17 +17,22 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.BlockingDeque;
 import java.util.concurrent.LinkedBlockingDeque;
+import java.util.concurrent.TimeUnit;
 
 
 public class TrackScheduler extends AudioEventAdapter {
     private final AudioPlayer player;
     private final BlockingDeque<AudioTrack> queue;
+    private TextChannel textChannel;
+    private EmbedBuilder embedBuilder;
 
 
 
     public TrackScheduler(AudioPlayer player) {
         this.player = player;
         this.queue = new LinkedBlockingDeque<>();
+        this.textChannel = Main.getJda().getTextChannelById(953926413113769987L);
+        this.embedBuilder = new EmbedBuilder();
     }
 
     @Override
@@ -43,8 +50,8 @@ public class TrackScheduler extends AudioEventAdapter {
     @Override
     public void onTrackStart(AudioPlayer player, AudioTrack track) {
         super.onTrackStart(player, track);
-        TextChannel textChannel = Main.getJda().getTextChannelById(953926413113769987L);
-        textChannel.sendMessage("Трек" + track.getInfo().title).queue();
+        embedBuilder.setTitle("Сейчас ебашит: " + track.getInfo().title);
+        textChannel.sendMessageEmbeds(embedBuilder.build()).queue(message -> message.delete().queueAfter(30, TimeUnit.SECONDS));
     }
 
     @Override
