@@ -18,7 +18,7 @@ public class ShuffleCommand implements ServerCommand {
         AudioPlayer player = musicController.getAudioPlayer();
         TrackScheduler scheduler = musicController.getScheduler();
         player.addListener(scheduler);
-        textChannel.sendMessage("Плейлист перемешен").queue();
         scheduler.shuffle();
+        textChannel.sendMessage("Плейлист перемешен").queue();
     }
 }
