@@ -1,7 +1,6 @@
 package com.justeryt.discordbot.commands.music;
 
 import com.justeryt.discordbot.Main;
-import com.justeryt.discordbot.commands.Utils.Utils;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import com.sedmelluq.discord.lavaplayer.player.event.AudioEventAdapter;
 import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
@@ -14,7 +13,6 @@ import net.dv8tion.jda.api.entities.TextChannel;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
-import java.util.List;
 import java.util.concurrent.BlockingDeque;
 import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.TimeUnit;
@@ -27,7 +25,6 @@ public class TrackScheduler extends AudioEventAdapter {
     private EmbedBuilder embedBuilder;
 
 
-
     public TrackScheduler(AudioPlayer player) {
         this.player = player;
         this.queue = new LinkedBlockingDeque<>();
@@ -38,13 +35,15 @@ public class TrackScheduler extends AudioEventAdapter {
     @Override
     public void onPlayerPause(AudioPlayer player) {
         super.onPlayerPause(player);
+        player.isPaused();
 
     }
 
     @Override
     public void onPlayerResume(AudioPlayer player) {
         super.onPlayerResume(player);
-
+        AudioTrack audioTrack = queue.peek();
+        player.startTrack(audioTrack, false);
     }
 
     @Override
@@ -107,20 +106,33 @@ public class TrackScheduler extends AudioEventAdapter {
     public void skip() {
         startNextTrack(false);
     }
-    public void shuffle(){
+
+    public void shuffle() {
         ArrayList<AudioTrack> list = getList();
         Collections.shuffle(list);
         queue.clear();
-        for (AudioTrack track: list){
+        for (AudioTrack track : list) {
             queue.offer(track);
         }
     }
-    public ArrayList<AudioTrack> getList(){
+
+    public ArrayList<AudioTrack> getList() {
         Iterator<AudioTrack> i = queue.iterator();
         ArrayList<AudioTrack> al = new ArrayList<>();
-        while (i.hasNext()){
+        while (i.hasNext()) {
             al.add(i.next());
         }
         return al;
+    }
+
+    public void setVolume(int volume) {
+        player.setVolume(volume);
+    }
+
+    public void stop() {
+        player.stopTrack();
+    }
+    public void resume(AudioTrack track){
+        player.startTrack(track, true);
     }
 }

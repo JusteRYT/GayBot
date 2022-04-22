@@ -23,7 +23,7 @@ public class UserInfoCommand implements ServerCommand {
                 embedBuilder.addField("Когда создал акк", (target.getTimeCreated().format(formatter)), true);
                 embedBuilder.addField("Проверка на человечность", String.valueOf(checkForBot(target)), true);
                 embedBuilder.addField("Роль", getRoles(target.getRoles()), true);
-                textChannel.sendMessage(embedBuilder.build()).queue();
+                textChannel.sendMessageEmbeds(embedBuilder.build()).queue();
             }
         }
     }

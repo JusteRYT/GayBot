@@ -22,8 +22,8 @@
     </build>
     <repositories>
         <repository>
-            <id>center</id>
-            <name>bintray</name>
+            <id>jcenter</id>
+            <name>jcenter-bintray</name>
             <url>https://jcenter.bintray.com/</url>
         </repository>
         <repository>
@@ -49,9 +49,9 @@
             <version>2.11.0</version>
         </dependency>
         <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-            <version>2.0.0-alpha7</version>
+            <groupId>com.vk.api</groupId>
+            <artifactId>sdk</artifactId>
+            <version>1.0.14</version>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>

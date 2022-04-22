@@ -57,17 +57,16 @@ public class PlayCommand implements ServerCommand {
 
                         @Override
                         public void playlistLoaded(AudioPlaylist audioPlaylist) {
-                            textChannel.sendMessage("Аудиоплейлист загружен: " +  audioPlaylist.getName()).queue();
+                            textChannel.sendMessage("Аудиоплейлист загружен: " + audioPlaylist.getName()).queue();
                             for (AudioTrack audioTrack : audioPlaylist.getTracks()) {
-                                    scheduler.addToQueue(audioTrack);
-                                }
+                                scheduler.addToQueue(audioTrack);
                             }
-
+                        }
 
 
                         @Override
                         public void noMatches() {
-                        textChannel.sendMessage("Не правильный url").queue();
+                            textChannel.sendMessage("Не правильный url").queue();
                         }
 
                         @Override
@@ -86,5 +85,4 @@ public class PlayCommand implements ServerCommand {
             }
         }
     }
-
 }
