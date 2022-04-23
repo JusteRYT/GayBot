@@ -10,15 +10,15 @@ import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.entities.Activity;
-import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 import net.dv8tion.jda.api.requests.restaction.CommandListUpdateAction;
-import org.w3c.dom.Text;
 
 import javax.security.auth.login.LoginException;
+import java.io.File;
+import java.io.IOException;
 import java.util.Timer;
 
 public class Main extends ListenerAdapter {
@@ -27,11 +27,10 @@ public class Main extends ListenerAdapter {
     private static JDABuilder jdaBuilder;
     public static AudioPlayerManager audioPlayerManager;
     private static AudioManager audioManager;
-    private  static TextChannel textChannel;
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         //Вставляем ключ от бота (Нельзя проебать, а то заного его придется делать)
-        jdaBuilder = JDABuilder.createDefault("OTM2NTQxMTcxMjM5NTAxODM0.YfOr7w.6zZ_f3OV3ASw8suinYQ9DOzYb30");
+        jdaBuilder = JDABuilder.createDefault("OTM2NTQxMTcxMjM5NTAxODM0.YfOr7w.5TTeFNtH1cHFpBIDq8MTvJwvUqI");
         //Статус бота (Онлайн, спящий или оффлайн)
         jdaBuilder.setStatus(OnlineStatus.ONLINE);
         //Статус бота (Во что играет или просто цитатка)
@@ -47,8 +46,7 @@ public class Main extends ListenerAdapter {
         CommandListUpdateAction action = jda.updateCommands();
         action.addCommands(new CommandData("say", "Отправить сообщение")
                 .addOptions(new OptionData(OptionType.STRING, "message", "The message to send").setRequired(true))).complete();
-        action.addCommands(new CommandData("play", "Играй музыка, играй")
-                .addOptions(new OptionData(OptionType.STRING, "music", "Сыграет на балалайке").setRequired(true))).complete();
+        action.addCommands(new CommandData("play", "Сыграть на балалйке"));
         //команды
         registerCommands();
         //Анимированный статус
