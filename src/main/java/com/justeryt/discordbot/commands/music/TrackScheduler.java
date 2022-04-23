@@ -28,7 +28,7 @@ public class TrackScheduler extends AudioEventAdapter {
     public TrackScheduler(AudioPlayer player) {
         this.player = player;
         this.queue = new LinkedBlockingDeque<>();
-        this.textChannel = Main.getJda().getTextChannelById(953926413113769987L);
+        this.textChannel = Main.getJda().getTextChannelById(529237596602105867L);
         this.embedBuilder = new EmbedBuilder();
     }
 

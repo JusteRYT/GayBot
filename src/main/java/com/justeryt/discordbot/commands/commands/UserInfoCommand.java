@@ -10,7 +10,7 @@ import java.util.List;
 
 public class UserInfoCommand implements ServerCommand {
     @Override
-    public void performCommand(String[] arguments, Guild guild, Member member, TextChannel textChannel, Message message) {
+    public void performCommand(String[] arguments, Guild guild, Member member, TextChannel textChannel, Message message, VoiceChannel voiceChannel) {
         if(arguments.length == 2) {
             Member target = message.getMentionedMembers().get(0);
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
@@ -33,7 +33,7 @@ public class UserInfoCommand implements ServerCommand {
             String check = "Ботяра ебаная";
             return check;
         }else {
-            String check = "Человек, но если женщина то нет";
+            String check = "Пчел";
             return check;
         }
     }

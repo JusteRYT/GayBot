@@ -18,11 +18,10 @@ import net.dv8tion.jda.api.managers.AudioManager;
 public class PlayCommand implements ServerCommand {
 
     @Override
-    public void performCommand(String[] arguments, Guild guild, Member member, TextChannel textChannel, Message message) {
+    public void performCommand(String[] arguments, Guild guild, Member member, TextChannel textChannel, Message message, VoiceChannel voiceChannel) {
         if (arguments.length == 2) { //! play <url>
             GuildVoiceState voiceState;
             if ((voiceState = member.getVoiceState()) != null) {
-                VoiceChannel voiceChannel;
                 if ((voiceChannel = voiceState.getChannel()) != null) {
                     EmbedBuilder embedBuilder = new EmbedBuilder();
                     MusicController musicController = Main.getAudioManager().getMusicController(voiceChannel.getGuild().getIdLong());
@@ -42,12 +41,13 @@ public class PlayCommand implements ServerCommand {
 
 
                     assert audioPlayerManager != null;
+                    String finalRawLink = rawLink;
                     audioPlayerManager.loadItem(url, new AudioLoadResultHandler() {
                         @Override
                         public void trackLoaded(AudioTrack audioTrack) {
                             if (audioTrack != null) {
-                                embedBuilder.setTitle("Трек загружен: " + audioTrack.getInfo().title);
-                                embedBuilder.setThumbnail(member.getUser().getAvatarUrl());
+                                embedBuilder.setTitle("▶Трек загружен: " + audioTrack.getInfo().title);
+                                embedBuilder.setThumbnail(finalRawLink);
                                 embedBuilder.addField("Добавил", String.valueOf(member.getUser().getName()), true);
                                 embedBuilder.addField("Длительность", Utils.formatLongDuration(audioTrack.getDuration()), true);
                                 textChannel.sendMessageEmbeds(embedBuilder.build()).queue();
@@ -57,7 +57,8 @@ public class PlayCommand implements ServerCommand {
 
                         @Override
                         public void playlistLoaded(AudioPlaylist audioPlaylist) {
-                            textChannel.sendMessage("Аудиоплейлист загружен: " + audioPlaylist.getName()).queue();
+                            embedBuilder.setTitle("▶Аудиоплейлист загружен" + audioPlaylist.getName());
+                            textChannel.sendMessageEmbeds(embedBuilder.build()).queue();
                             for (AudioTrack audioTrack : audioPlaylist.getTracks()) {
                                 scheduler.addToQueue(audioTrack);
                             }
@@ -66,7 +67,7 @@ public class PlayCommand implements ServerCommand {
 
                         @Override
                         public void noMatches() {
-                            textChannel.sendMessage("Не правильный url").queue();
+                            textChannel.sendMessage("❌Не правильный url").queue();
                         }
 
                         @Override
@@ -78,10 +79,10 @@ public class PlayCommand implements ServerCommand {
 
                     });
                 } else {
-                    textChannel.sendMessage("Ты должен быть в голосовом чате дебил, а потом написать плей... еблан").queue();
+                    textChannel.sendMessage("❌Ты должен быть в голосовом чате дебил, а потом написать плей... еблан").queue();
                 }
             } else {
-                textChannel.sendMessage("Ты должен быть в голосовом чате дебил, а потом написать плей... еблан").queue();
+                textChannel.sendMessage("❌Ты должен быть в голосовом чате дебил, а потом написать плей... еблан").queue();
             }
         }
     }

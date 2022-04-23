@@ -1,6 +1,5 @@
 package com.justeryt.discordbot.commands.commands;
 
-import com.justeryt.discordbot.commands.commands.*;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
@@ -18,9 +17,8 @@ public class CommandManager extends ListenerAdapter {
     private final UserInfoCommand userInfoCommand;
     private final SkipCommand skipCommand;
     private final ShuffleCommand shuffleCommand;
-    private final StopCommand stopCommand;
-    private final ResumeCommand resumeCommand;
-    private final Volume volume;
+    private final VolumeCommand volumeCommand;
+    private final LeaveCommand leaveCommand;
 
     public CommandManager() {
         this.helpCommands = new HelpCommands();
@@ -33,9 +31,8 @@ public class CommandManager extends ListenerAdapter {
         this.userInfoCommand = new UserInfoCommand();
         this.skipCommand = new SkipCommand();
         this.shuffleCommand = new ShuffleCommand();
-        this.stopCommand = new StopCommand();
-        this.resumeCommand = new ResumeCommand();
-        this.volume = new Volume();
+        this.volumeCommand = new VolumeCommand();
+        this.leaveCommand = new LeaveCommand();
     }
 
     @Override
@@ -46,47 +43,44 @@ public class CommandManager extends ListenerAdapter {
             Member member = event.getMember();
             TextChannel textChannel = event.getChannel();
             Message message = event.getMessage();
+            VoiceChannel voiceChannel = event.getGuild().getSelfMember().getVoiceState().getChannel();
 
             switch (arguments[0]) {
                 case "!help":
-                    helpCommands.performCommand(arguments, guild, member, textChannel, message);
+                    helpCommands.performCommand(arguments, guild, member, textChannel, message, voiceChannel);
                     break;
                 case "!clear":
-                    clearCommands.performCommand(arguments, guild, member, textChannel, message);
+                    clearCommands.performCommand(arguments, guild, member, textChannel, message, voiceChannel);
                     break;
                 case "!kick":
-                    kickCommand.performCommand(arguments, guild, member, textChannel, message);
+                    kickCommand.performCommand(arguments, guild, member, textChannel, message, voiceChannel);
                     break;
                 case "!ban":
-                    banCommand.performCommand(arguments, guild, member, textChannel, message);
+                    banCommand.performCommand(arguments, guild, member, textChannel, message, voiceChannel);
                     break;
                 case "!unban":
-                    unBanCommand.performCommand(arguments, guild, member, textChannel, message);
+                    unBanCommand.performCommand(arguments, guild, member, textChannel, message, voiceChannel);
                     break;
                 case "!test":
-                    permission.performCommand(arguments, guild, member, textChannel, message);
+                    permission.performCommand(arguments, guild, member, textChannel, message, voiceChannel);
                     break;
                 case "!play":
-                    playCommand.performCommand(arguments, guild, member, textChannel, message);
+                    playCommand.performCommand(arguments, guild, member, textChannel, message, voiceChannel);
                     break;
                 case "!info":
-                    userInfoCommand.performCommand(arguments, guild, member, textChannel, message);
+                    userInfoCommand.performCommand(arguments, guild, member, textChannel, message, voiceChannel);
                     break;
                 case "!skip":
-                    skipCommand.performCommand(arguments, guild, member, textChannel, message);
+                    skipCommand.performCommand(arguments, guild, member, textChannel, message, voiceChannel);
                     break;
                 case "!shuffle":
-                    shuffleCommand.performCommand(arguments, guild, member, textChannel, message);
-                    break;
-                case "!stop":
-                    stopCommand.performCommand(arguments, guild, member, textChannel, message);
-                    break;
-                case "!resume":
-                    resumeCommand.performCommand(arguments, guild, member, textChannel, message);
+                    shuffleCommand.performCommand(arguments, guild, member, textChannel, message, voiceChannel);
                     break;
                 case "!volume":
-                    volume.performCommand(arguments, guild, member, textChannel, message);
+                    volumeCommand.performCommand(arguments, guild, member, textChannel, message, voiceChannel);
                     break;
+                case "!leave":
+                    leaveCommand.performCommand(arguments, guild, member, textChannel, message, voiceChannel);
 
             }
         }

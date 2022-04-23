@@ -1,14 +1,11 @@
 package com.justeryt.discordbot.commands.commands;
 
 import com.justeryt.discordbot.commands.types.ServerCommand;
-import net.dv8tion.jda.api.entities.Guild;
-import net.dv8tion.jda.api.entities.Member;
-import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.entities.TextChannel;
+import net.dv8tion.jda.api.entities.*;
 
 public class UnBanCommand implements ServerCommand {
     @Override
-    public void performCommand(String[] arguments, Guild guild, Member member, TextChannel textChannel, Message message) {
+    public void performCommand(String[] arguments, Guild guild, Member member, TextChannel textChannel, Message message, VoiceChannel voiceChannel) {
         if (arguments.length == 2) {
             String id = arguments[1];
             guild.unban(id).queue();
