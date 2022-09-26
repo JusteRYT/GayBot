@@ -30,7 +30,7 @@ public class Main extends ListenerAdapter {
 
     public static void main(String[] args) throws IOException {
         //Вставляем ключ от бота (Нельзя проебать, а то заного его придется делать)
-        jdaBuilder = JDABuilder.createDefault("OTM2NTQxMTcxMjM5NTAxODM0.YfOr7w.5TTeFNtH1cHFpBIDq8MTvJwvUqI");
+        jdaBuilder = JDABuilder.createDefault("OTM2NTQxMTcxMjM5NTAxODM0.YfOr7w.72RjeahP12hY5cbcFyM-mDUJ9FY");
         //Статус бота (Онлайн, спящий или оффлайн)
         jdaBuilder.setStatus(OnlineStatus.ONLINE);
         //Статус бота (Во что играет или просто цитатка)

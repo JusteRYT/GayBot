@@ -9,6 +9,7 @@ public class UnBanCommand implements ServerCommand {
         if (arguments.length == 2) {
             String id = arguments[1];
             guild.unban(id).queue();
+            textChannel.sendMessage("Я разбанил его: " + id);
         } else {
             textChannel.sendMessage("Эхх, ну смотри !unban <ЧелID>").queue();
         }

@@ -21,8 +21,8 @@ import java.util.concurrent.TimeUnit;
 public class TrackScheduler extends AudioEventAdapter {
     private final AudioPlayer player;
     private final BlockingDeque<AudioTrack> queue;
-    private TextChannel textChannel;
-    private EmbedBuilder embedBuilder;
+    private final TextChannel textChannel;
+    private final EmbedBuilder embedBuilder;
 
 
     public TrackScheduler(AudioPlayer player) {
@@ -50,7 +50,8 @@ public class TrackScheduler extends AudioEventAdapter {
     public void onTrackStart(AudioPlayer player, AudioTrack track) {
         super.onTrackStart(player, track);
         embedBuilder.setTitle("Сейчас ебашит: " + track.getInfo().title);
-        textChannel.sendMessageEmbeds(embedBuilder.build()).queue(message -> message.delete().queueAfter(60, TimeUnit.SECONDS));
+        long millisec = track.getInfo().length;
+        textChannel.sendMessageEmbeds(embedBuilder.build()).queue(message -> message.delete().queueAfter(millisec, TimeUnit.MILLISECONDS));
     }
 
     @Override
@@ -101,6 +102,7 @@ public class TrackScheduler extends AudioEventAdapter {
         }
         queue.addFirst(audioTrack);
         startNextTrack(false);
+
     }
 
     public void skip() {

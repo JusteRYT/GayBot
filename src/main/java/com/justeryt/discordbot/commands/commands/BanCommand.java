@@ -14,7 +14,11 @@ public class BanCommand implements ServerCommand {
                 if(reason != null){
                     if(member.hasPermission(Permission.BAN_MEMBERS)){
                         target.ban(0, reason).queue();
+                    } else {
+                        textChannel.sendMessage("А прав то у тебя нет, дебил").queue();
                     }
+                } else {
+                    textChannel.sendMessage("❌Ты не написал причину мудак!").queue();
                 }
             }
         } else {

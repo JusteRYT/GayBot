@@ -14,7 +14,6 @@ public class ShuffleCommand implements ServerCommand {
     @Override
     public void performCommand(String[] arguments, Guild guild, Member member, TextChannel textChannel, Message message, VoiceChannel voiceChannel) {
         if (voiceChannel != null) {
-            EmbedBuilder embedBuilder = new EmbedBuilder();
             MusicController musicController = Main.getAudioManager().getMusicController(voiceChannel.getGuild().getIdLong());
             AudioPlayer player = musicController.getAudioPlayer();
             TrackScheduler scheduler = musicController.getScheduler();
@@ -22,7 +21,7 @@ public class ShuffleCommand implements ServerCommand {
             scheduler.shuffle();
             textChannel.sendMessage("✔Плейлист перемешен").queue();
         } else {
-            textChannel.sendMessage("❌А ну да, мне же не надо сначало воспроизвести музыку, а потом скипать, это ты здорово придумал").queue();
+            textChannel.sendMessage("❌А ну да, мне же не надо сначало воспроизвести музыку, а потом подключаться, это ты здорово придумал").queue();
         }
     }
 }

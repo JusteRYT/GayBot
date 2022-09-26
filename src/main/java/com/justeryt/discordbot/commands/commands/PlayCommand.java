@@ -57,7 +57,7 @@ public class PlayCommand implements ServerCommand {
 
                         @Override
                         public void playlistLoaded(AudioPlaylist audioPlaylist) {
-                            embedBuilder.setTitle("▶Аудиоплейлист загружен" + audioPlaylist.getName());
+                            embedBuilder.setTitle("▶Аудиоплейлист загружен: " + audioPlaylist.getName());
                             textChannel.sendMessageEmbeds(embedBuilder.build()).queue();
                             for (AudioTrack audioTrack : audioPlaylist.getTracks()) {
                                 scheduler.addToQueue(audioTrack);

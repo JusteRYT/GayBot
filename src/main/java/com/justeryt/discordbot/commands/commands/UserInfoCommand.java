@@ -24,16 +24,18 @@ public class UserInfoCommand implements ServerCommand {
                 embedBuilder.addField("Проверка на человечность", String.valueOf(checkForBot(target)), true);
                 embedBuilder.addField("Роль", getRoles(target.getRoles()), true);
                 textChannel.sendMessageEmbeds(embedBuilder.build()).queue();
+            } else {
+                textChannel.sendMessage("🤡!info <Чел>").queue();
             }
         }
     }
 
     private String checkForBot(Member member) {
         if(member.getUser().isBot()) {
-            String check = "Ботяра ебаная";
+            String check = "💥Ботяра ебаная";
             return check;
         }else {
-            String check = "Пчел";
+            String check = "☺Пчел";
             return check;
         }
     }

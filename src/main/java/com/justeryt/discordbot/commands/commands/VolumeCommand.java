@@ -22,6 +22,8 @@ public class VolumeCommand implements ServerCommand {
             }else {
                 textChannel.sendMessage("❌Я не в голосовом канале, ебень").queue();
         }
+        } else {
+            textChannel.sendMessage("❌А ты типо цифры не хочешь написать??? ммм уеба").queue();
         }
     }
 }
