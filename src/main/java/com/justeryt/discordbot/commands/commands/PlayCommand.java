@@ -15,6 +15,11 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.managers.AudioManager;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.LinkedBlockingDeque;
+
+
 public class PlayCommand implements ServerCommand {
 
     @Override
@@ -34,22 +39,26 @@ public class PlayCommand implements ServerCommand {
                     StringBuilder builder = new StringBuilder();
                     for (int i = 1; i < arguments.length; i++) builder.append(arguments[i] + " ");
                     String rawLink = builder.toString().trim();
-                    if (!rawLink.startsWith("https")) {
-                        rawLink = " ytsearch: " + rawLink;
+//                    if (!rawLink.startsWith("https")) {
+//                        rawLink = "ytsearch: " + rawLink;
+//                    } else
+                    if (rawLink.startsWith("gachi")) {
+                        rawLink = "https://www.youtube.com/playlist?list=PLG_SPmHF0hBfgHU60KwF-2Y4lDX4FD1vu";
+                    } else if (rawLink.startsWith("GachiRadio")) {
+                        rawLink = "https://www.youtube.com/watch?v=J5M0ZWKVhC0";
                     }
                     final String url = rawLink;
-
-
                     assert audioPlayerManager != null;
-                    String finalRawLink = rawLink;
+
                     audioPlayerManager.loadItem(url, new AudioLoadResultHandler() {
                         @Override
                         public void trackLoaded(AudioTrack audioTrack) {
                             if (audioTrack != null) {
                                 embedBuilder.setTitle("▶Трек загружен: " + audioTrack.getInfo().title);
-                                embedBuilder.setThumbnail(finalRawLink);
+                                embedBuilder.setThumbnail(getURL(url));
                                 embedBuilder.addField("Добавил", String.valueOf(member.getUser().getName()), true);
                                 embedBuilder.addField("Длительность", Utils.formatLongDuration(audioTrack.getDuration()), true);
+                                embedBuilder.setFooter("GayBot", Main.getIcon());
                                 textChannel.sendMessageEmbeds(embedBuilder.build()).queue();
                                 scheduler.addToQueue(audioTrack);
                             }
@@ -57,10 +66,20 @@ public class PlayCommand implements ServerCommand {
 
                         @Override
                         public void playlistLoaded(AudioPlaylist audioPlaylist) {
-                            embedBuilder.setTitle("▶Аудиоплейлист загружен: " + audioPlaylist.getName());
-                            textChannel.sendMessageEmbeds(embedBuilder.build()).queue();
-                            for (AudioTrack audioTrack : audioPlaylist.getTracks()) {
-                                scheduler.addToQueue(audioTrack);
+                            if (audioPlaylist != null) {
+                                embedBuilder.setTitle("▶Аудиоплейлист загружен: " + audioPlaylist.getName());
+                                long time = 0;
+                                for (int i = 0; i < audioPlaylist.getTracks().size(); i++) {
+                                    if (!audioPlaylist.getTracks().isEmpty()) {
+                                        time = time + audioPlaylist.getTracks().get(i).getDuration();
+                                    }
+                                }
+                                embedBuilder.setDescription("Длительность: " + Utils.formatLongDuration(time));
+                                embedBuilder.setFooter("GayBot", Main.getIcon());
+                                textChannel.sendMessageEmbeds(embedBuilder.build()).queue();
+                                for (AudioTrack audioTrack : audioPlaylist.getTracks()) {
+                                    scheduler.addToQueue(audioTrack);
+                                }
                             }
                         }
 
@@ -77,6 +96,7 @@ public class PlayCommand implements ServerCommand {
 
                         }
 
+
                     });
                 } else {
                     textChannel.sendMessage("❌Ты должен быть в голосовом чате дебил, а потом написать плей... еблан").queue();
@@ -85,5 +105,11 @@ public class PlayCommand implements ServerCommand {
                 textChannel.sendMessage("❌Ты должен быть в голосовом чате дебил, а потом написать плей... еблан").queue();
             }
         }
+    }
+
+    public static String getURL(String url) {
+        String VideoID = url.split("v=")[1];
+        String preview = "http://img.youtube.com/vi/" + VideoID + "/hqdefault.jpg";
+        return preview;
     }
 }

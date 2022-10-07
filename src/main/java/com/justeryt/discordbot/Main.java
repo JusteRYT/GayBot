@@ -16,6 +16,7 @@ import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 import net.dv8tion.jda.api.requests.restaction.CommandListUpdateAction;
 
+import javax.imageio.ImageIO;
 import javax.security.auth.login.LoginException;
 import java.io.File;
 import java.io.IOException;
@@ -30,7 +31,7 @@ public class Main extends ListenerAdapter {
 
     public static void main(String[] args) throws IOException {
         //Вставляем ключ от бота (Нельзя проебать, а то заного его придется делать)
-        jdaBuilder = JDABuilder.createDefault("OTM2NTQxMTcxMjM5NTAxODM0.YfOr7w.72RjeahP12hY5cbcFyM-mDUJ9FY");
+        jdaBuilder = JDABuilder.createDefault("OTM2NTQxMTcxMjM5NTAxODM0.GbiLdr.kiOtev90S8lb6YdDtf0r5oZ-ys-ezxsq5hLuMw");
         //Статус бота (Онлайн, спящий или оффлайн)
         jdaBuilder.setStatus(OnlineStatus.ONLINE);
         //Статус бота (Во что играет или просто цитатка)
@@ -90,5 +91,8 @@ public class Main extends ListenerAdapter {
             return audioManager;
         }
         return null;
+    }
+    public static String getIcon(){
+        return "https://sun6-22.userapi.com/s/v1/ig2/VQ02V7DnGvxTTXKs9514MUDBUUWFvtn9WYPCp8M3kwkhE7YFawuLWjZu4H76AnJvN6FI2dotf-BqGZjlj6Tfc3YR.jpg?size=400x400&quality=96&crop=0,2,1077,1077&ava=1";
     }
 }
