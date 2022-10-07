@@ -19,6 +19,9 @@ public class CommandManager extends ListenerAdapter {
     private final ShuffleCommand shuffleCommand;
     private final VolumeCommand volumeCommand;
     private final LeaveCommand leaveCommand;
+    private final RemoveCommand removeCommand;
+    private final ResumeCommand resumeCommand;
+    private final StopCommand stopCommand;
 
     public CommandManager() {
         this.helpCommands = new HelpCommands();
@@ -33,6 +36,9 @@ public class CommandManager extends ListenerAdapter {
         this.shuffleCommand = new ShuffleCommand();
         this.volumeCommand = new VolumeCommand();
         this.leaveCommand = new LeaveCommand();
+        this.removeCommand = new RemoveCommand();
+        this.resumeCommand = new ResumeCommand();
+        this.stopCommand = new StopCommand();
     }
 
     @Override
@@ -81,7 +87,16 @@ public class CommandManager extends ListenerAdapter {
                     break;
                 case "!leave":
                     leaveCommand.performCommand(arguments, guild, member, textChannel, message, voiceChannel);
-
+                    break;
+                case "!remove":
+                    removeCommand.performCommand(arguments, guild, member, textChannel, message, voiceChannel);
+                    break;
+                case "!resume":
+                    resumeCommand.performCommand(arguments, guild, member, textChannel, message, voiceChannel);
+                    break;
+                case "!stop":
+                    stopCommand.performCommand(arguments, guild, member, textChannel, message, voiceChannel);
+                    break;
             }
         }
     }
