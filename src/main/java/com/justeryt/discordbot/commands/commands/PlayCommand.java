@@ -39,13 +39,8 @@ public class PlayCommand implements ServerCommand {
                     StringBuilder builder = new StringBuilder();
                     for (int i = 1; i < arguments.length; i++) builder.append(arguments[i] + " ");
                     String rawLink = builder.toString().trim();
-//                    if (!rawLink.startsWith("https")) {
-//                        rawLink = "ytsearch: " + rawLink;
-//                    } else
-                    if (rawLink.startsWith("gachi")) {
-                        rawLink = "https://www.youtube.com/playlist?list=PLG_SPmHF0hBfgHU60KwF-2Y4lDX4FD1vu";
-                    } else if (rawLink.startsWith("GachiRadio")) {
-                        rawLink = "https://www.youtube.com/watch?v=J5M0ZWKVhC0";
+                    if (!rawLink.startsWith("https")){
+                        rawLink = "ytsearch: " + rawLink;
                     }
                     final String url = rawLink;
                     assert audioPlayerManager != null;
