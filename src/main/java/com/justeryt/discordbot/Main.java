@@ -3,6 +3,7 @@ package com.justeryt.discordbot;
 import com.justeryt.discordbot.commands.Listener.onJoin;
 import com.justeryt.discordbot.commands.commands.CommandManager;
 import com.justeryt.discordbot.commands.music.AudioManager;
+import com.justeryt.discordbot.resource.LoadToken;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.source.AudioSourceManagers;
@@ -16,9 +17,7 @@ import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 import net.dv8tion.jda.api.requests.restaction.CommandListUpdateAction;
 
-import javax.imageio.ImageIO;
 import javax.security.auth.login.LoginException;
-import java.io.File;
 import java.io.IOException;
 import java.util.Timer;
 
@@ -31,7 +30,7 @@ public class Main extends ListenerAdapter {
 
     public static void main(String[] args) throws IOException {
         //Вставляем ключ от бота (Нельзя проебать, а то заного его придется делать)
-        jdaBuilder = JDABuilder.createDefault("OTM2NTQxMTcxMjM5NTAxODM0.GbiLdr.kiOtev90S8lb6YdDtf0r5oZ-ys-ezxsq5hLuMw");
+        jdaBuilder = JDABuilder.createDefault(LoadToken.getToken());
         //Статус бота (Онлайн, спящий или оффлайн)
         jdaBuilder.setStatus(OnlineStatus.ONLINE);
         //Статус бота (Во что играет или просто цитатка)
