@@ -1,6 +1,7 @@
 package com.justeryt.discordbot.commands.music;
 
 import com.justeryt.discordbot.Main;
+import com.justeryt.discordbot.commands.Utils.EmbedCreate;
 import com.justeryt.discordbot.commands.Utils.Utils;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import com.sedmelluq.discord.lavaplayer.player.event.AudioEventAdapter;
@@ -11,26 +12,24 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.TextChannel;
 
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.concurrent.BlockingDeque;
 import java.util.concurrent.LinkedBlockingDeque;
-import java.util.concurrent.TimeUnit;
 
 
 public class TrackScheduler extends AudioEventAdapter {
     private final AudioPlayer player;
     private final BlockingDeque<AudioTrack> queue;
     private final TextChannel textChannel;
-    private final EmbedBuilder embedBuilder;
 
 
     public TrackScheduler(AudioPlayer player) {
         this.player = player;
         this.queue = new LinkedBlockingDeque<>();
         this.textChannel = Main.getJda().getTextChannelById(529237596602105867L);
-        this.embedBuilder = new EmbedBuilder();
     }
 
     @Override
@@ -49,13 +48,10 @@ public class TrackScheduler extends AudioEventAdapter {
     @Override
     public void onTrackStart(AudioPlayer player, AudioTrack track) {
         super.onTrackStart(player, track);
-        embedBuilder.setTitle("Сейчас ебашит: " + track.getInfo().title);
         String time = Utils.formatLongDuration(track.getInfo().length);
-        embedBuilder.setDescription("Длительность: " + time);
-        embedBuilder.setImage(getLink(track));
-        embedBuilder.setFooter("GayBot", Main.getIcon());
         long millisecond = track.getInfo().length;
-        textChannel.sendMessageEmbeds(embedBuilder.build()).queue(message -> message.delete().queueAfter(millisecond, TimeUnit.MILLISECONDS));
+        EmbedCreate.createEmbedTrackScheduler("Сейчас ебашит: " + track.getInfo().title,"Длительность: " + time,
+                "GayBot", Main.getIcon(), textChannel,getLink(track), Color.orange, millisecond );
     }
 
     @Override
@@ -94,10 +90,9 @@ public class TrackScheduler extends AudioEventAdapter {
         }
     }
 
-    public LinkedBlockingDeque<AudioTrack> drainQueue() {
+    public void drainQueue() {
         LinkedBlockingDeque<AudioTrack> drainQueue = new LinkedBlockingDeque<>();
         queue.drainTo(drainQueue);
-        return drainQueue;
     }
 
     public void playNow(AudioTrack audioTrack, boolean clearQueue) {

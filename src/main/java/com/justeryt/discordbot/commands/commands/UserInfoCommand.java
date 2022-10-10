@@ -1,5 +1,6 @@
 package com.justeryt.discordbot.commands.commands;
 
+import com.justeryt.discordbot.commands.Utils.EmbedCreate;
 import com.justeryt.discordbot.commands.types.ServerCommand;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.*;
@@ -15,28 +16,20 @@ public class UserInfoCommand implements ServerCommand {
             Member target = message.getMentionedMembers().get(0);
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
             if(target != null) {
-                EmbedBuilder embedBuilder = new EmbedBuilder();
-                embedBuilder.setColor(Color.YELLOW);
-                embedBuilder.setTitle("Чел - " + target.getUser().getName());
-                embedBuilder.setThumbnail(target.getUser().getAvatarUrl());
-                embedBuilder.addField("Когда присоединился", (target.getTimeJoined().format(formatter)), true);
-                embedBuilder.addField("Когда создал акк", (target.getTimeCreated().format(formatter)), true);
-                embedBuilder.addField("Проверка на человечность", String.valueOf(checkForBot(target)), true);
-                embedBuilder.addField("Роль", getRoles(target.getRoles()), true);
-                textChannel.sendMessageEmbeds(embedBuilder.build()).queue();
+                EmbedCreate.createEmbedUserInfo("Чел - " + target.getUser().getName(),target.getUser().getAvatarUrl(),
+                        (target.getTimeJoined().format(formatter)),(target.getTimeCreated().format(formatter)),
+                        String.valueOf(checkForBot(target)),getRoles(target.getRoles()), textChannel );
             } else {
-                textChannel.sendMessage("🤡!info <Чел>").queue();
+                EmbedCreate.createEmbed("🤡!info <Чел>",textChannel);
             }
         }
     }
 
     private String checkForBot(Member member) {
         if(member.getUser().isBot()) {
-            String check = "💥Ботяра ебаная";
-            return check;
+            return "💥Ботяра ебаная";
         }else {
-            String check = "☺Пчел";
-            return check;
+            return "☺Пчел";
         }
     }
 

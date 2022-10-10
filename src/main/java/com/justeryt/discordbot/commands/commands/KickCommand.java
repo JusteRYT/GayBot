@@ -1,7 +1,7 @@
 package com.justeryt.discordbot.commands.commands;
 
+import com.justeryt.discordbot.commands.Utils.EmbedCreate;
 import com.justeryt.discordbot.commands.types.ServerCommand;
-import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.*;
 
@@ -15,13 +15,13 @@ public class KickCommand implements ServerCommand {
                 String reason = arguments[2];
                 if (reason != null ){
                     if (member.hasPermission(Permission.KICK_MEMBERS)){
-                        textChannel.sendMessage("✔Ну пока клоун по имени: " + target.getUser().getName() + ". Причина кика: " + reason).queue();
+                        EmbedCreate.createEmbed("✅Ну пока клоун по имени: " + target.getUser().getName() + ". Причина кика: " + reason, textChannel);
                         target.kick(reason).queue();
                     }
                 }
             }
         } else {
-            textChannel.sendMessage("❌Введите кого забанить и причину").queue();
+            EmbedCreate.createEmbed("⛔Введите кого кикать и причину",textChannel);
         }
     }
 }

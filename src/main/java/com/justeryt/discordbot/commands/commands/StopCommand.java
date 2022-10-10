@@ -1,6 +1,7 @@
 package com.justeryt.discordbot.commands.commands;
 
 import com.justeryt.discordbot.Main;
+import com.justeryt.discordbot.commands.Utils.EmbedCreate;
 import com.justeryt.discordbot.commands.music.MusicController;
 import com.justeryt.discordbot.commands.music.TrackScheduler;
 import com.justeryt.discordbot.commands.types.ServerCommand;
@@ -16,9 +17,9 @@ public class StopCommand implements ServerCommand {
             TrackScheduler scheduler = musicController.getScheduler();
             player.addListener(scheduler);
             scheduler.stop();
-            textChannel.sendMessage("💢Мы его задержали").queue();
+            EmbedCreate.createEmbed("💢Мы его задержали", textChannel);
         } else {
-            textChannel.sendMessage("❌Я не в голосовом канале мудак!").queue();
+            EmbedCreate.createEmbed("📛Я не в голосовом канале мудак!",textChannel);
         }
     }
 }

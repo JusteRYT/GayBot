@@ -1,11 +1,11 @@
 package com.justeryt.discordbot.commands.commands;
 
 import com.justeryt.discordbot.Main;
+import com.justeryt.discordbot.commands.Utils.EmbedCreate;
 import com.justeryt.discordbot.commands.types.ServerCommand;
 import com.justeryt.discordbot.commands.music.MusicController;
 import com.justeryt.discordbot.commands.music.TrackScheduler;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
-import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.*;
 
 public class ShuffleCommand implements ServerCommand {
@@ -19,9 +19,9 @@ public class ShuffleCommand implements ServerCommand {
             TrackScheduler scheduler = musicController.getScheduler();
             player.addListener(scheduler);
             scheduler.shuffle();
-            textChannel.sendMessage("✔Плейлист перемешен").queue();
+            EmbedCreate.createEmbed("✅Плейлист перемешен", textChannel);
         } else {
-            textChannel.sendMessage("❌А ну да, мне же не надо сначало воспроизвести музыку, а потом подключаться, это ты здорово придумал").queue();
+            EmbedCreate.createEmbed("📛А ну да, мне же надо сначало воспроизвести музыку, а потом подключаться, это ты здорово придумал", textChannel);
         }
     }
 }

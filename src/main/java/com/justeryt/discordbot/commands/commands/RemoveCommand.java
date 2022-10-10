@@ -1,11 +1,13 @@
 package com.justeryt.discordbot.commands.commands;
 
 import com.justeryt.discordbot.Main;
+import com.justeryt.discordbot.commands.Utils.EmbedCreate;
 import com.justeryt.discordbot.commands.music.MusicController;
 import com.justeryt.discordbot.commands.music.TrackScheduler;
 import com.justeryt.discordbot.commands.types.ServerCommand;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import net.dv8tion.jda.api.entities.*;
+
 
 public class RemoveCommand implements ServerCommand {
     @Override
@@ -16,9 +18,9 @@ public class RemoveCommand implements ServerCommand {
             TrackScheduler scheduler = musicController.getScheduler();
             player.addListener(scheduler);
             scheduler.drainQueue();
-            textChannel.sendMessage("✔Очередь удалена").queue();
+            EmbedCreate.createEmbed("✅Очередь удалена", textChannel);
         } else {
-            textChannel.sendMessage("❌Я не в голосовом канале мудак!").queue();
+            EmbedCreate.createEmbed("📛Я не в голосовом канале мудак!", textChannel);
         }
     }
 }
