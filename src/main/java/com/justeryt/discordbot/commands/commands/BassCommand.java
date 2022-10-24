@@ -5,10 +5,8 @@ import com.justeryt.discordbot.commands.Utils.EmbedCreate;
 import com.justeryt.discordbot.commands.music.MusicController;
 import com.justeryt.discordbot.commands.music.TrackScheduler;
 import com.justeryt.discordbot.commands.types.ServerCommand;
-import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
 import net.dv8tion.jda.api.entities.*;
-import net.dv8tion.jda.api.exceptions.ContextException;
 
 public class BassCommand implements ServerCommand {
     @Override
