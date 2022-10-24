@@ -13,6 +13,7 @@ import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
 import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import net.dv8tion.jda.api.entities.*;
+import net.dv8tion.jda.api.exceptions.ContextException;
 import net.dv8tion.jda.api.managers.AudioManager;
 
 import java.awt.*;
@@ -48,16 +49,17 @@ public class PlayCommand implements ServerCommand {
                     if (!rawLink.startsWith("https")) {
                         rawLink = "ytsearch: " + rawLink;
                     }
+//                    if (rawLink.equals("test")) {
+//                        rawLink = "https://s237iva.storage.yandex.net/get-mp3/82713ae21b0aad01fdb7148e147f89ae/0005ebc7882600e5/rmusic/U2FsdGVkX1-qkOKKrNNWLPcEncHyFrpzX6qv0197UssK6nE4S1sPBbdUXBEW95sgCdDXJ0XzYTQrO2sXgBkIY85JMRDyUyayDdG_8qSyCA4/a5babdf47d81f634af2ccf0646df154a7a8c144177d3741187b0f1833504fe1e?track-id=43790789&play=false";
+//                    }
                     final String url = rawLink;
-                    assert audioPlayerManager != null;
-
                     String finalRawLink = rawLink;
                     audioPlayerManager.loadItem(url, new AudioLoadResultHandler() {
                         @Override
                         public void trackLoaded(AudioTrack audioTrack) {
                             if (audioTrack != null) {
                                 EmbedCreate.createEmbedTrackLoaded("▶Трек загружен: " + audioTrack.getInfo().title,
-                                        getURL(url), String.valueOf(member.getUser().getName()),
+                                        getURL(url), member.getUser().getName(),
                                         Utils.formatLongDuration(audioTrack.getDuration()), textChannel);
                                 scheduler.addToQueue(audioTrack);
                             }
@@ -72,16 +74,15 @@ public class PlayCommand implements ServerCommand {
                                         time = time + audioPlaylist.getTracks().get(i).getDuration();
                                     }
                                 }
-                                int track = audioPlaylist.getTracks().size();
-                                EmbedCreate.createEmbed("▶Аудиоплейлист загружен: " + audioPlaylist.getName(),
-                                        "Длительность: " + Utils.formatLongDuration(time),
-                                        "GayBot", Main.getIcon(), Color.ORANGE, textChannel, track, finalRawLink, audioPlaylist.getName());
+                                int cost = audioPlaylist.getTracks().size();
+                                EmbedCreate.createEmbedPlaylistLoad("▶Аудиоплейлист загружен: " + audioPlaylist.getName(),
+                                        "🎵Длительность: " + Utils.formatLongDuration(time),
+                                        "GayBot", Main.getIcon(), Color.ORANGE, textChannel, cost, finalRawLink, audioPlaylist.getName());
                                 for (AudioTrack audioTrack : audioPlaylist.getTracks()) {
                                     scheduler.addToQueue(audioTrack);
                                 }
                             }
                         }
-
 
                         @Override
                         public void noMatches() {
@@ -90,15 +91,17 @@ public class PlayCommand implements ServerCommand {
 
                         @Override
                         public void loadFailed(FriendlyException e) {
-                            scheduler.skip();
-                            EmbedCreate.createEmbed("📛Не удалось загрузить трек", textChannel);
+                            if (e.toString().startsWith("Something broke when playing the track.")) {
+                                EmbedCreate.createEmbed("📛Не удалось загрузить трек", textChannel);
+                                scheduler.skip();
+                            }
                         }
                     });
                 } else {
-                    textChannel.sendMessage("❌Ты должен быть в голосовом чате дебил, а потом написать плей... еблан").queue();
+                    EmbedCreate.createEmbed("❌Не удалось найти кого-то в голосовом канале сучка", textChannel);
                 }
             } else {
-                textChannel.sendMessage("❌Ты должен быть в голосовом чате дебил, а потом написать плей... еблан").queue();
+                EmbedCreate.createEmbed("❌Ты должен быть в голосовом чате дебил, а потом написать плей... еблан", textChannel);
             }
         }
     }
