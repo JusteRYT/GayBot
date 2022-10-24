@@ -1,6 +1,9 @@
 package com.justeryt.discordbot;
 
+import com.justeryt.discordbot.commands.Listener.OnShutDown;
 import com.justeryt.discordbot.commands.Listener.onJoin;
+import com.justeryt.discordbot.commands.Listener.onMemberJoin;
+import com.justeryt.discordbot.commands.Listener.onReadyBot;
 import com.justeryt.discordbot.commands.commands.CommandManager;
 import com.justeryt.discordbot.commands.music.AudioManager;
 import com.justeryt.discordbot.resource.LoadToken;
@@ -15,6 +18,7 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
+import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.requests.restaction.CommandListUpdateAction;
 
 import javax.security.auth.login.LoginException;
@@ -35,8 +39,11 @@ public class Main extends ListenerAdapter {
         jdaBuilder.setStatus(OnlineStatus.ONLINE);
         //Статус бота (Во что играет или просто цитатка)
         jdaBuilder.setActivity(Activity.playing("Привет я твой персональный бот!"));
-        //Делаем обработку ошибки
         jdaBuilder.addEventListeners(new onJoin());
+        jdaBuilder.addEventListeners(new onMemberJoin());
+        jdaBuilder.addEventListeners(new OnShutDown());
+        jdaBuilder.addEventListeners(new onReadyBot());
+        jdaBuilder.enableIntents(GatewayIntent.GUILD_MEMBERS);
         try {
             jda = jdaBuilder.build();
         } catch (LoginException exception) {
@@ -46,7 +53,6 @@ public class Main extends ListenerAdapter {
         CommandListUpdateAction action = jda.updateCommands();
         action.addCommands(new CommandData("say", "Отправить сообщение")
                 .addOptions(new OptionData(OptionType.STRING, "message", "The message to send").setRequired(true))).complete();
-        action.addCommands(new CommandData("play", "Сыграть на балалйке"));
         //команды
         registerCommands();
         //Анимированный статус
@@ -54,8 +60,6 @@ public class Main extends ListenerAdapter {
         audioPlayerManager = new DefaultAudioPlayerManager();
         AudioSourceManagers.registerRemoteSources(audioPlayerManager);
         audioManager = new AudioManager();
-
-
         //Метод для команд
     }
 
