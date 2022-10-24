@@ -3,12 +3,12 @@ package com.justeryt.discordbot.commands.music;
 import com.justeryt.discordbot.Main;
 import com.justeryt.discordbot.commands.Utils.EmbedCreate;
 import com.justeryt.discordbot.commands.Utils.Utils;
+import com.sedmelluq.discord.lavaplayer.filter.equalizer.EqualizerFactory;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import com.sedmelluq.discord.lavaplayer.player.event.AudioEventAdapter;
 import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackEndReason;
-import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.TextChannel;
 
 
@@ -24,12 +24,32 @@ public class TrackScheduler extends AudioEventAdapter {
     private final AudioPlayer player;
     private final BlockingDeque<AudioTrack> queue;
     private final TextChannel textChannel;
-
+    private static float[] BASS_BOOST = {
+            0,2f,
+            0.15f,
+            0.1f,
+            0.05f,
+            0.0f,
+            -0.05f,
+            -0.1f,
+            -0.1f,
+            -0.1f,
+            -0.1f,
+            -0.1f,
+            -0.1f,
+            -0.1f,
+            -0.1f,
+            -0.1f,
+    };
+    private EqualizerFactory equalizerFactory;
 
     public TrackScheduler(AudioPlayer player) {
         this.player = player;
         this.queue = new LinkedBlockingDeque<>();
         this.textChannel = Main.getJda().getTextChannelById(529237596602105867L);
+        this.equalizerFactory = new EqualizerFactory();
+        this.player.setFilterFactory(equalizerFactory);
+        this.player.setFrameBufferDuration(500);
     }
 
     @Override
@@ -50,8 +70,8 @@ public class TrackScheduler extends AudioEventAdapter {
         super.onTrackStart(player, track);
         String time = Utils.formatLongDuration(track.getInfo().length);
         long millisecond = track.getInfo().length;
-        EmbedCreate.createEmbedTrackScheduler("Сейчас ебашит: " + track.getInfo().title,"Длительность: " + time,
-                "GayBot", Main.getIcon(), textChannel,getLink(track), Color.orange, millisecond );
+        EmbedCreate.createEmbedTrackScheduler("Сейчас ебашит: " + track.getInfo().title, "Длительность: " + time,
+                "GayBot", Main.getIcon(), textChannel, getLink(track), Color.orange, millisecond);
     }
 
     @Override
@@ -64,7 +84,8 @@ public class TrackScheduler extends AudioEventAdapter {
 
     @Override
     public void onTrackException(AudioPlayer player, AudioTrack track, FriendlyException exception) {
-        super.onTrackException(player, track, exception);
+        EmbedCreate.createEmbedException("Не удалось запустить трек: " + track.getInfo().title, textChannel);
+        skip();
     }
 
     @Override
@@ -95,13 +116,7 @@ public class TrackScheduler extends AudioEventAdapter {
         queue.drainTo(drainQueue);
     }
 
-    public void playNow(AudioTrack audioTrack, boolean clearQueue) {
-        if (clearQueue) {
-            queue.clear();
-        }
-        queue.addFirst(audioTrack);
-        startNextTrack(false);
-
+    public void playNow(AudioTrack audioTrack) {
     }
 
     public void skip() {
@@ -130,12 +145,23 @@ public class TrackScheduler extends AudioEventAdapter {
         player.setVolume(volume);
     }
 
+    public void getVolume() {
+        player.getVolume();
+    }
+
     public void stop() {
         player.setPaused(true);
     }
 
     public void resume() {
         player.setPaused(false);
+    }
+
+    public void Bass(float percentage) {
+        final float multiplier = percentage / 100.00f;
+        for (int i = 0; i < BASS_BOOST.length; i++){
+            equalizerFactory.setGain(i, BASS_BOOST[i] * multiplier);
+        }
     }
 
     public static String getLink(AudioTrack track) {
