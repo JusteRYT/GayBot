@@ -10,8 +10,6 @@ public class CommandManager extends ListenerAdapter {
     private final HelpCommands helpCommands;
     private final ClearCommands clearCommands;
     private final KickCommand kickCommand;
-    private final BanCommand banCommand;
-    private final UnBanCommand unBanCommand;
     private final Permission permission;
     private final PlayCommand playCommand;
     private final UserInfoCommand userInfoCommand;
@@ -22,13 +20,18 @@ public class CommandManager extends ListenerAdapter {
     private final RemoveCommand removeCommand;
     private final ResumeCommand resumeCommand;
     private final StopCommand stopCommand;
+    private final JoinCommand joinCommand;
+    private final NowPlayingCommand nowPlayingCommand;
+    private final MuteCommand muteCommand;
+    private final UnMuteCommand unMuteCommand;
+    private final VersionCommand versionCommand;
+    private final BassCommand bassCommand;
+    private final KickVoiceCommand kickVoiceCommand;
 
     public CommandManager() {
         this.helpCommands = new HelpCommands();
         this.clearCommands = new ClearCommands();
         this.kickCommand = new KickCommand();
-        this.banCommand = new BanCommand();
-        this.unBanCommand = new UnBanCommand();
         this.permission = new Permission();
         this.playCommand = new PlayCommand();
         this.userInfoCommand = new UserInfoCommand();
@@ -39,6 +42,13 @@ public class CommandManager extends ListenerAdapter {
         this.removeCommand = new RemoveCommand();
         this.resumeCommand = new ResumeCommand();
         this.stopCommand = new StopCommand();
+        this.joinCommand = new JoinCommand();
+        this.nowPlayingCommand = new NowPlayingCommand();
+        this.muteCommand = new MuteCommand();
+        this.unMuteCommand = new UnMuteCommand();
+        this.versionCommand = new VersionCommand();
+        this.bassCommand = new BassCommand();
+        this.kickVoiceCommand = new KickVoiceCommand();
     }
 
     @Override
@@ -60,12 +70,6 @@ public class CommandManager extends ListenerAdapter {
                     break;
                 case "!kick":
                     kickCommand.performCommand(arguments, guild, member, textChannel, message, voiceChannel);
-                    break;
-                case "!ban":
-                    banCommand.performCommand(arguments, guild, member, textChannel, message, voiceChannel);
-                    break;
-                case "!unban":
-                    unBanCommand.performCommand(arguments, guild, member, textChannel, message, voiceChannel);
                     break;
                 case "!test":
                     permission.performCommand(arguments, guild, member, textChannel, message, voiceChannel);
@@ -96,6 +100,27 @@ public class CommandManager extends ListenerAdapter {
                     break;
                 case "!stop":
                     stopCommand.performCommand(arguments, guild, member, textChannel, message, voiceChannel);
+                    break;
+                case "!join":
+                    joinCommand.performCommand(arguments, guild, member, textChannel, message, voiceChannel);
+                    break;
+                case "!nowplay":
+                    nowPlayingCommand.performCommand(arguments, guild, member, textChannel, message, voiceChannel);
+                    break;
+                case "!mute":
+                    muteCommand.performCommand(arguments, guild, member, textChannel, message, voiceChannel);
+                    break;
+                case "!unmute":
+                    unMuteCommand.performCommand(arguments, guild, member, textChannel, message, voiceChannel);
+                    break;
+                case "!version":
+                    versionCommand.performCommand(arguments, guild, member, textChannel, message, voiceChannel);
+                    break;
+                case "!bass":
+                    bassCommand.performCommand(arguments, guild, member, textChannel, message, voiceChannel);
+                    break;
+                case "!kickVoice":
+                    kickVoiceCommand.performCommand(arguments, guild, member, textChannel, message, voiceChannel);
                     break;
             }
         }
