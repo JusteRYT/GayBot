@@ -11,15 +11,27 @@ import net.dv8tion.jda.api.entities.*;
 public class StopCommand implements ServerCommand {
     @Override
     public void performCommand(String[] arguments, Guild guild, Member member, TextChannel textChannel, Message message, VoiceChannel voiceChannel) {
-        if (voiceChannel != null) {
-            MusicController musicController = Main.getAudioManager().getMusicController(voiceChannel.getGuild().getIdLong());
-            AudioPlayer player = musicController.getAudioPlayer();
-            TrackScheduler scheduler = musicController.getScheduler();
-            player.addListener(scheduler);
-            scheduler.stop();
-            EmbedCreate.createEmbed("💢Мы его задержали", textChannel);
+        if (arguments.length == 1) {
+            if (voiceChannel != null) {
+                MusicController musicController = Main.getAudioManager().getMusicController(voiceChannel.getGuild().getIdLong());
+                AudioPlayer player = musicController.getAudioPlayer();
+                TrackScheduler scheduler = musicController.getScheduler();
+                player.addListener(scheduler);
+                if (player.getPlayingTrack() != null) {
+                    if (!player.isPaused()) {
+                        scheduler.stop();
+                        EmbedCreate.createEmbed("💢Мы его задержали", textChannel);
+                    } else {
+                        EmbedCreate.createEmbed("📛Он и так не играет дэбил!!!", textChannel);
+                    }
+                } else {
+                    EmbedCreate.createEmbed("😡В очереди нет треков", textChannel);
+                }
+            } else {
+                EmbedCreate.createEmbed("📛Я не в голосовом канале мудак!", textChannel);
+            }
         } else {
-            EmbedCreate.createEmbed("📛Я не в голосовом канале мудак!",textChannel);
+            EmbedCreate.createEmbed("🤦‍♂️Ни как вы блять не научитесь !stop и всё!!!", textChannel);
         }
     }
 }
