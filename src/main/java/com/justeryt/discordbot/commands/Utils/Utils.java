@@ -15,12 +15,4 @@ public abstract class Utils {
     public static String formatLongDuration(long duration) {
         return DurationFormatUtils.formatDuration(duration, DURATION_FORMAT_LONG);
     }
-
-    public static PrivateChannel getPrivateChannel(User user) {
-        if (user.hasPrivateChannel()) {
-            return user.getPrivateChannel();
-        } else {
-            return user.openPrivateChannel().complete();
-        }
-    }
 }
