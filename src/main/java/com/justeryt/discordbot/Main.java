@@ -15,11 +15,10 @@ import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
-import net.dv8tion.jda.api.interactions.commands.OptionType;
-import net.dv8tion.jda.api.interactions.commands.build.CommandData;
-import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 import net.dv8tion.jda.api.requests.GatewayIntent;
-import net.dv8tion.jda.api.requests.restaction.CommandListUpdateAction;
+import net.dv8tion.jda.api.utils.ChunkingFilter;
+import net.dv8tion.jda.api.utils.MemberCachePolicy;
+import net.dv8tion.jda.api.utils.cache.CacheFlag;
 
 import javax.security.auth.login.LoginException;
 import java.io.IOException;
@@ -39,20 +38,17 @@ public class Main extends ListenerAdapter {
         jdaBuilder.setStatus(OnlineStatus.ONLINE);
         //Статус бота (Во что играет или просто цитатка)
         jdaBuilder.setActivity(Activity.playing("Привет я твой персональный бот!"));
-        jdaBuilder.addEventListeners(new onJoin());
-        jdaBuilder.addEventListeners(new onMemberJoin());
-        jdaBuilder.addEventListeners(new OnShutDown());
-        jdaBuilder.addEventListeners(new onReadyBot());
-        jdaBuilder.enableIntents(GatewayIntent.GUILD_MEMBERS);
+        jdaBuilder.addEventListeners(new onJoin(),new onMemberJoin(), new OnShutDown(),new onReadyBot());
+        jdaBuilder.enableIntents(GatewayIntent.GUILD_MEMBERS, GatewayIntent.GUILD_MESSAGES, GatewayIntent.GUILD_PRESENCES);
+        jdaBuilder.setMemberCachePolicy(MemberCachePolicy.ALL);
+        jdaBuilder.setChunkingFilter(ChunkingFilter.ALL);
+        jdaBuilder.enableCache(CacheFlag.ONLINE_STATUS);
         try {
             jda = jdaBuilder.build();
         } catch (LoginException exception) {
             exception.printStackTrace();
         }
 
-        CommandListUpdateAction action = jda.updateCommands();
-        action.addCommands(new CommandData("say", "Отправить сообщение")
-                .addOptions(new OptionData(OptionType.STRING, "message", "The message to send").setRequired(true))).complete();
         //команды
         registerCommands();
         //Анимированный статус
@@ -97,5 +93,8 @@ public class Main extends ListenerAdapter {
     }
     public static String getIcon(){
         return "https://sun6-22.userapi.com/s/v1/ig2/VQ02V7DnGvxTTXKs9514MUDBUUWFvtn9WYPCp8M3kwkhE7YFawuLWjZu4H76AnJvN6FI2dotf-BqGZjlj6Tfc3YR.jpg?size=400x400&quality=96&crop=0,2,1077,1077&ava=1";
+    }
+    public static StringBuilder getStringBuilder(){
+        return new StringBuilder();
     }
 }

@@ -10,7 +10,7 @@ import net.dv8tion.jda.api.entities.*;
 
 public class StopCommand implements ServerCommand {
     @Override
-    public void performCommand(String[] arguments, Guild guild, Member member, TextChannel textChannel, Message message, VoiceChannel voiceChannel) {
+    public void performCommand(String[] arguments, Guild guild, Member member, MessageChannel textChannel, Message message, AudioChannel voiceChannel) {
         if (arguments.length == 1) {
             if (voiceChannel != null) {
                 MusicController musicController = Main.getAudioManager().getMusicController(voiceChannel.getGuild().getIdLong());

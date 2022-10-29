@@ -1,9 +1,18 @@
 package com.justeryt.discordbot.commands.commands;
 
 import net.dv8tion.jda.api.entities.*;
-import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
+import net.dv8tion.jda.api.events.guild.GuildReadyEvent;
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import net.dv8tion.jda.api.interactions.commands.OptionType;
+import net.dv8tion.jda.api.interactions.commands.build.CommandData;
+import net.dv8tion.jda.api.interactions.commands.build.Commands;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class CommandManager extends ListenerAdapter {
 
@@ -52,14 +61,14 @@ public class CommandManager extends ListenerAdapter {
     }
 
     @Override
-    public void onGuildMessageReceived(@NotNull GuildMessageReceivedEvent event) {
+    public void onMessageReceived(@NotNull MessageReceivedEvent event) {
         if (!event.getMember().getUser().isBot()) {
             String[] arguments = event.getMessage().getContentRaw().split(" ");
             Guild guild = event.getGuild();
             Member member = event.getMember();
-            TextChannel textChannel = event.getChannel();
+            MessageChannel textChannel = event.getChannel();
             Message message = event.getMessage();
-            VoiceChannel voiceChannel = event.getGuild().getSelfMember().getVoiceState().getChannel();
+            AudioChannel voiceChannel = event.getGuild().getSelfMember().getVoiceState().getChannel();
 
             switch (arguments[0]) {
                 case "!help":
@@ -124,6 +133,43 @@ public class CommandManager extends ListenerAdapter {
                     break;
             }
         }
+    }
+
+    @Override
+    public void onSlashCommandInteraction(@NotNull SlashCommandInteractionEvent event) {
+        String command = event.getName();
+        String[] arguments = new String[2];
+        Guild guild = event.getGuild();
+        Member member = event.getMember();
+        AudioChannel audioChannel = event.getGuild().getSelfMember().getVoiceState().getChannel();
+        MessageChannel messageChannel = event.getMessageChannel();
+        Message message = null;
+        switch (command) {
+            case "play":
+                arguments[0] = "!play";
+                arguments[1] = Arrays.toString(event.getOption("url").getAsString().split(" "));
+                playCommand.performCommand(arguments, guild, member, messageChannel, message, audioChannel);
+                event.reply("Запускаю");
+                break;
+            case "welcome":
+                String userTag = event.getUser().getName();
+                event.reply("Добро пожаловать на сервер шизофрения **" + userTag + "**!").queue();
+                break;
+            case "help":
+                helpCommands.performCommand(arguments, guild, member, messageChannel, message, audioChannel);
+                event.reply("Выполняю");
+                break;
+            case "join":
+        }
+    }
+    @Override
+    public void onGuildReady(@NotNull GuildReadyEvent event) {
+        List<CommandData> commandData = new ArrayList<>();
+        commandData.add(Commands.slash("welcome", "Поприветствует такого мудака как ты"));
+        commandData.add(Commands.slash("play", "Играй балалайка, играй").addOption(OptionType.STRING, "url",
+                "Ссылка на музыку", true));
+        commandData.add(Commands.slash("help", "Помощь такому уебану как ты"));
+        event.getGuild().updateCommands().addCommands(commandData).queue();
     }
 }
 

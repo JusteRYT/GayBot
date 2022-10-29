@@ -9,7 +9,7 @@ import net.dv8tion.jda.api.entities.*;
 public class HelpCommands implements ServerCommand {
 
     @Override
-    public void performCommand(String[] arguments, Guild guild, Member member, TextChannel textChannel, Message message, VoiceChannel voiceChannel) {
+    public void performCommand(String[] arguments, Guild guild, Member member, MessageChannel textChannel, Message message, AudioChannel voiceChannel) {
         EmbedCreate.createEmbedHelp("Вот что я умею","""
                 **🎉!help** - *Ну типо все команды*
                 **🎶!bass** - *Добавляет бассы в музло ыыыы*

@@ -10,7 +10,7 @@ import net.dv8tion.jda.api.entities.*;
 
 public class BassCommand implements ServerCommand {
     @Override
-    public void performCommand(String[] arguments, Guild guild, Member member, TextChannel textChannel, Message message, VoiceChannel voiceChannel) {
+    public void performCommand(String[] arguments, Guild guild, Member member, MessageChannel textChannel, Message message, AudioChannel voiceChannel) {
         try {
             if (arguments.length == 2) {
                 float precent = Float.parseFloat(arguments[1]);

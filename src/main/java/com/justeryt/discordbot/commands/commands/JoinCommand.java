@@ -7,7 +7,7 @@ import net.dv8tion.jda.api.managers.AudioManager;
 
 public class JoinCommand implements ServerCommand {
     @Override
-    public void performCommand(String[] arguments, Guild guild, Member member, TextChannel textChannel, Message message, VoiceChannel voiceChannel) {
+    public void performCommand(String[] arguments, Guild guild, Member member, MessageChannel textChannel, Message message, AudioChannel voiceChannel) {
         GuildVoiceState guildVoiceState;
         if (arguments.length == 1) {
             if ((guildVoiceState = member.getVoiceState()) != null) {

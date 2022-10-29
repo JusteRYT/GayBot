@@ -21,7 +21,7 @@ import java.awt.*;
 public class PlayCommand implements ServerCommand {
 
     @Override
-    public void performCommand(String[] arguments, Guild guild, Member member, TextChannel textChannel, Message message, VoiceChannel voiceChannel) {
+    public void performCommand(String[] arguments, Guild guild, Member member, MessageChannel textChannel, Message message, AudioChannel voiceChannel) {
         if (arguments.length == 2) { //! play <url>
             GuildVoiceState voiceState;
             if ((voiceState = member.getVoiceState()) != null) {
@@ -33,9 +33,9 @@ public class PlayCommand implements ServerCommand {
                     player.addListener(scheduler);
                     AudioManager audioManager = voiceState.getGuild().getAudioManager();
                     audioManager.openAudioConnection(voiceChannel);
-                    StringBuilder builder = new StringBuilder();
-                    for (int i = 1; i < arguments.length; i++) builder.append(arguments[i] + " ");
-                    String rawLink = builder.toString().trim();
+                    StringBuilder builder = Main.getStringBuilder();
+                    for (int i = 1; i < arguments.length; i++) builder.append(arguments[i]).append(" ");
+                    String rawLink = builder.toString().trim().replace("]", "").replace("[", "");
                     if (rawLink.equals("gachi")) {
                         rawLink = "https://www.youtube.com/playlist?list=PLG_SPmHF0hBfgHU60KwF-2Y4lDX4FD1vu";
                     }
@@ -52,6 +52,7 @@ public class PlayCommand implements ServerCommand {
 //                        rawLink = "https://s237iva.storage.yandex.net/get-mp3/82713ae21b0aad01fdb7148e147f89ae/0005ebc7882600e5/rmusic/U2FsdGVkX1-qkOKKrNNWLPcEncHyFrpzX6qv0197UssK6nE4S1sPBbdUXBEW95sgCdDXJ0XzYTQrO2sXgBkIY85JMRDyUyayDdG_8qSyCA4/a5babdf47d81f634af2ccf0646df154a7a8c144177d3741187b0f1833504fe1e?track-id=43790789&play=false";
 //                    }
                     final String url = rawLink;
+                    System.out.println(url);
                     String finalRawLink = rawLink;
                     audioPlayerManager.loadItem(url, new AudioLoadResultHandler() {
                         @Override

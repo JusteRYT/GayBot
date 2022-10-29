@@ -13,7 +13,7 @@ import java.util.ArrayList;
 
 public class SkipCommand implements ServerCommand {
     @Override
-    public void performCommand(String[] arguments, Guild guild, Member member, TextChannel textChannel, Message message, VoiceChannel voiceChannel) {
+    public void performCommand(String[] arguments, Guild guild, Member member, MessageChannel textChannel, Message message, AudioChannel voiceChannel) {
         if (arguments.length == 1) {
             if (voiceChannel != null) {
                 MusicController musicController = Main.getAudioManager().getMusicController(voiceChannel.getGuild().getIdLong());

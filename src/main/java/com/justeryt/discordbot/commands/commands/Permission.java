@@ -7,7 +7,7 @@ import net.dv8tion.jda.api.exceptions.InsufficientPermissionException;
 
 public class Permission implements ServerCommand {
     @Override
-    public void performCommand(String[] arguments, Guild guild, Member member, TextChannel textChannel, Message message, VoiceChannel voiceChannel)  {
+    public void performCommand(String[] arguments, Guild guild, Member member, MessageChannel textChannel, Message message, AudioChannel voiceChannel)  {
         try {
             message.delete().queue();
             if (member.hasPermission(net.dv8tion.jda.api.Permission.ADMINISTRATOR)){

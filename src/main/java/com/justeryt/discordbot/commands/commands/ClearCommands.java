@@ -11,7 +11,7 @@ import java.util.List;
 public class ClearCommands implements ServerCommand {
 
     @Override
-    public void performCommand(String[] arguments, Guild guild, Member member, TextChannel textChannel, Message message, VoiceChannel voiceChannel) {
+    public void performCommand(String[] arguments, Guild guild, Member member, MessageChannel textChannel, Message message, AudioChannel voiceChannel) {
         if (arguments.length < 2) {
             EmbedCreate.createEmbed("🤡Извините мистер, но вы бы не могли, сука ,после команды ввести число, блять", textChannel);
         } else {
@@ -22,7 +22,7 @@ public class ClearCommands implements ServerCommand {
                     EmbedCreate.createEmbed("😅Прости, но ты не дал мне права на это", textChannel);
                 }
                 List<Message> messageList = textChannel.getHistory().retrievePast(Integer.parseInt(arguments[1])).complete();
-                textChannel.deleteMessages(messageList).queue();
+                textChannel.purgeMessages(messageList);
                 EmbedCreate.createEmbedClear("☺Кароча я удалил твою жизнь, мать, собаку и ту шлюху, о которой не знает твоя девушка!", textChannel);
             } catch (IllegalArgumentException exception) {
                 if (exception.toString().startsWith("java.lang.IllegalArgumentException: Message retrieval")) {
