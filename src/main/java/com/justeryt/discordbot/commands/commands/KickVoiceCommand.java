@@ -12,13 +12,18 @@ public class KickVoiceCommand implements ServerCommand {
         try {
             if (arguments.length == 2) {
                 Member target = message.getMentionedMembers().get(0);
+                GuildVoiceState voiceState;
                 if (target != null) {
                     if (member.hasPermission(ADMINISTRATOR)) {
-                        if (target.getVoiceState() != null) {
-                            guild.kickVoiceMember(target).queue();
-                            EmbedCreate.createEmbed("✅Кикнул лоха: " + target.getUser().getName()
-                                    + " с голосового канала", textChannel);
-                        } else {
+                        if ((voiceState = target.getVoiceState()) != null) {
+                            if (voiceState.getChannel() != null) {
+                                guild.kickVoiceMember(target).queue();
+                                EmbedCreate.createEmbed("✅Кикнул лоха: " + target.getUser().getName()
+                                        + " с голосового канала", textChannel);
+                            } else {
+                                EmbedCreate.createEmbed("😅Его же нет в голосовом!!!", textChannel);
+                            }
+                        }else {
                             EmbedCreate.createEmbed("😅Его же нет в голосовом!!!", textChannel);
                         }
                     } else {
