@@ -52,7 +52,6 @@ public class PlayCommand implements ServerCommand {
 //                        rawLink = "https://s237iva.storage.yandex.net/get-mp3/82713ae21b0aad01fdb7148e147f89ae/0005ebc7882600e5/rmusic/U2FsdGVkX1-qkOKKrNNWLPcEncHyFrpzX6qv0197UssK6nE4S1sPBbdUXBEW95sgCdDXJ0XzYTQrO2sXgBkIY85JMRDyUyayDdG_8qSyCA4/a5babdf47d81f634af2ccf0646df154a7a8c144177d3741187b0f1833504fe1e?track-id=43790789&play=false";
 //                    }
                     final String url = rawLink;
-                    System.out.println(url);
                     String finalRawLink = rawLink;
                     audioPlayerManager.loadItem(url, new AudioLoadResultHandler() {
                         @Override
