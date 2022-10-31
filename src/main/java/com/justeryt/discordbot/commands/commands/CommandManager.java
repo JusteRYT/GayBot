@@ -1,5 +1,6 @@
 package com.justeryt.discordbot.commands.commands;
 
+import com.justeryt.discordbot.Main;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.events.guild.GuildReadyEvent;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
@@ -36,6 +37,7 @@ public class CommandManager extends ListenerAdapter {
     private final VersionCommand versionCommand;
     private final BassCommand bassCommand;
     private final KickVoiceCommand kickVoiceCommand;
+    private final JailCommand jailCommand;
 
     public CommandManager() {
         this.helpCommands = new HelpCommands();
@@ -58,6 +60,7 @@ public class CommandManager extends ListenerAdapter {
         this.versionCommand = new VersionCommand();
         this.bassCommand = new BassCommand();
         this.kickVoiceCommand = new KickVoiceCommand();
+        this.jailCommand = new JailCommand();
     }
 
     @Override
@@ -131,6 +134,9 @@ public class CommandManager extends ListenerAdapter {
                 case "!kickVoice":
                     kickVoiceCommand.performCommand(arguments, guild, member, textChannel, message, voiceChannel);
                     break;
+                case "!jail":
+                    jailCommand.performCommand(arguments, guild, member, textChannel, message, voiceChannel);
+                    break;
             }
         }
     }
@@ -149,19 +155,24 @@ public class CommandManager extends ListenerAdapter {
                 arguments[0] = "!play";
                 arguments[1] = Arrays.toString(event.getOption("url").getAsString().split(" "));
                 playCommand.performCommand(arguments, guild, member, messageChannel, message, audioChannel);
-                event.reply("Запускаю");
+                event.reply("Запускаю").queue();
                 break;
             case "welcome":
                 String userTag = event.getUser().getName();
                 event.reply("Добро пожаловать на сервер шизофрения **" + userTag + "**!").queue();
                 break;
             case "help":
+                event.reply("Выполняю!").queue();
                 helpCommands.performCommand(arguments, guild, member, messageChannel, message, audioChannel);
-                event.reply("Выполняю");
                 break;
-            case "join":
+            case "test":
+                List<Role> list = Main.getJda().getRoles();
+                for(Role role: list){
+                    System.out.println(role);
+                }
         }
     }
+
     @Override
     public void onGuildReady(@NotNull GuildReadyEvent event) {
         List<CommandData> commandData = new ArrayList<>();
@@ -169,6 +180,7 @@ public class CommandManager extends ListenerAdapter {
         commandData.add(Commands.slash("play", "Играй балалайка, играй").addOption(OptionType.STRING, "url",
                 "Ссылка на музыку", true));
         commandData.add(Commands.slash("help", "Помощь такому уебану как ты"));
+        commandData.add(Commands.slash("test","test"));
         event.getGuild().updateCommands().addCommands(commandData).queue();
     }
 }
