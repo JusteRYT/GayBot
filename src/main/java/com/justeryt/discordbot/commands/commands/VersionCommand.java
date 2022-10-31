@@ -8,7 +8,7 @@ public class VersionCommand implements ServerCommand {
     @Override
     public void performCommand(String[] arguments, Guild guild, Member member, MessageChannel textChannel, Message message, AudioChannel voiceChannel) {
         if (arguments.length == 1){
-            EmbedCreate.createEmbed("Версия:1.05", textChannel);
+            EmbedCreate.createEmbed("Версия:1.06", textChannel);
         }
     }
 }
