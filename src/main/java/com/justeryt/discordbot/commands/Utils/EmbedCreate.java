@@ -4,7 +4,6 @@ import com.justeryt.discordbot.Main;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.entities.MessageChannel;
-import net.dv8tion.jda.api.entities.TextChannel;
 
 import java.awt.*;
 import java.util.concurrent.TimeUnit;
