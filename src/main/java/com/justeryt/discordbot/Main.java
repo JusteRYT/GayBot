@@ -22,6 +22,8 @@ import net.dv8tion.jda.api.utils.cache.CacheFlag;
 
 import javax.security.auth.login.LoginException;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Random;
 import java.util.Timer;
 
 public class Main extends ListenerAdapter {
@@ -96,5 +98,8 @@ public class Main extends ListenerAdapter {
     }
     public static StringBuilder getStringBuilder(){
         return new StringBuilder();
+    }
+    public static ArrayList<String> getList(){
+        return new ArrayList<>();
     }
 }
