@@ -4,11 +4,11 @@ import com.justeryt.discordbot.commands.Utils.EmbedCreate;
 import net.dv8tion.jda.api.entities.AudioChannel;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.TextChannel;
-import net.dv8tion.jda.api.entities.VoiceChannel;
 import net.dv8tion.jda.api.events.guild.voice.GuildVoiceJoinEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
 import java.util.Objects;
 
 public class onJoin extends ListenerAdapter {
@@ -19,9 +19,10 @@ public class onJoin extends ListenerAdapter {
     private final long Ancverg = 278177107182485504L;
     private final long Laxno = 398228323249029121L;
     private final long marycya = 996030565717397625L;
+    private final long Dima = 294881802676469761L;
 
     @Override
-    public void onGuildVoiceJoin(@NotNull GuildVoiceJoinEvent event){
+    public void onGuildVoiceJoin(@NotNull GuildVoiceJoinEvent event) {
         Member member = event.getMember();
         TextChannel textChannel = event.getJDA().getTextChannelById(529237596602105867L);
         AudioChannel voiceChannel = Objects.requireNonNull(member.getVoiceState()).getChannel();
@@ -72,6 +73,12 @@ public class onJoin extends ListenerAdapter {
                             "**Вот кто свет моих очей:  **"
                             , member.getUser().getAvatarUrl(), "Зашёл на канал: " + voiceChannel.getName(),
                             textChannel);
+                }
+                if (member.getIdLong() == Dima) {
+                    EmbedCreate.createEmbedOnJoin("**Ну вы поглядите на него, с портфелем в туфлях и поганяло коронное: **",
+                            member.getUser().getName(), "**Когда то он малолетнюю дочь увел у отца и трахнул под забором, **" +
+                                    "**так что парни бойтесь**", member.getUser().getAvatarUrl(), "Зашёл на канал: " + voiceChannel.getName()
+                            , textChannel);
                 }
             }
         }
