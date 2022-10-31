@@ -14,6 +14,7 @@ import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.entities.Activity;
+import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.utils.ChunkingFilter;
@@ -23,7 +24,7 @@ import net.dv8tion.jda.api.utils.cache.CacheFlag;
 import javax.security.auth.login.LoginException;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Random;
+import java.util.List;
 import java.util.Timer;
 
 public class Main extends ListenerAdapter {
@@ -40,7 +41,7 @@ public class Main extends ListenerAdapter {
         jdaBuilder.setStatus(OnlineStatus.ONLINE);
         //Статус бота (Во что играет или просто цитатка)
         jdaBuilder.setActivity(Activity.playing("Привет я твой персональный бот!"));
-        jdaBuilder.addEventListeners(new onJoin(),new onMemberJoin(), new OnShutDown(),new onReadyBot());
+        jdaBuilder.addEventListeners(new onJoin(), new onMemberJoin(), new OnShutDown(), new onReadyBot());
         jdaBuilder.enableIntents(GatewayIntent.GUILD_MEMBERS, GatewayIntent.GUILD_MESSAGES, GatewayIntent.GUILD_PRESENCES);
         jdaBuilder.setMemberCachePolicy(MemberCachePolicy.ALL);
         jdaBuilder.setChunkingFilter(ChunkingFilter.ALL);
@@ -93,13 +94,16 @@ public class Main extends ListenerAdapter {
         }
         return null;
     }
-    public static String getIcon(){
+
+    public static String getIcon() {
         return "https://sun6-22.userapi.com/s/v1/ig2/VQ02V7DnGvxTTXKs9514MUDBUUWFvtn9WYPCp8M3kwkhE7YFawuLWjZu4H76AnJvN6FI2dotf-BqGZjlj6Tfc3YR.jpg?size=400x400&quality=96&crop=0,2,1077,1077&ava=1";
     }
-    public static StringBuilder getStringBuilder(){
+
+    public static StringBuilder getStringBuilder() {
         return new StringBuilder();
     }
-    public static ArrayList<String> getList(){
+
+    public static ArrayList<String> getList() {
         return new ArrayList<>();
     }
 }
