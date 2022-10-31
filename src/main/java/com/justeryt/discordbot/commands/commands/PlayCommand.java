@@ -1,6 +1,7 @@
 package com.justeryt.discordbot.commands.commands;
 
 import com.justeryt.discordbot.Main;
+import com.justeryt.discordbot.commands.ListMusic.TrackList;
 import com.justeryt.discordbot.commands.Utils.EmbedCreate;
 import com.justeryt.discordbot.commands.Utils.Utils;
 import com.justeryt.discordbot.commands.types.ServerCommand;
@@ -37,22 +38,18 @@ public class PlayCommand implements ServerCommand {
                     for (int i = 1; i < arguments.length; i++) builder.append(arguments[i]).append(" ");
                     String rawLink = builder.toString().trim().replace("]", "").replace("[", "");
                     if (rawLink.equals("gachi")) {
-                        rawLink = "https://www.youtube.com/playlist?list=PLG_SPmHF0hBfgHU60KwF-2Y4lDX4FD1vu";
+                        rawLink = TrackList.getGachi();
                     }
                     if (rawLink.equals("GachiRadio")) {
-                        rawLink = "https://www.youtube.com/watch?v=J5M0ZWKVhC0";
+                        rawLink = TrackList.getGachiRadio();
                     }
                     if (rawLink.equals("phonk")) {
-                        rawLink = "https://www.youtube.com/watch?v=ao4RCon11eY&list=PLNrz3YPMGMM6uvULJYIdLFflAi_xxah0x&index=2";
+                        rawLink = TrackList.getPhonk();
                     }
                     if (!rawLink.startsWith("https")) {
                         rawLink = "ytsearch: " + rawLink;
                     }
-//                    if (rawLink.equals("test")) {
-//                        rawLink = "https://s237iva.storage.yandex.net/get-mp3/82713ae21b0aad01fdb7148e147f89ae/0005ebc7882600e5/rmusic/U2FsdGVkX1-qkOKKrNNWLPcEncHyFrpzX6qv0197UssK6nE4S1sPBbdUXBEW95sgCdDXJ0XzYTQrO2sXgBkIY85JMRDyUyayDdG_8qSyCA4/a5babdf47d81f634af2ccf0646df154a7a8c144177d3741187b0f1833504fe1e?track-id=43790789&play=false";
-//                    }
                     final String url = rawLink;
-                    String finalRawLink = rawLink;
                     audioPlayerManager.loadItem(url, new AudioLoadResultHandler() {
                         @Override
                         public void trackLoaded(AudioTrack audioTrack) {
@@ -76,7 +73,7 @@ public class PlayCommand implements ServerCommand {
                                 int cost = audioPlaylist.getTracks().size();
                                 EmbedCreate.createEmbedPlaylistLoad("▶Аудиоплейлист загружен: " + audioPlaylist.getName(),
                                         "🎵Длительность: " + Utils.formatLongDuration(time),
-                                        "GayBot", Main.getIcon(), Color.ORANGE, textChannel, cost, finalRawLink, audioPlaylist.getName());
+                                        "GayBot", Main.getIcon(), Color.ORANGE, textChannel, cost, url, audioPlaylist.getName());
                                 for (AudioTrack audioTrack : audioPlaylist.getTracks()) {
                                     scheduler.addToQueue(audioTrack);
                                 }
