@@ -96,7 +96,10 @@ public class Main extends ListenerAdapter {
     }
 
     public static String getIcon() {
-        return "https://sun6-22.userapi.com/s/v1/ig2/VQ02V7DnGvxTTXKs9514MUDBUUWFvtn9WYPCp8M3kwkhE7YFawuLWjZu4H76AnJvN6FI2dotf-BqGZjlj6Tfc3YR.jpg?size=400x400&quality=96&crop=0,2,1077,1077&ava=1";
+        return "https://goo.su/vZAAi";
+    }
+    public static String getImageMusic(){
+        return "https://thumbs.gfycat.com/OpulentShortAfricanporcupine-size_restricted.gif";
     }
 
     public static StringBuilder getStringBuilder() {
