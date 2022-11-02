@@ -18,7 +18,6 @@ import net.dv8tion.jda.api.managers.AudioManager;
 
 import java.awt.*;
 
-
 public class PlayCommand implements ServerCommand {
 
     @Override
@@ -38,16 +37,19 @@ public class PlayCommand implements ServerCommand {
                     for (int i = 1; i < arguments.length; i++) builder.append(arguments[i]).append(" ");
                     String rawLink = builder.toString().trim().replace("]", "").replace("[", "");
                     if (rawLink.equals("gachi")) {
-                        rawLink = TrackList.getGachi();
+                        rawLink = TrackList.getGachiLink();
                     }
                     if (rawLink.equals("GachiRadio")) {
                         rawLink = TrackList.getGachiRadio();
                     }
                     if (rawLink.equals("phonk")) {
-                        rawLink = TrackList.getPhonk();
+                        rawLink = TrackList.getPhonkLink();
                     }
                     if (!rawLink.startsWith("https")) {
                         rawLink = "ytsearch: " + rawLink;
+                    }
+                    if (!rawLink.startsWith("my")){
+                        rawLink = TrackList.getMyPlaylist();
                     }
                     final String url = rawLink;
                     audioPlayerManager.loadItem(url, new AudioLoadResultHandler() {
