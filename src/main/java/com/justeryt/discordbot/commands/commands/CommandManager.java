@@ -1,16 +1,22 @@
 package com.justeryt.discordbot.commands.commands;
 
 import com.justeryt.discordbot.Main;
+import com.justeryt.discordbot.commands.ListMusic.TrackList;
+import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.events.guild.GuildReadyEvent;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import net.dv8tion.jda.api.interactions.commands.build.Commands;
+import net.dv8tion.jda.api.interactions.components.buttons.Button;
 import org.jetbrains.annotations.NotNull;
 
+import java.awt.*;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -144,18 +150,62 @@ public class CommandManager extends ListenerAdapter {
     @Override
     public void onSlashCommandInteraction(@NotNull SlashCommandInteractionEvent event) {
         String command = event.getName();
+        EmbedBuilder embedBuilder = new EmbedBuilder();
         String[] arguments = new String[2];
         Guild guild = event.getGuild();
         Member member = event.getMember();
         AudioChannel audioChannel = event.getGuild().getSelfMember().getVoiceState().getChannel();
+        AudioChannel audioChannel1 = member.getVoiceState().getChannel();
         MessageChannel messageChannel = event.getMessageChannel();
         Message message = null;
+        embedBuilder.setFooter("GayBot", Main.getIcon());
+        embedBuilder.setColor(Color.orange);
         switch (command) {
             case "play":
-                arguments[0] = "!play";
-                arguments[1] = Arrays.toString(event.getOption("url").getAsString().split(" "));
-                playCommand.performCommand(arguments, guild, member, messageChannel, message, audioChannel);
-                event.reply("Запускаю").queue();
+                String url = Arrays.toString(event.getOption("url").getAsString().split(" ")).replace("["
+                        , " ").replace("]", " ");
+                if (url.equals(" gachi ")) {
+                    embedBuilder.setTitle("Выберите плейлист:");
+                    embedBuilder.addField("🔊1 Плейлист:", "🎵 Коллекция Крепкой Мужской на 10+ часов гачи 🎵",false);
+                    embedBuilder.addField("🔊2 Плейлист:", "🎵 Gachi золотой пантеон 🎵",false);
+                    embedBuilder.addField("🔊3 Плейлист:", "🎵 Гачи/gachi 🎵",false);
+                    embedBuilder.setImage(Main.getImageMusic());
+                    embedBuilder.setTimestamp(Instant.now());
+                    event.replyEmbeds(embedBuilder.build()).addActionRow(Button.primary("Gachi", "Плейлист 1"),
+                            Button.primary("Gachi1", "Плейлист 2"), Button.primary("Gachi2",
+                                    "Плейлист 3")).queue();
+                }
+                if (url.equals(" phonk ")) {
+                    embedBuilder.setTitle("Выберите плейлист:");
+                    embedBuilder.addField("🔊1 Плейлист:", "🎵 Phonk 🎵",false);
+                    embedBuilder.addField("🔊2 Плейлист:", "🎵 Best Phonk playlist 🎵",false);
+                    embedBuilder.addField("🔊3 Плейлист:", "🎵 AGGRESSIVE PHONK 🎵",false);
+                    embedBuilder.setImage(Main.getImageMusic());
+                    embedBuilder.setTimestamp(Instant.now());
+                    event.replyEmbeds(embedBuilder.build()).addActionRow(Button.primary("Phonk", "Плейлист 1"),
+                            Button.primary("Phonk1", "Плейлист 2"), Button.primary("Phonk2",
+                                    "Плейлист 3")).queue();
+                }
+                if (url.equals(" GachiRadio ")) {
+                    if (audioChannel1 != null) {
+                        arguments[0] = "!play";
+                        arguments[1] = TrackList.getGachiRadio();
+                        playCommand.performCommand(arguments, guild, member, messageChannel, message, audioChannel);
+                        event.reply("Запускаю").queue();
+                    } else {
+                        event.reply("📛Вас нет в голосовом канале").queue();
+                    }
+                }
+                if (url.equals(" my ")){
+                    if (audioChannel1 != null) {
+                        arguments[0] = "!play";
+                        arguments[1] = TrackList.getMyPlaylist();
+                        playCommand.performCommand(arguments, guild, member, messageChannel, message, audioChannel);
+                        event.reply("Запускаю").queue();
+                    } else {
+                        event.reply("📛Вас нет в голосовом канале").queue();
+                    }
+                }
                 break;
             case "welcome":
                 String userTag = event.getUser().getName();
@@ -165,11 +215,6 @@ public class CommandManager extends ListenerAdapter {
                 event.reply("Выполняю!").queue();
                 helpCommands.performCommand(arguments, guild, member, messageChannel, message, audioChannel);
                 break;
-            case "test":
-                List<Role> list = Main.getJda().getRoles();
-                for(Role role: list){
-                    System.out.println(role);
-                }
         }
     }
 
@@ -183,5 +228,73 @@ public class CommandManager extends ListenerAdapter {
         commandData.add(Commands.slash("test","test"));
         event.getGuild().updateCommands().addCommands(commandData).queue();
     }
-}
 
+    @Override
+    public void onButtonInteraction(@NotNull ButtonInteractionEvent event) {
+        String[] arguments = new String[2];
+        Guild guild = event.getGuild();
+        Member member = event.getMember();
+        AudioChannel audioChannel = event.getGuild().getSelfMember().getVoiceState().getChannel();
+        AudioChannel audioChannel1 = member.getVoiceState().getChannel();
+        MessageChannel messageChannel = event.getMessageChannel();
+        Message message = null;
+        ArrayList<String> listGachi = TrackList.getGachi();
+        ArrayList<String> listPhonk = TrackList.getPhonk();
+        if (event.getComponentId().equals("Gachi")) {
+            if(audioChannel1 != null) {
+                arguments[0] = "!play";
+                arguments[1] = listGachi.get(0);
+                playCommand.performCommand(arguments, guild, member, messageChannel, message, audioChannel);
+                event.reply("✅Запускаю").queue();
+            } else {
+                event.reply("📛Вас нет в голосовом канале").queue();
+            }
+        } else if (event.getComponentId().equals("Gachi1")) {
+            if (audioChannel1 != null) {
+                arguments[0] = "!play";
+                arguments[1] = listGachi.get(1);
+                playCommand.performCommand(arguments, guild, member, messageChannel, message, audioChannel);
+                event.reply("✅Запускаю").queue();
+            } else {
+                event.reply("📛Вас нет в голосовом канале").queue();
+            }
+        } else if (event.getComponentId().equals("Gachi2")) {
+            if (audioChannel1 != null) {
+                arguments[0] = "!play";
+                arguments[1] = listGachi.get(2);
+                playCommand.performCommand(arguments, guild, member, messageChannel, message, audioChannel);
+                event.reply("✅Запускаю").queue();
+            } else {
+                event.reply("📛Вас нет в голосовом канале").queue();
+            }
+        } else if (event.getComponentId().equals("Phonk")) {
+            if (audioChannel1 != null) {
+                arguments[0] = "!play";
+                arguments[1] = listPhonk.get(0);
+                playCommand.performCommand(arguments, guild, member, messageChannel, message, audioChannel);
+                event.reply("✅Запускаю").queue();
+            } else {
+                event.reply("📛Вас нет в голосовом канале").queue();
+            }
+        } else if (event.getComponentId().equals("Phonk1")) {
+            if (audioChannel1 != null) {
+                arguments[0] = "!play";
+                arguments[1] = listPhonk.get(1);
+                playCommand.performCommand(arguments, guild, member, messageChannel, message, audioChannel);
+                event.reply("✅Запускаю").queue();
+            } else {
+                event.reply("📛Вас нет в голосовом канале").queue();
+            }
+
+        } else if (event.getComponentId().equals("Phonk2")) {
+            if (audioChannel1 != null) {
+                arguments[0] = "!play";
+                arguments[1] = listPhonk.get(2);
+                playCommand.performCommand(arguments, guild, member, messageChannel, message, audioChannel);
+                event.reply("✅Запускаю").queue();
+            } else {
+                event.reply("📛Вас нет в голосовом канале").queue();
+            }
+        }
+    }
+}
