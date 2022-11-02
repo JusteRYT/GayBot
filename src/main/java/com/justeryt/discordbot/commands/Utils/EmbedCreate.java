@@ -6,6 +6,7 @@ import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.entities.MessageChannel;
 
 import java.awt.*;
+import java.time.Instant;
 import java.util.concurrent.TimeUnit;
 
 public abstract class EmbedCreate {
@@ -20,6 +21,7 @@ public abstract class EmbedCreate {
         em.setTitle(SetTitle);
         em.setColor(Color.orange);
         em.setFooter("GayBot", Main.getIcon());
+        em.setTimestamp(Instant.now());
         textChannel.sendMessageEmbeds(em.build()).queue(message -> message.delete().queueAfter(20, TimeUnit.SECONDS));
     }
 
@@ -28,15 +30,8 @@ public abstract class EmbedCreate {
         em.setTitle(SetTitle);
         em.setColor(Color.orange);
         em.setFooter("GayBot", Main.getIcon());
+        em.setTimestamp(Instant.now());
         textChannel.sendMessageEmbeds(em.build()).queue(message -> message.delete().queueAfter(15, TimeUnit.SECONDS));
-    }
-
-    public static void createEmbedBan(String SetTitle, MessageChannel textChannel) {
-        EmbedBuilder em = AccessEmbed();
-        em.setTitle(SetTitle);
-        em.setColor(Color.orange);
-        em.setFooter("GayBot", Main.getIcon());
-        textChannel.sendMessageEmbeds(em.build()).queue(message -> message.delete().queueAfter(20, TimeUnit.SECONDS));
     }
 
     public static void createEmbedTrackScheduler(String setTitle, String Description, String Footer, String Icon,
@@ -47,6 +42,7 @@ public abstract class EmbedCreate {
         embedBuilder.setFooter(Footer, Icon);
         embedBuilder.setImage(Image);
         embedBuilder.setColor(color);
+        embedBuilder.setTimestamp(Instant.now());
         textChannel.sendMessageEmbeds(embedBuilder.build()).queue(message -> message.delete().queueAfter(time, TimeUnit.MILLISECONDS));
     }
 
@@ -58,6 +54,7 @@ public abstract class EmbedCreate {
         embedBuilder.addField("Длительность:", addField1, true);
         embedBuilder.setFooter("GayBot", Main.getIcon());
         embedBuilder.setColor(Color.orange);
+        embedBuilder.setTimestamp(Instant.now());
         textChannel.sendMessageEmbeds(embedBuilder.build()).queue(message -> message.delete().queueAfter(20, TimeUnit.SECONDS));
     }
     public static void createEmbedPlaylistLoad(String title, String description, String footer, String icon
@@ -69,6 +66,7 @@ public abstract class EmbedCreate {
         embedBuilder.addField("Количество треков: ", String.valueOf(cost), true);
         embedBuilder.setFooter(footer, icon);
         embedBuilder.setColor(color);
+        embedBuilder.setTimestamp(Instant.now());
         textChannel.sendMessageEmbeds(embedBuilder.build()).queue(message -> message.delete().queueAfter(30, TimeUnit.SECONDS));
     }
 
@@ -78,6 +76,7 @@ public abstract class EmbedCreate {
         embedBuilder.setDescription(Description);
         embedBuilder.setColor(Color.orange);
         embedBuilder.setFooter(Footer, Icon);
+        embedBuilder.setTimestamp(Instant.now());
         textChannel.sendMessageEmbeds(embedBuilder.build()).queue(message -> message.delete().queueAfter(time, TimeUnit.SECONDS));
     }
 
@@ -93,6 +92,7 @@ public abstract class EmbedCreate {
         embedBuilder.addField("Статус онлайна: ", String.valueOf(addField4), true);
         embedBuilder.setColor(Color.orange);
         embedBuilder.setFooter("GayBot", Main.getIcon());
+        embedBuilder.setTimestamp(Instant.now());
         textChannel.sendMessageEmbeds(embedBuilder.build()).queue(message -> message.delete().queueAfter(30, TimeUnit.SECONDS));
     }
 
@@ -104,6 +104,7 @@ public abstract class EmbedCreate {
         embedBuilder.addField(text, addField, true);
         embedBuilder.setFooter("GayBot", Main.getIcon());
         embedBuilder.setColor(Color.orange);
+        embedBuilder.setTimestamp(Instant.now());
         textChannel.sendMessageEmbeds(embedBuilder.build()).queue(message -> message.delete().queueAfter(30, TimeUnit.SECONDS));
     }
 
@@ -115,6 +116,7 @@ public abstract class EmbedCreate {
         embedBuilder.addField("Первоначальная роль: ", roles, true);
         embedBuilder.setFooter("GayBot", Main.getIcon());
         embedBuilder.setColor(Color.orange);
+        embedBuilder.setTimestamp(Instant.now());
         textChannel.sendMessageEmbeds(embedBuilder.build()).queue(message -> message.delete().queueAfter(30, TimeUnit.SECONDS));
     }
 
@@ -123,9 +125,10 @@ public abstract class EmbedCreate {
         embedBuilder.setTitle(s);
         embedBuilder.setThumbnail(icon);
         embedBuilder.setAuthor(text, uri);
-        embedBuilder.addField("Количество треков", String.valueOf(size), true);
+        embedBuilder.addField("Количество треков: ", String.valueOf(size), true);
         embedBuilder.setFooter("GayBot", Main.getIcon());
         embedBuilder.setColor(Color.orange);
+        embedBuilder.setTimestamp(Instant.now());
         textChannel.sendMessageEmbeds(embedBuilder.build()).queue(message -> message.delete().queueAfter(15, TimeUnit.SECONDS));
     }
 
@@ -134,6 +137,7 @@ public abstract class EmbedCreate {
         embedBuilder.setTitle(title);
         embedBuilder.setFooter("GayBot", Main.getIcon());
         embedBuilder.setColor(Color.orange);
+        embedBuilder.setTimestamp(Instant.now());
         textChannel.sendMessageEmbeds(embedBuilder.build()).queue();
     }
 }
