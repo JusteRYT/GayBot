@@ -24,7 +24,7 @@ public class TrackScheduler extends AudioEventAdapter {
     private final AudioPlayer player;
     private final BlockingDeque<AudioTrack> queue;
     private final TextChannel textChannel;
-    private static float[] BASS_BOOST = {
+    private static final float[] BASS_BOOST = {
             0,2f,
             0.15f,
             0.1f,
@@ -41,7 +41,7 @@ public class TrackScheduler extends AudioEventAdapter {
             -0.1f,
             -0.1f,
     };
-    private EqualizerFactory equalizerFactory;
+    private final EqualizerFactory equalizerFactory;
 
     public TrackScheduler(AudioPlayer player) {
         this.player = player;
