@@ -45,7 +45,7 @@ public class PlayCommand implements ServerCommand {
                     if (rawLink.equals("phonk")) {
                         rawLink = TrackList.getPhonkLink();
                     }
-                    if (!rawLink.equals("my")){
+                    if (rawLink.equals("my")){
                         rawLink = TrackList.getMyPlaylist();
                     }
                     if (!rawLink.startsWith("https")) {
