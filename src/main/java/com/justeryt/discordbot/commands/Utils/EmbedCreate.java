@@ -4,6 +4,7 @@ import com.justeryt.discordbot.Main;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.entities.MessageChannel;
+import net.dv8tion.jda.api.interactions.components.buttons.Button;
 
 import java.awt.*;
 import java.time.Instant;
@@ -57,8 +58,9 @@ public abstract class EmbedCreate {
         embedBuilder.setTimestamp(Instant.now());
         textChannel.sendMessageEmbeds(embedBuilder.build()).queue(message -> message.delete().queueAfter(20, TimeUnit.SECONDS));
     }
+
     public static void createEmbedPlaylistLoad(String title, String description, String footer, String icon
-    ,Color color, MessageChannel textChannel, int cost, String url, String name){
+            , Color color, MessageChannel textChannel, int cost, String url, String name) {
         EmbedBuilder embedBuilder = AccessEmbed();
         embedBuilder.setTitle(title);
         embedBuilder.setDescription(description);
@@ -96,7 +98,7 @@ public abstract class EmbedCreate {
         textChannel.sendMessageEmbeds(embedBuilder.build()).queue(message -> message.delete().queueAfter(30, TimeUnit.SECONDS));
     }
 
-    public static void createEmbedOnJoin(String title, String description,  String text,String thunmbail, String addField,  MessageChannel textChannel) {
+    public static void createEmbedOnJoin(String title, String description, String text, String thunmbail, String addField, MessageChannel textChannel) {
         EmbedBuilder embedBuilder = AccessEmbed();
         embedBuilder.setTitle(title);
         embedBuilder.setDescription("Пользователь: " + description);
@@ -135,6 +137,57 @@ public abstract class EmbedCreate {
     public static void createEmbedException(String title, MessageChannel textChannel) {
         EmbedBuilder embedBuilder = AccessEmbed();
         embedBuilder.setTitle(title);
+        embedBuilder.setFooter("GayBot", Main.getIcon());
+        embedBuilder.setColor(Color.orange);
+        embedBuilder.setTimestamp(Instant.now());
+        textChannel.sendMessageEmbeds(embedBuilder.build()).queue();
+    }
+
+    public static void createParser(String title, String urlImage, MessageChannel textChannel) {
+        EmbedBuilder embedBuilder = AccessEmbed();
+        embedBuilder.addField("Заголовок: ", title, false);
+        embedBuilder.setImage(urlImage);
+        embedBuilder.setFooter("GayBot", Main.getIcon());
+        embedBuilder.setColor(Color.orange);
+        embedBuilder.setTimestamp(Instant.now());
+        textChannel.sendMessageEmbeds(embedBuilder.build()).queue();
+    }
+
+    public static void createParserNews(String addField, String addField1, String addField2, String addField3,
+                                        String addField4, MessageChannel textChannel) {
+        EmbedBuilder embedBuilder = AccessEmbed();
+        embedBuilder.setTitle("Новости Steam");
+        embedBuilder.addField("1:", addField, false);
+        embedBuilder.addField("2:", addField1, false);
+        embedBuilder.addField("3:", addField2, false);
+        embedBuilder.addField("4:", addField3, false);
+        embedBuilder.addField("5:", addField4, false);
+        embedBuilder.setImage("https://pixelbox.ru/wp-content/uploads/2021/10/gif-for-steam-pixelbox.ru-96.gif");
+        embedBuilder.setFooter("GayBot", Main.getIcon());
+        embedBuilder.setColor(Color.orange);
+        embedBuilder.setTimestamp(Instant.now());
+        textChannel.sendMessageEmbeds(embedBuilder.build()).queue();
+    }
+    public static void createParserNewsSolo(String title, String Description, String LinkNews, String UrlImage, MessageChannel textChannel) {
+        EmbedBuilder embedBuilder = AccessEmbed();
+        embedBuilder.setAuthor(title, LinkNews);
+        embedBuilder.setDescription(Description);
+        embedBuilder.setImage(UrlImage);
+        embedBuilder.setFooter("GayBot", Main.getIcon());
+        embedBuilder.setColor(Color.orange);
+        embedBuilder.setTimestamp(Instant.now());
+        textChannel.sendMessageEmbeds(embedBuilder.build()).queue();
+    }
+    public static void createParserNewsDota(String addField, String addField1, String addField2, String addField3,
+                                        String addField4, MessageChannel textChannel) {
+        EmbedBuilder embedBuilder = AccessEmbed();
+        embedBuilder.setTitle("Новости Dota2");
+        embedBuilder.addField("1:", addField, false);
+        embedBuilder.addField("2:", addField1, false);
+        embedBuilder.addField("3:", addField2, false);
+        embedBuilder.addField("4:", addField3, false);
+        embedBuilder.addField("5:", addField4, false);
+        embedBuilder.setImage("https://thumbs.gfycat.com/EmotionalWaterloggedFalcon-size_restricted.gif");
         embedBuilder.setFooter("GayBot", Main.getIcon());
         embedBuilder.setColor(Color.orange);
         embedBuilder.setTimestamp(Instant.now());
