@@ -2,6 +2,9 @@ package com.justeryt.discordbot.commands.commands;
 
 import com.justeryt.discordbot.Main;
 import com.justeryt.discordbot.commands.ListMusic.TrackList;
+import com.justeryt.discordbot.commands.Parsing.ParserMeme;
+import com.justeryt.discordbot.commands.Parsing.ParsingNewsDota;
+import com.justeryt.discordbot.commands.Parsing.ParsingNewsSteam;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.events.guild.GuildReadyEvent;
@@ -44,6 +47,9 @@ public class CommandManager extends ListenerAdapter {
     private final BassCommand bassCommand;
     private final KickVoiceCommand kickVoiceCommand;
     private final JailCommand jailCommand;
+    private final ParserMeme parserMeme;
+    private final ParsingNewsSteam parsingNews;
+    private final ParsingNewsDota parsingNewsDota;
 
     public CommandManager() {
         this.helpCommands = new HelpCommands();
@@ -67,6 +73,9 @@ public class CommandManager extends ListenerAdapter {
         this.bassCommand = new BassCommand();
         this.kickVoiceCommand = new KickVoiceCommand();
         this.jailCommand = new JailCommand();
+        this.parserMeme = new ParserMeme();
+        this.parsingNews = new ParsingNewsSteam();
+        this.parsingNewsDota = new ParsingNewsDota();
     }
 
     @Override
@@ -142,6 +151,15 @@ public class CommandManager extends ListenerAdapter {
                     break;
                 case "!jail":
                     jailCommand.performCommand(arguments, guild, member, textChannel, message, voiceChannel);
+                    break;
+                case "!meme":
+                    parserMeme.performCommand(arguments, guild, member, textChannel, message, voiceChannel);
+                    break;
+                case "!Steam":
+                    parsingNews.performCommand(arguments, guild, member, textChannel, message, voiceChannel);
+                    break;
+                case "!dota":
+                    parsingNewsDota.performCommand(arguments, guild, member, textChannel, message, voiceChannel);
                     break;
             }
         }
