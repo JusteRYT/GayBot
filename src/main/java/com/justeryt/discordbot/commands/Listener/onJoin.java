@@ -20,6 +20,7 @@ public class onJoin extends ListenerAdapter {
     private final long Laxno = 398228323249029121L;
     private final long marycya = 996030565717397625L;
     private final long Dima = 294881802676469761L;
+    private final long Maksim = 370241725597351936L;
 
     @Override
     public void onGuildVoiceJoin(@NotNull GuildVoiceJoinEvent event) {
@@ -76,9 +77,15 @@ public class onJoin extends ListenerAdapter {
                 }
                 if (member.getIdLong() == Dima) {
                     EmbedCreate.createEmbedOnJoin("**Ну вы поглядите на него, с портфелем в туфлях и поганяло коронное: **",
-                            member.getUser().getName(), "**Когда то он малолетнюю дочь увел у отца и трахнул под забором, **" +
-                                    "**так что парни бойтесь**", member.getUser().getAvatarUrl(), "Зашёл на канал: " + voiceChannel.getName()
+                            member.getUser().getName(), "**Когда то он малолетнюю дочь увел у отца и трахнул под забором, " +
+                                    "так что парни бойтесь**", member.getUser().getAvatarUrl(), "Зашёл на канал: " + voiceChannel.getName()
                             , textChannel);
+                }
+                if (member.getIdLong() == Maksim){
+                    EmbedCreate.createEmbedOnJoin("**Если вы близнецы, то он вас взорвет. Ведь это самый жесткий террорист" +
+                            "в России.[Осуждаю]", member.getUser().getName(), "**Далеко далеко в горах кто то трахнул овцу," +
+                            "так вот, это был Максимка, наш Альфа самец.**", member.getUser().getAvatarUrl(), "Зашёл на канал: " +
+                            voiceChannel.getName(), textChannel);
                 }
             }
         }
