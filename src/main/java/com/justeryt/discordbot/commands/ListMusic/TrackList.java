@@ -47,4 +47,9 @@ public class TrackList {
         Collections.shuffle(list);
         return list.get(0);
     }
+    public static String getOxxxyLink(){
+        ArrayList<String> list = Main.getList();
+        list.add("https://www.youtube.com/watch?v=QRoJTZeUu_4&list=PLj1uyrTezgDPw-iRgwRDZe_sY4iGzQ5kH");//Мэшапы окси
+        return list.get(0);
+    }
 }
