@@ -14,7 +14,6 @@ import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.entities.Activity;
-import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.utils.ChunkingFilter;
@@ -24,7 +23,6 @@ import net.dv8tion.jda.api.utils.cache.CacheFlag;
 import javax.security.auth.login.LoginException;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Timer;
 
 public class Main extends ListenerAdapter {
@@ -98,7 +96,7 @@ public class Main extends ListenerAdapter {
     public static String getIcon() {
         return "https://goo.su/vZAAi";
     }
-    public static String getImageMusic(){
+    public static String getImageMusic() {
         return "https://thumbs.gfycat.com/OpulentShortAfricanporcupine-size_restricted.gif";
     }
 
