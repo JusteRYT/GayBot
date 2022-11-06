@@ -48,6 +48,9 @@ public class PlayCommand implements ServerCommand {
                     if (rawLink.equals("my")){
                         rawLink = TrackList.getMyPlaylist();
                     }
+                    if (rawLink.equals("mashup")){
+                        rawLink = TrackList.getOxxxyLink();
+                    }
                     if (!rawLink.startsWith("https")) {
                         rawLink = "ytsearch: " + rawLink;
                     }
