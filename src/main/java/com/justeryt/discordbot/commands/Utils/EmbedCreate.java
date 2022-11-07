@@ -4,7 +4,6 @@ import com.justeryt.discordbot.Main;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.entities.MessageChannel;
-import net.dv8tion.jda.api.interactions.components.buttons.Button;
 
 import java.awt.*;
 import java.time.Instant;
@@ -140,7 +139,8 @@ public abstract class EmbedCreate {
         embedBuilder.setFooter("GayBot", Main.getIcon());
         embedBuilder.setColor(Color.orange);
         embedBuilder.setTimestamp(Instant.now());
-        textChannel.sendMessageEmbeds(embedBuilder.build()).queue();
+        textChannel.sendMessageEmbeds(embedBuilder.build()).queue(message -> message.delete().queueAfter(15, TimeUnit.SECONDS));
+        ;
     }
 
     public static void createParser(String title, String urlImage, MessageChannel textChannel) {
@@ -150,7 +150,8 @@ public abstract class EmbedCreate {
         embedBuilder.setFooter("GayBot", Main.getIcon());
         embedBuilder.setColor(Color.orange);
         embedBuilder.setTimestamp(Instant.now());
-        textChannel.sendMessageEmbeds(embedBuilder.build()).queue();
+        textChannel.sendMessageEmbeds(embedBuilder.build()).queue(message -> message.delete().queueAfter(15, TimeUnit.SECONDS));
+
     }
 
     public static void createParserNews(String addField, String addField1, String addField2, String addField3,
@@ -162,12 +163,14 @@ public abstract class EmbedCreate {
         embedBuilder.addField("3:", addField2, false);
         embedBuilder.addField("4:", addField3, false);
         embedBuilder.addField("5:", addField4, false);
-        embedBuilder.setImage("https://pixelbox.ru/wp-content/uploads/2021/10/gif-for-steam-pixelbox.ru-96.gif");
+        embedBuilder.setImage("https://goo.su/2U3TLa");
         embedBuilder.setFooter("GayBot", Main.getIcon());
         embedBuilder.setColor(Color.orange);
         embedBuilder.setTimestamp(Instant.now());
-        textChannel.sendMessageEmbeds(embedBuilder.build()).queue();
+        textChannel.sendMessageEmbeds(embedBuilder.build()).queue(message -> message.delete().queueAfter(25, TimeUnit.SECONDS));
+        ;
     }
+
     public static void createParserNewsSolo(String title, String Description, String LinkNews, String UrlImage, MessageChannel textChannel) {
         EmbedBuilder embedBuilder = AccessEmbed();
         embedBuilder.setAuthor(title, LinkNews);
@@ -176,10 +179,11 @@ public abstract class EmbedCreate {
         embedBuilder.setFooter("GayBot", Main.getIcon());
         embedBuilder.setColor(Color.orange);
         embedBuilder.setTimestamp(Instant.now());
-        textChannel.sendMessageEmbeds(embedBuilder.build()).queue();
+        textChannel.sendMessageEmbeds(embedBuilder.build()).queue(message -> message.delete().queueAfter(20, TimeUnit.SECONDS));
     }
+
     public static void createParserNewsDota(String addField, String addField1, String addField2, String addField3,
-                                        String addField4, MessageChannel textChannel) {
+                                            String addField4, MessageChannel textChannel) {
         EmbedBuilder embedBuilder = AccessEmbed();
         embedBuilder.setTitle("Новости Dota2");
         embedBuilder.addField("1:", addField, false);
@@ -191,6 +195,62 @@ public abstract class EmbedCreate {
         embedBuilder.setFooter("GayBot", Main.getIcon());
         embedBuilder.setColor(Color.orange);
         embedBuilder.setTimestamp(Instant.now());
-        textChannel.sendMessageEmbeds(embedBuilder.build()).queue();
+        textChannel.sendMessageEmbeds(embedBuilder.build()).queue(message -> message.delete().queueAfter(40, TimeUnit.SECONDS));
+    }
+
+    public static void createDotaBuff(String title, String thumbnail, String core, String supp, String nameFirstPers, String valuematch
+            , String WinRate1, String nameFirstPers2, String valuematch2, String WinRate2, String nameFirstPers3,
+                                      String valuematch3, String WinRate3, String nameCharacter, String WonAndLose, String KDA
+            , String nameCharacter2, String WonAndLose2, String KDA2, String nameCharacter3, String WonAndLose3, String KDA3,
+                                      String nameCharacter4, String WonAndLose4, String KDA4,
+                                      String nameCharacter5, String WonAndLose5, String KDA5,
+                                      String nameCharacter6, String WonAndLose6, String KDA6,
+                                      String nameCharacter7, String WonAndLose7, String KDA7,
+                                      String nameCharacter8, String WonAndLose8, String KDA8,
+                                      String nameCharacter9, String WonAndLose9, String KDA9,
+                                      String nameCharacter10, String WonAndLose10, String KDA10,
+                                      MessageChannel textChannel) {
+        EmbedBuilder embedBuilder = AccessEmbed();
+        embedBuilder.setTitle("Профиль игрока: " + title);
+        embedBuilder.setDescription(String.format("**Роли: ** *%s* **|** *%s*", core, supp));
+        embedBuilder.setThumbnail(thumbnail);
+        embedBuilder.addField("*1 top pick hero:*", String.format("**Герой:** *%s* \n **Матчей:** *%s* \n **Винрейт:** *%s*", nameFirstPers, valuematch, WinRate1), false);
+        embedBuilder.addField("*2 top pick hero:*", String.format("**Герой:** *%s* \n **Матчей:** *%s* \n **Винрейт:** *%s*", nameFirstPers2, valuematch2, WinRate2), false);
+        embedBuilder.addField("*3 top pick hero:*", String.format("**Герой:** *%s* \n **Матчей:** *%s* \n **Винрейт:** *%s*", nameFirstPers3, valuematch3, WinRate3), false);
+        embedBuilder.addField("Последние игры:", String.format(
+                """
+                        **1 Матч:** *%s* | %s | KDA: *%s*\s
+                        **2 Матч:** *%s* | %s | KDA: *%s*\s
+                        **3 Матч:** *%s* | %s | KDA: *%s*\s
+                        **4 Матч:** *%s* | %s | KDA: *%s*\s
+                        **5 Матч:** *%s* | %s | KDA: *%s*\s
+                        **6 Матч:** *%s* | %s | KDA: *%s*\s
+                        **7 Матч:** *%s* | %s | KDA: *%s*\s
+                        **8 Матч:** *%s* | %s | KDA: *%s*\s
+                        **9 Матч:** *%s* | %s | KDA: *%s*\s
+                        **10 Матч:** *%s* | %s | KDA: *%s*\s
+                        """, nameCharacter, WonOrNote(WonAndLose), KDA,
+                nameCharacter2, WonOrNote(WonAndLose2), KDA2,
+                nameCharacter3, WonOrNote(WonAndLose3), KDA3,
+                nameCharacter4, WonOrNote(WonAndLose4), KDA4,
+                nameCharacter5, WonOrNote(WonAndLose5), KDA5,
+                nameCharacter6, WonOrNote(WonAndLose6), KDA6,
+                nameCharacter7, WonOrNote(WonAndLose7), KDA7,
+                nameCharacter8, WonOrNote(WonAndLose8), KDA8,
+                nameCharacter9, WonOrNote(WonAndLose9), KDA9,
+                nameCharacter10, WonOrNote(WonAndLose10), KDA10), false);
+        embedBuilder.setFooter("GayBot", Main.getIcon());
+        embedBuilder.setColor(Color.orange);
+        embedBuilder.setTimestamp(Instant.now());
+        textChannel.sendMessageEmbeds(embedBuilder.build()).queue(message -> message.delete().queueAfter(100, TimeUnit.SECONDS));
+    }
+    public static String WonOrNote(String text){
+        if(text.equals("Поражение")){
+            return "📛";
+        }
+        if(text.equals("Победа")){
+            return "✅";
+        }
+        return null;
     }
 }
