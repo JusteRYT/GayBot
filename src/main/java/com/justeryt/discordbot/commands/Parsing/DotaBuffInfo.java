@@ -110,9 +110,11 @@ public class DotaBuffInfo implements ServerCommand {
                         nameCharacter.get(8), WinOrNotGame.get(8),KDAGame.get(8),
                         nameCharacter.get(9), WinOrNotGame.get(9),KDAGame.get(9),
                         textChannel);
+            } else {
+                EmbedCreate.createEmbed("💢Введите так !dotabuff id", textChannel);
             }
         } catch (IOException e) {
-            EmbedCreate.createEmbed("suka", textChannel);
+            EmbedCreate.createEmbed("Не удалось загрузить страницу", textChannel);
         }
     }
 }
