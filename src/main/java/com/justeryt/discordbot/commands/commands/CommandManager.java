@@ -2,6 +2,7 @@ package com.justeryt.discordbot.commands.commands;
 
 import com.justeryt.discordbot.Main;
 import com.justeryt.discordbot.commands.ListMusic.TrackList;
+import com.justeryt.discordbot.commands.Parsing.DotaBuffInfo;
 import com.justeryt.discordbot.commands.Parsing.ParserMeme;
 import com.justeryt.discordbot.commands.Parsing.ParsingNewsDota;
 import com.justeryt.discordbot.commands.Parsing.ParsingNewsSteam;
@@ -50,6 +51,7 @@ public class CommandManager extends ListenerAdapter {
     private final ParserMeme parserMeme;
     private final ParsingNewsSteam parsingNews;
     private final ParsingNewsDota parsingNewsDota;
+    private final DotaBuffInfo dotaBuffInfo;
 
     public CommandManager() {
         this.helpCommands = new HelpCommands();
@@ -76,6 +78,7 @@ public class CommandManager extends ListenerAdapter {
         this.parserMeme = new ParserMeme();
         this.parsingNews = new ParsingNewsSteam();
         this.parsingNewsDota = new ParsingNewsDota();
+        this.dotaBuffInfo = new DotaBuffInfo();
     }
 
     @Override
@@ -155,11 +158,14 @@ public class CommandManager extends ListenerAdapter {
                 case "!meme":
                     parserMeme.performCommand(arguments, guild, member, textChannel, message, voiceChannel);
                     break;
-                case "!Steam":
+                case "!steam":
                     parsingNews.performCommand(arguments, guild, member, textChannel, message, voiceChannel);
                     break;
                 case "!dota":
                     parsingNewsDota.performCommand(arguments, guild, member, textChannel, message, voiceChannel);
+                    break;
+                case "!dotabuff":
+                    dotaBuffInfo.performCommand(arguments, guild, member, textChannel, message, voiceChannel);
                     break;
             }
         }
