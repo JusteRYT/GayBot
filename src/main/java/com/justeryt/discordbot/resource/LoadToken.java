@@ -7,7 +7,7 @@ import java.io.*;
 public class LoadToken {
 
     public static String getToken() throws FileNotFoundException {
-        String filename = "testconfig.yml";
+        String filename = "config.yml";
         InputStream inputStream = new FileInputStream(new File(filename));
 
         Yaml yaml = new Yaml();
