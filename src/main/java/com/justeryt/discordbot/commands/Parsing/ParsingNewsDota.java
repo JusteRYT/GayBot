@@ -16,7 +16,6 @@ public class ParsingNewsDota implements ServerCommand {
             int a = b - 1;
             EmbedCreate.createParserNewsSolo(ParserCore.getDotaTitle().get(a), ParserCore.getListDotaTime().get(a),
                     ParserCore.getLinkDotaNews().get(a), ParserCore.getUrlImageDota().get(a), textChannel);
-            System.out.println(ParserCore.getUrlImageDota().get(2));
         }
         }catch (IndexOutOfBoundsException e){
             EmbedCreate.createEmbed("💢Вы ввели неверное число!!!", textChannel);
