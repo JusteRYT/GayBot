@@ -109,6 +109,7 @@ public class DotaBuffInfo implements ServerCommand {
                         nameCharacter.get(7), WinOrNotGame.get(7),KDAGame.get(7),
                         nameCharacter.get(8), WinOrNotGame.get(8),KDAGame.get(8),
                         nameCharacter.get(9), WinOrNotGame.get(9),KDAGame.get(9),
+                        Matches.get(0), Matches.get(1),
                         textChannel);
             } else {
                 EmbedCreate.createEmbed("💢Введите так !dotabuff id", textChannel);

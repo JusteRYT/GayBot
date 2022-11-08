@@ -209,11 +209,13 @@ public abstract class EmbedCreate {
                                       String nameCharacter8, String WonAndLose8, String KDA8,
                                       String nameCharacter9, String WonAndLose9, String KDA9,
                                       String nameCharacter10, String WonAndLose10, String KDA10,
+                                      String AllMatch, String AllMatchWinrate,
                                       MessageChannel textChannel) {
         EmbedBuilder embedBuilder = AccessEmbed();
         embedBuilder.setTitle("Профиль игрока: " + title);
         embedBuilder.setDescription(String.format("**Роли: ** *%s* **|** *%s*", core, supp));
         embedBuilder.setThumbnail(thumbnail);
+        embedBuilder.addField("Сколько всего игр:", String.format("Матчей: *%s* **|** Винрейт: *%s*",AllMatch, AllMatchWinrate), false);
         embedBuilder.addField("*1 top pick hero:*", String.format("**Герой:** *%s* \n **Матчей:** *%s* \n **Винрейт:** *%s*", nameFirstPers, valuematch, WinRate1), false);
         embedBuilder.addField("*2 top pick hero:*", String.format("**Герой:** *%s* \n **Матчей:** *%s* \n **Винрейт:** *%s*", nameFirstPers2, valuematch2, WinRate2), false);
         embedBuilder.addField("*3 top pick hero:*", String.format("**Герой:** *%s* \n **Матчей:** *%s* \n **Винрейт:** *%s*", nameFirstPers3, valuematch3, WinRate3), false);
