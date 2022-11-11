@@ -17,7 +17,7 @@ public class JailCommand implements ServerCommand {
                         AudioChannel channel = Main.getJda().getVoiceChannelById(1033854390198599792L);
                         guild.moveVoiceMember(target, channel).queue();
                         EmbedCreate.createEmbed("✅Мы поместили этого отброса: " + target.getUser().getName()
-                                + "в утилизатор", textChannel);
+                                + " в утилизатор", textChannel);
                     } else {
                         EmbedCreate.createEmbed("📛Ты же женщина,прав у тебя нет до 1893(хотя даже после этого нет прав)", textChannel);
                     }

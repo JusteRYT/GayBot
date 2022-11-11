@@ -20,10 +20,8 @@
         <outputRelativeToContentRoot value="true" />
         <module name="DiscordBot" />
         <module name="DiscrodBot" />
+        <module name="DiscordBot-master" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel>
-      <module name="DiscordBot-master" target="8" />
-    </bytecodeTargetLevel>
   </component>
 </project>
