@@ -19,9 +19,9 @@ public class DotaBuffInfo implements ServerCommand {
                 long id = Long.parseLong(arguments[1]);
 
                 Document document1 = Jsoup.connect("https://www.dotabuff.com/players/" + id).userAgent("Chrome/4.0.249.0")
-                        .referrer("http://www,google.com").get();
+                        .referrer("https://www,google.com").get();
                 Document document = Jsoup.connect("https://ru.dotabuff.com/players/" + id).userAgent("Chrome/4.0.249.0")
-                        .referrer("http://www,google.com").get();
+                        .referrer("https://www,google.com").get();
                 Elements position = document.getElementsByClass("label");
                 Elements allMatch = document.getElementsByTag("td");
                 Elements MostPopularPickHero1 = document1.getElementsByClass("r-table r-only-mobile-5 heroes-overview").
@@ -32,7 +32,6 @@ public class DotaBuffInfo implements ServerCommand {
                         get(0).getElementsByClass("r-none-mobile").get(2).getElementsByTag("a");
                 Elements WinRatePersonal = document1.getElementsByClass("r-body");
                 Elements MatchMost = document1.getElementsByClass("r-fluid r-10 r-line-graph");
-                Elements LatestGameHistory = document1.getElementsByClass("r-table r-only-mobile-5 performances-overview");
                 Elements WinOrNot = document.getElementsByClass("r-table r-only-mobile-5 performances-overview");
                 Elements KDA = document1.getElementsByClass("r-table r-only-mobile-5 performances-overview");
                 Elements thunmbailRank = document1.getElementsByClass("rank-tier-base");

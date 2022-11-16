@@ -110,6 +110,6 @@ public class PlayCommand implements ServerCommand {
 
     public static String getURL(String url) {
         String VideoID = url.split("v=")[1];
-        return "http://img.youtube.com/vi/" + VideoID + "/hqdefault.jpg";
+        return "https://img.youtube.com/vi/" + VideoID + "/hqdefault.jpg";
     }
 }

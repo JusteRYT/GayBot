@@ -15,7 +15,7 @@ public class ParserCore {
     private static Document getSteamDocument(){
         try {
             SteamDocument = Jsoup.connect("https://vgtimes.ru/tags/Steam/").userAgent("Chrome/4.0.249.0" +
-                    "Safari/532.5").referrer("http://www.google.com").get();
+                    "Safari/532.5").referrer("https://www.google.com").get();
             return SteamDocument;
         }catch (IOException e){
             e.printStackTrace();
@@ -25,7 +25,7 @@ public class ParserCore {
     private static Document getDota2Document(){
         try {
             Dota2Document = Jsoup.connect("https://vgtimes.ru/games/dota-2/news").userAgent("Chrome/4.0.249.0" +
-                    "Safari/532.5").referrer("http://www.google.com").get();
+                    "Safari/532.5").referrer("https://www.google.com").get();
             return Dota2Document;
         }catch (IOException e){
             e.printStackTrace();

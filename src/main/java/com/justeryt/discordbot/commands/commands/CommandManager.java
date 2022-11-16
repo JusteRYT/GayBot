@@ -187,8 +187,8 @@ public class CommandManager extends ListenerAdapter {
         switch (command) {
             case "play":
                 String url = Arrays.toString(event.getOption("url").getAsString().split(" ")).replace("["
-                        , " ").replace("]", " ");
-                if (url.equals(" gachi ")) {
+                        , " ").replace("]", " ").trim();
+                if (url.equals("gachi")) {
                     embedBuilder.setTitle("Выберите плейлист:");
                     embedBuilder.addField("🔊1 Плейлист:", "🎵 Коллекция Крепкой Мужской на 10+ часов гачи 🎵",false);
                     embedBuilder.addField("🔊2 Плейлист:", "🎵 Gachi золотой пантеон 🎵",false);
@@ -199,7 +199,7 @@ public class CommandManager extends ListenerAdapter {
                             Button.primary("Gachi1", "Плейлист 2"), Button.primary("Gachi2",
                                     "Плейлист 3")).queue();
                 }
-                if (url.equals(" phonk ")) {
+                if (url.equals("phonk")) {
                     embedBuilder.setTitle("Выберите плейлист:");
                     embedBuilder.addField("🔊1 Плейлист:", "🎵 Phonk 🎵",false);
                     embedBuilder.addField("🔊2 Плейлист:", "🎵 Best Phonk playlist 🎵",false);
@@ -210,7 +210,7 @@ public class CommandManager extends ListenerAdapter {
                             Button.primary("Phonk1", "Плейлист 2"), Button.primary("Phonk2",
                                     "Плейлист 3")).queue();
                 }
-                if (url.equals(" GachiRadio ")) {
+                if (url.equals("GachiRadio")) {
                     if (audioChannel1 != null) {
                         arguments[0] = "!play";
                         arguments[1] = TrackList.getGachiRadio();
@@ -220,7 +220,7 @@ public class CommandManager extends ListenerAdapter {
                         event.reply("📛Вас нет в голосовом канале").queue();
                     }
                 }
-                if (url.equals(" my ")){
+                if (url.equals("my")){
                     if (audioChannel1 != null) {
                         arguments[0] = "!play";
                         arguments[1] = TrackList.getMyPlaylist();
