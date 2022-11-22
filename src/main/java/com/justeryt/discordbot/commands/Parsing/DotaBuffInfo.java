@@ -17,7 +17,6 @@ public class DotaBuffInfo implements ServerCommand {
         try {
             if (arguments.length == 2) {
                 long id = Long.parseLong(arguments[1]);
-
                 Document document1 = Jsoup.connect("https://www.dotabuff.com/players/" + id).userAgent("Chrome/4.0.249.0")
                         .referrer("https://www,google.com").get();
                 Document document = Jsoup.connect("https://ru.dotabuff.com/players/" + id).userAgent("Chrome/4.0.249.0")
@@ -97,24 +96,30 @@ public class DotaBuffInfo implements ServerCommand {
                 KDAGame.add(KDA.get(0).getElementsByClass("r-body").get(39).text());
                 KDAGame.add(KDA.get(0).getElementsByClass("r-body").get(44).text());
                 KDAGame.add(KDA.get(0).getElementsByClass("r-body").get(49).text());
-                EmbedCreate.createDotaBuff(namePlayer,rank,pos.get(0),pos.get(1),PickHero.get(0),PickHero.get(3),PickHero.get(6),
-                        PickHero.get(1),PickHero.get(4),PickHero.get(7),PickHero.get(2), PickHero.get(5),PickHero.get(8),
+                EmbedCreate.createDotaBuff(namePlayer, rank, pos.get(0), pos.get(1), PickHero.get(0), PickHero.get(3), PickHero.get(6),
+                        PickHero.get(1), PickHero.get(4), PickHero.get(7), PickHero.get(2), PickHero.get(5), PickHero.get(8),
                         nameCharacter.get(0), WinOrNotGame.get(0), KDAGame.get(0), nameCharacter.get(1), WinOrNotGame.get(1),
-                        KDAGame.get(1),nameCharacter.get(2), WinOrNotGame.get(2),KDAGame.get(2),
-                        nameCharacter.get(3), WinOrNotGame.get(3),KDAGame.get(3),
-                        nameCharacter.get(4), WinOrNotGame.get(4),KDAGame.get(4),
-                        nameCharacter.get(5), WinOrNotGame.get(5),KDAGame.get(5),
-                        nameCharacter.get(6), WinOrNotGame.get(6),KDAGame.get(6),
-                        nameCharacter.get(7), WinOrNotGame.get(7),KDAGame.get(7),
-                        nameCharacter.get(8), WinOrNotGame.get(8),KDAGame.get(8),
-                        nameCharacter.get(9), WinOrNotGame.get(9),KDAGame.get(9),
+                        KDAGame.get(1), nameCharacter.get(2), WinOrNotGame.get(2), KDAGame.get(2),
+                        nameCharacter.get(3), WinOrNotGame.get(3), KDAGame.get(3),
+                        nameCharacter.get(4), WinOrNotGame.get(4), KDAGame.get(4),
+                        nameCharacter.get(5), WinOrNotGame.get(5), KDAGame.get(5),
+                        nameCharacter.get(6), WinOrNotGame.get(6), KDAGame.get(6),
+                        nameCharacter.get(7), WinOrNotGame.get(7), KDAGame.get(7),
+                        nameCharacter.get(8), WinOrNotGame.get(8), KDAGame.get(8),
+                        nameCharacter.get(9), WinOrNotGame.get(9), KDAGame.get(9),
                         Matches.get(0), Matches.get(1),
                         textChannel);
             } else {
                 EmbedCreate.createEmbed("💢Введите так !dotabuff id", textChannel);
             }
-        } catch (IOException e) {
-            EmbedCreate.createEmbed("Не удалось загрузить страницу", textChannel);
+        } catch (Exception exception) {
+            if(exception instanceof IOException){
+                EmbedCreate.createEmbed("💢Не удалось загрузить страницу", textChannel);
+            } else if (exception instanceof  IndexOutOfBoundsException) {
+                EmbedCreate.createEmbed("📛Приватная страница", textChannel);
+            }else {
+                EmbedCreate.createEmbed(String.valueOf(exception),textChannel);
+            }
         }
     }
 }
