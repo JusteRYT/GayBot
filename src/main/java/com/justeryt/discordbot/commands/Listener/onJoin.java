@@ -43,7 +43,7 @@ public class onJoin extends ListenerAdapter {
                 if (member.getIdLong() == Brazilcev) {
                     EmbedCreate.createEmbedOnJoin("**Патаму шта дора дура!!!**",
                             member.getUser().getName(),
-                            "**Вот он, тайный поклоник доры: **", member.getUser().getAvatarUrl(),
+                            "**Вот он, тайный поклонник доры: **", member.getUser().getAvatarUrl(),
                             "Зашёл на канал: " + voiceChannel.getName(), textChannel);
                 }
                 if (member.getIdLong() == Ancverg) {
@@ -82,7 +82,7 @@ public class onJoin extends ListenerAdapter {
                 }
                 if (member.getIdLong() == Maksim){
                     EmbedCreate.createEmbedOnJoin("**Если вы близнецы, то он вас взорвет. Ведь это самый жесткий террорист" +
-                            "в России.[Осуждаю]", member.getUser().getName(), "**Далеко далеко в горах кто то трахнул овцу," +
+                            "в России.**[Осуждаю]", member.getUser().getName(), "**Далеко далеко в горах кто то трахнул овцу," +
                             "так вот, это был Максимка, наш Альфа самец.**", member.getUser().getAvatarUrl(), "Зашёл на канал: " +
                             voiceChannel.getName(), textChannel);
                 }
