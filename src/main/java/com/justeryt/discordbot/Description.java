@@ -15,7 +15,7 @@ public class Description extends TimerTask {
     public void run() {
         if (jda != null) {
             jda.getPresence().setActivity(Activity.watching(messages[count]));
-            count = (count + 1)%messages.length;
+            count = (count + 1) % messages.length;
         }
     }
 }

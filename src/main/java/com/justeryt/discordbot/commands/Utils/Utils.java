@@ -12,4 +12,7 @@ public abstract class Utils {
     public static String formatLongDuration(long duration) {
         return DurationFormatUtils.formatDuration(duration, DURATION_FORMAT_LONG);
     }
+    public static String formatUltraLongDuration(long duration){
+        return DurationFormatUtils.formatDuration(duration, "y лет M м. d д. HH:mm:ss");
+    }
 }

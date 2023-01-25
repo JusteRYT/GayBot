@@ -52,6 +52,10 @@ public class CommandManager extends ListenerAdapter {
     private final ParsingNewsSteam parsingNews;
     private final ParsingNewsDota parsingNewsDota;
     private final DotaBuffInfo dotaBuffInfo;
+    private final RollCommand rollCommand;
+    private final RollGameCommand rollGameCommand;
+    private final RollPos rollPos;
+    private final TimeCommand timeCommand;
 
     public CommandManager() {
         this.helpCommands = new HelpCommands();
@@ -79,6 +83,10 @@ public class CommandManager extends ListenerAdapter {
         this.parsingNews = new ParsingNewsSteam();
         this.parsingNewsDota = new ParsingNewsDota();
         this.dotaBuffInfo = new DotaBuffInfo();
+        this.rollCommand = new RollCommand();
+        this.rollGameCommand = new RollGameCommand();
+        this.rollPos = new RollPos();
+        this.timeCommand = new TimeCommand();
     }
 
     @Override
@@ -166,6 +174,18 @@ public class CommandManager extends ListenerAdapter {
                     break;
                 case "!dotabuff":
                     dotaBuffInfo.performCommand(arguments, guild, member, textChannel, message, voiceChannel);
+                    break;
+                case "!roll":
+                    rollCommand.performCommand(arguments, guild, member, textChannel, message, voiceChannel);
+                    break;
+                case "!rollgame":
+                    rollGameCommand.performCommand(arguments, guild, member, textChannel, message, voiceChannel);
+                    break;
+                case "!rollpos":
+                    rollPos.performCommand(arguments, guild, member, textChannel, message, voiceChannel);
+                    break;
+                case "!time":
+                    timeCommand.performCommand(arguments, guild, member, textChannel, message, voiceChannel);
                     break;
             }
         }

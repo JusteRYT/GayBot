@@ -14,15 +14,19 @@ import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.entities.Activity;
+import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.utils.ChunkingFilter;
 import net.dv8tion.jda.api.utils.MemberCachePolicy;
 import net.dv8tion.jda.api.utils.cache.CacheFlag;
+import org.apache.commons.lang3.time.StopWatch;
 
 import javax.security.auth.login.LoginException;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 import java.util.Timer;
 
 public class Main extends ListenerAdapter {
@@ -31,6 +35,7 @@ public class Main extends ListenerAdapter {
     private static JDABuilder jdaBuilder;
     public static AudioPlayerManager audioPlayerManager;
     private static AudioManager audioManager;
+    public static StopWatch stopWatch = new StopWatch();
 
     public static void main(String[] args) throws IOException {
         //Вставляем ключ от бота (Нельзя проебать, а то заного его придется делать)
@@ -49,11 +54,11 @@ public class Main extends ListenerAdapter {
         } catch (LoginException exception) {
             exception.printStackTrace();
         }
-
         //команды
         registerCommands();
         //Анимированный статус
         setDescription();
+        stopWatch.start();
         audioPlayerManager = new DefaultAudioPlayerManager();
         AudioSourceManagers.registerRemoteSources(audioPlayerManager);
         audioManager = new AudioManager();
@@ -107,4 +112,15 @@ public class Main extends ListenerAdapter {
     public static ArrayList<String> getList() {
         return new ArrayList<>();
     }
+    public static Random getRandom(){
+        return new Random();
+    }
+    public static List<Guild> getGuild(){
+        return jda.getGuilds();
+    }
+    public static long getTime(){
+        return Main.stopWatch.getTime();
+    }
+
+
 }

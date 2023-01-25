@@ -4,6 +4,7 @@ import com.justeryt.discordbot.Main;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.entities.MessageChannel;
+import net.dv8tion.jda.api.entities.TextChannel;
 
 import java.awt.*;
 import java.time.Instant;
@@ -245,6 +246,50 @@ public abstract class EmbedCreate {
         embedBuilder.setColor(Color.orange);
         embedBuilder.setTimestamp(Instant.now());
         textChannel.sendMessageEmbeds(embedBuilder.build()).queue(message -> message.delete().queueAfter(100, TimeUnit.SECONDS));
+    }
+    public static void EmbedCreateRoll (String member, int procent, MessageChannel textChannel){
+        EmbedBuilder embedBuilder = AccessEmbed();
+        embedBuilder.setTitle("Пользователь: " + member);
+        embedBuilder.addField("Процент: ", String.valueOf(procent) + "%",false);
+        embedBuilder.setFooter("GayBot", Main.getIcon());
+        embedBuilder.setColor(Color.orange);
+        embedBuilder.setTimestamp(Instant.now());
+        textChannel.sendMessageEmbeds(embedBuilder.build()).queue(message -> message.delete().queueAfter(20, TimeUnit.SECONDS));
+    }
+    public static void createembedRollGame(String slovo, MessageChannel textChannel){
+        EmbedBuilder embedBuilder = AccessEmbed();
+        embedBuilder.setTitle("На основе рандома выбрана следующая игра!!!");
+        embedBuilder.setImage("https://media.tenor.com/v0ygh6Q-qtMAAAAi/khersi-dance.gif");
+        embedBuilder.addField("Игра: ", slovo, true);
+        embedBuilder.setFooter("GayBot", Main.getIcon());
+        embedBuilder.setColor(Color.orange);
+        embedBuilder.setTimestamp(Instant.now());
+        textChannel.sendMessageEmbeds(embedBuilder.build()).queue(message -> message.delete().queueAfter(20, TimeUnit.SECONDS));
+    }
+    public static void createRollPos(String person1,String person2,String person3,String person4,String person5,MessageChannel textChannel){
+        EmbedBuilder embedBuilder = AccessEmbed();
+        embedBuilder.setTitle("🎉Распределение по ролям!!!🎉");
+        embedBuilder.setDescription("Вот что получилось:");
+        embedBuilder.setImage("https://media.tenor.com/BSEQAtx0bvQAAAAC/dota2.gif");
+        embedBuilder.addField("⚔️Керри (1 pos): ", person1, false);
+        embedBuilder.addField("🏹Мидер (2 pos): ", person2, false);
+        embedBuilder.addField("🪓Хардлейнер (3 pos): ", person3, false);
+        embedBuilder.addField("🛡️Поддержка (4 pos): ", person4, false);
+        embedBuilder.addField("💊Полная поддержка (5 pos): ", person5, false);
+        embedBuilder.setFooter("GayBot", Main.getIcon());
+        embedBuilder.setColor(Color.orange);
+        embedBuilder.setTimestamp(Instant.now());
+        textChannel.sendMessageEmbeds(embedBuilder.build()).queue();
+    }
+    public static void createVersion(String title, String addfield, MessageChannel textChannel){
+        EmbedBuilder embedBuilder = AccessEmbed();
+        embedBuilder.setTitle(title);
+        embedBuilder.setDescription("Лог изменений:");
+        embedBuilder.addField("Список: ", addfield,false);
+        embedBuilder.setFooter("GayBot", Main.getIcon());
+        embedBuilder.setColor(Color.orange);
+        embedBuilder.setTimestamp(Instant.now());
+        textChannel.sendMessageEmbeds(embedBuilder.build()).queue(message -> message.delete().queueAfter(20, TimeUnit.SECONDS));
     }
     public static String WonOrNote(String text){
         if(text.equals("Поражение")){
