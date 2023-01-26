@@ -14,9 +14,12 @@ import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
 import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import net.dv8tion.jda.api.entities.*;
+import net.dv8tion.jda.api.entities.channel.middleman.AudioChannel;
+import net.dv8tion.jda.api.entities.channel.middleman.MessageChannel;
 import net.dv8tion.jda.api.managers.AudioManager;
 
 import java.awt.*;
+import java.io.IOException;
 
 public class PlayCommand implements ServerCommand {
 
@@ -38,17 +41,19 @@ public class PlayCommand implements ServerCommand {
                     String rawLink = builder.toString().trim().replace("]", "").replace("[", "");
                     if (rawLink.equals("gachi")) {
                         rawLink = TrackList.getGachiLink();
+
                     }
                     if (rawLink.equals("GachiRadio")) {
                         rawLink = TrackList.getGachiRadio();
+
                     }
                     if (rawLink.equals("phonk")) {
                         rawLink = TrackList.getPhonkLink();
                     }
-                    if (rawLink.equals("my")){
+                    if (rawLink.equals("my")) {
                         rawLink = TrackList.getMyPlaylist();
                     }
-                    if (rawLink.equals("mashup")){
+                    if (rawLink.equals("mashup")) {
                         rawLink = TrackList.getOxxxyLink();
                     }
                     if (!rawLink.startsWith("https")) {
@@ -60,9 +65,13 @@ public class PlayCommand implements ServerCommand {
                         @Override
                         public void trackLoaded(AudioTrack audioTrack) {
                             if (audioTrack != null) {
-                                EmbedCreate.createEmbedTrackLoaded("▶Трек загружен: " + audioTrack.getInfo().title,
-                                        getURL(url), member.getUser().getName(),
-                                        Utils.formatLongDuration(audioTrack.getDuration()), textChannel);
+                                try {
+                                    EmbedCreate.createEmbedTrackLoaded("▶Трек загружен: " + audioTrack.getInfo().title,
+                                            Main.getUrlForVideo(getURL(url)), member.getUser().getName(),
+                                            Utils.formatLongDuration(audioTrack.getDuration()), textChannel);
+                                } catch (IOException e) {
+                                    throw new RuntimeException(e);
+                                }
                                 scheduler.addToQueue(audioTrack);
                             }
                         }
@@ -77,9 +86,14 @@ public class PlayCommand implements ServerCommand {
                                     }
                                 }
                                 int cost = audioPlaylist.getTracks().size();
-                                EmbedCreate.createEmbedPlaylistLoad("▶Аудиоплейлист загружен: " + audioPlaylist.getName(),
-                                        "🎵Длительность: " + Utils.formatLongDuration(time),
-                                        "GayBot", Main.getIcon(), Color.ORANGE, textChannel, cost, url, audioPlaylist.getName());
+                                try {
+                                    EmbedCreate.createEmbedPlaylistLoad("▶Аудиоплейлист загружен: " + audioPlaylist.getName(),
+                                            "🎵Длительность: " + Utils.formatLongDuration(time),
+                                            "GayBot", Main.getIcon(), Color.ORANGE, textChannel, cost,
+                                            Main.getURLImagePlaylist(getUrlPlayList(url)));
+                                } catch (IOException e) {
+                                    throw new RuntimeException(e);
+                                }
                                 for (AudioTrack audioTrack : audioPlaylist.getTracks()) {
                                     scheduler.addToQueue(audioTrack);
                                 }
@@ -109,7 +123,9 @@ public class PlayCommand implements ServerCommand {
     }
 
     public static String getURL(String url) {
-        String VideoID = url.split("v=")[1];
-        return "https://img.youtube.com/vi/" + VideoID + "/hqdefault.jpg";
+        return url.split("v=")[1];
+    }
+    public static String getUrlPlayList(String url) {
+        return url.split("list=")[1];
     }
 }

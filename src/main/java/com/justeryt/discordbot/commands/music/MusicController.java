@@ -9,8 +9,8 @@ import java.nio.ByteBuffer;
 
 public class MusicController {
 
-    private Guild guild;
-    private AudioPlayer audioPlayer;
+    private final Guild guild;
+    private final AudioPlayer audioPlayer;
     private ByteBuffer buffer;
     private MutableAudioFrame frame;
     private final TrackScheduler scheduler;
@@ -19,7 +19,7 @@ public class MusicController {
         this.guild = guild;
         this.audioPlayer = Main.getAudioPlayerManager().createPlayer();
         this.guild.getAudioManager().setSendingHandler(new AudioPlayerSendHandler(audioPlayer, buffer, frame));
-        this.scheduler = new TrackScheduler(audioPlayer);
+        this.scheduler = new TrackScheduler(audioPlayer, guild);
         this.audioPlayer.addListener(scheduler);
 
     }

@@ -4,6 +4,8 @@ import com.justeryt.discordbot.commands.Utils.EmbedCreate;
 import com.justeryt.discordbot.commands.types.ServerCommand;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.*;
+import net.dv8tion.jda.api.entities.channel.middleman.AudioChannel;
+import net.dv8tion.jda.api.entities.channel.middleman.MessageChannel;
 
 public class KickCommand implements ServerCommand {
 
@@ -11,7 +13,7 @@ public class KickCommand implements ServerCommand {
     public void performCommand(String[] arguments, Guild guild, Member member, MessageChannel textChannel, Message message, AudioChannel voiceChannel)  {
         if (arguments.length == 3) {
             try {
-                Member target = message.getMentionedMembers().get(0);
+                Member target = message.getMentions().getMembers().get(0);
                 if (target != null) {
                     String reason = arguments[2];
                     if (reason != null) {

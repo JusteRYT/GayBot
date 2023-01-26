@@ -9,10 +9,12 @@ import com.sedmelluq.discord.lavaplayer.player.event.AudioEventAdapter;
 import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackEndReason;
-import net.dv8tion.jda.api.entities.TextChannel;
+import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 
 
 import java.awt.*;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
@@ -23,7 +25,7 @@ import java.util.concurrent.LinkedBlockingDeque;
 public class TrackScheduler extends AudioEventAdapter {
     private final AudioPlayer player;
     private final BlockingDeque<AudioTrack> queue;
-    private final TextChannel textChannel;
+    private TextChannel textChannel;
     private static final float[] BASS_BOOST = {
             0,2f,
             0.15f,
@@ -43,10 +45,10 @@ public class TrackScheduler extends AudioEventAdapter {
     };
     private final EqualizerFactory equalizerFactory;
 
-    public TrackScheduler(AudioPlayer player) {
+    public TrackScheduler(AudioPlayer player, Guild guild) {
         this.player = player;
         this.queue = new LinkedBlockingDeque<>();
-        this.textChannel = Main.getJda().getTextChannelById(529237596602105867L);
+        this.textChannel = guild.getDefaultChannel().asTextChannel();
         this.equalizerFactory = new EqualizerFactory();
         this.player.setFilterFactory(equalizerFactory);
         this.player.setFrameBufferDuration(500);
@@ -70,8 +72,12 @@ public class TrackScheduler extends AudioEventAdapter {
         super.onTrackStart(player, track);
         String time = Utils.formatLongDuration(track.getInfo().length);
         long millisecond = track.getInfo().length;
-        EmbedCreate.createEmbedTrackScheduler("Сейчас ебашит: " + track.getInfo().title, "Длительность: " + time,
-                "GayBot", Main.getIcon(), textChannel, getLink(track), Color.orange, millisecond);
+        try {
+            EmbedCreate.createEmbedTrackScheduler("Сейчас ебашит: " + track.getInfo().title, "Длительность: " + time,
+                    "GayBot", Main.getIcon(), textChannel, Main.getUrlForVideo(getLink(track)), Color.orange, millisecond);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
@@ -116,8 +122,6 @@ public class TrackScheduler extends AudioEventAdapter {
         queue.drainTo(drainQueue);
     }
 
-    public void playNow(AudioTrack audioTrack) {
-    }
 
     public void skip() {
         startNextTrack(false);
@@ -145,9 +149,6 @@ public class TrackScheduler extends AudioEventAdapter {
         player.setVolume(volume);
     }
 
-    public void getVolume() {
-        player.getVolume();
-    }
 
     public void stop() {
         player.setPaused(true);
@@ -165,9 +166,12 @@ public class TrackScheduler extends AudioEventAdapter {
     }
 
     public static String getLink(AudioTrack track) {
-
-        String link = track.getIdentifier();
-        return String.format("http://img.youtube.com/vi/" + link + "/hqdefault.jpg");
+        String link = track.getInfo().uri;
+        return link.split("v=")[1];
     }
+    public void setTextChannel(TextChannel textChannel){
+        this.textChannel = textChannel;
+    }
+
 }
 

@@ -3,9 +3,8 @@ package com.justeryt.discordbot.commands.Utils;
 import com.justeryt.discordbot.Main;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.OnlineStatus;
-import net.dv8tion.jda.api.entities.MessageChannel;
-import net.dv8tion.jda.api.entities.TextChannel;
-
+import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
+import net.dv8tion.jda.api.entities.channel.middleman.MessageChannel;
 import java.awt.*;
 import java.time.Instant;
 import java.util.concurrent.TimeUnit;
@@ -60,11 +59,11 @@ public abstract class EmbedCreate {
     }
 
     public static void createEmbedPlaylistLoad(String title, String description, String footer, String icon
-            , Color color, MessageChannel textChannel, int cost, String url, String name) {
+            , Color color, MessageChannel textChannel, int cost, String url) {
         EmbedBuilder embedBuilder = AccessEmbed();
         embedBuilder.setTitle(title);
         embedBuilder.setDescription(description);
-        embedBuilder.setAuthor(name, url);
+        embedBuilder.setThumbnail(url);
         embedBuilder.addField("Количество треков: ", String.valueOf(cost), true);
         embedBuilder.setFooter(footer, icon);
         embedBuilder.setColor(color);
@@ -98,7 +97,7 @@ public abstract class EmbedCreate {
         textChannel.sendMessageEmbeds(embedBuilder.build()).queue(message -> message.delete().queueAfter(30, TimeUnit.SECONDS));
     }
 
-    public static void createEmbedOnJoin(String title, String description, String text, String thunmbail, String addField, MessageChannel textChannel) {
+    public static void createEmbedOnJoin(String title, String description, String text, String thunmbail, String addField, TextChannel textChannel) {
         EmbedBuilder embedBuilder = AccessEmbed();
         embedBuilder.setTitle(title);
         embedBuilder.setDescription("Пользователь: " + description);
@@ -141,7 +140,6 @@ public abstract class EmbedCreate {
         embedBuilder.setColor(Color.orange);
         embedBuilder.setTimestamp(Instant.now());
         textChannel.sendMessageEmbeds(embedBuilder.build()).queue(message -> message.delete().queueAfter(15, TimeUnit.SECONDS));
-        ;
     }
 
     public static void createParser(String title, String urlImage, MessageChannel textChannel) {
@@ -169,7 +167,6 @@ public abstract class EmbedCreate {
         embedBuilder.setColor(Color.orange);
         embedBuilder.setTimestamp(Instant.now());
         textChannel.sendMessageEmbeds(embedBuilder.build()).queue(message -> message.delete().queueAfter(25, TimeUnit.SECONDS));
-        ;
     }
 
     public static void createParserNewsSolo(String title, String Description, String LinkNews, String UrlImage, MessageChannel textChannel) {
@@ -250,7 +247,7 @@ public abstract class EmbedCreate {
     public static void EmbedCreateRoll (String member, int procent, MessageChannel textChannel){
         EmbedBuilder embedBuilder = AccessEmbed();
         embedBuilder.setTitle("Пользователь: " + member);
-        embedBuilder.addField("Процент: ", String.valueOf(procent) + "%",false);
+        embedBuilder.addField("Процент: ", procent + "%",false);
         embedBuilder.setFooter("GayBot", Main.getIcon());
         embedBuilder.setColor(Color.orange);
         embedBuilder.setTimestamp(Instant.now());
@@ -281,11 +278,12 @@ public abstract class EmbedCreate {
         embedBuilder.setTimestamp(Instant.now());
         textChannel.sendMessageEmbeds(embedBuilder.build()).queue();
     }
-    public static void createVersion(String title, String addfield, MessageChannel textChannel){
+    public static void createVersion(String title, String addfield, String addfield1, MessageChannel textChannel){
         EmbedBuilder embedBuilder = AccessEmbed();
         embedBuilder.setTitle(title);
         embedBuilder.setDescription("Лог изменений:");
-        embedBuilder.addField("Список: ", addfield,false);
+        embedBuilder.addField("1.12: ", addfield1, false);
+        embedBuilder.addField("1.11: ", addfield,false);
         embedBuilder.setFooter("GayBot", Main.getIcon());
         embedBuilder.setColor(Color.orange);
         embedBuilder.setTimestamp(Instant.now());

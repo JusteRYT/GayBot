@@ -4,6 +4,8 @@ import com.justeryt.discordbot.Main;
 import com.justeryt.discordbot.commands.Utils.EmbedCreate;
 import com.justeryt.discordbot.commands.types.ServerCommand;
 import net.dv8tion.jda.api.entities.*;
+import net.dv8tion.jda.api.entities.channel.middleman.AudioChannel;
+import net.dv8tion.jda.api.entities.channel.middleman.MessageChannel;
 
 
 public class HelpCommands implements ServerCommand {
@@ -15,7 +17,7 @@ public class HelpCommands implements ServerCommand {
                 **🎶!bass** - *Добавляет бассы в музло ыыыы*
                 **💥!clear <Число 2 и более>** - *Сотру вашу жизнь*
                 **🤡!kick <Чел> <Причина>** *Нахуй бездаря с сервера*
-                **😅!kickVoice <Чел> <Причина>** *Уберу этого долбаеба с голосового канала*
+                **😅!kickVoice <Чел>** *Уберу этого долбаеба с голосового канала*
                 **🔊!play <url>**-*Музло ыыыы*
                 **🎵!play gachi** - *Только мужская музыка*
                 **🎵!play phonk** - *Для настояхих отбросов и позеров*

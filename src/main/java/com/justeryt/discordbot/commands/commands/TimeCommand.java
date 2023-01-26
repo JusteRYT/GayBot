@@ -5,6 +5,8 @@ import com.justeryt.discordbot.commands.Utils.EmbedCreate;
 import com.justeryt.discordbot.commands.Utils.Utils;
 import com.justeryt.discordbot.commands.types.ServerCommand;
 import net.dv8tion.jda.api.entities.*;
+import net.dv8tion.jda.api.entities.channel.middleman.AudioChannel;
+import net.dv8tion.jda.api.entities.channel.middleman.MessageChannel;
 
 public class TimeCommand implements ServerCommand {
     @Override

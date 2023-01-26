@@ -1,6 +1,5 @@
 package com.justeryt.discordbot;
 
-import com.justeryt.discordbot.commands.Listener.OnShutDown;
 import com.justeryt.discordbot.commands.Listener.onJoin;
 import com.justeryt.discordbot.commands.Listener.onMemberJoin;
 import com.justeryt.discordbot.commands.Listener.onReadyBot;
@@ -21,9 +20,11 @@ import net.dv8tion.jda.api.utils.ChunkingFilter;
 import net.dv8tion.jda.api.utils.MemberCachePolicy;
 import net.dv8tion.jda.api.utils.cache.CacheFlag;
 import org.apache.commons.lang3.time.StopWatch;
-
-import javax.security.auth.login.LoginException;
-import java.io.IOException;
+import org.json.JSONException;
+import org.json.JSONObject;
+import java.io.*;
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -44,16 +45,12 @@ public class Main extends ListenerAdapter {
         jdaBuilder.setStatus(OnlineStatus.ONLINE);
         //Статус бота (Во что играет или просто цитатка)
         jdaBuilder.setActivity(Activity.playing("Привет я твой персональный бот!"));
-        jdaBuilder.addEventListeners(new onJoin(), new onMemberJoin(), new OnShutDown(), new onReadyBot());
-        jdaBuilder.enableIntents(GatewayIntent.GUILD_MEMBERS, GatewayIntent.GUILD_MESSAGES, GatewayIntent.GUILD_PRESENCES);
+        jdaBuilder.addEventListeners(new onJoin(), new onMemberJoin(), new onReadyBot());
+        jdaBuilder.enableIntents(GatewayIntent.GUILD_MEMBERS, GatewayIntent.GUILD_MESSAGES, GatewayIntent.GUILD_PRESENCES, GatewayIntent.MESSAGE_CONTENT);
         jdaBuilder.setMemberCachePolicy(MemberCachePolicy.ALL);
         jdaBuilder.setChunkingFilter(ChunkingFilter.ALL);
         jdaBuilder.enableCache(CacheFlag.ONLINE_STATUS);
-        try {
-            jda = jdaBuilder.build();
-        } catch (LoginException exception) {
-            exception.printStackTrace();
-        }
+        jda = jdaBuilder.build();
         //команды
         registerCommands();
         //Анимированный статус
@@ -101,6 +98,7 @@ public class Main extends ListenerAdapter {
     public static String getIcon() {
         return "https://goo.su/vZAAi";
     }
+
     public static String getImageMusic() {
         return "https://thumbs.gfycat.com/OpulentShortAfricanporcupine-size_restricted.gif";
     }
@@ -112,15 +110,55 @@ public class Main extends ListenerAdapter {
     public static ArrayList<String> getList() {
         return new ArrayList<>();
     }
-    public static Random getRandom(){
+
+    public static Random getRandom() {
         return new Random();
     }
-    public static List<Guild> getGuild(){
+
+    public static List<Guild> getGuild() {
         return jda.getGuilds();
     }
-    public static long getTime(){
+
+    public static long getTime() {
         return Main.stopWatch.getTime();
     }
 
+    public static String getURLImagePlaylist(String videoID) throws IOException {
+        String URl = "https://www.googleapis.com/youtube/v3/playlists?part=snippet&id=" + videoID + "&key=AIzaSyDTUo8i0oVCD8lR8Ajap54GV19je9r5Z7s";
+        return getStringURL(URl);
+    }
 
+    private static String getStringURL(String URl) throws IOException {
+        InputStream is = new URL(URl).openStream();
+        BufferedReader rd = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8));
+        String jsonText = readAll(rd);
+        JSONObject object = new JSONObject(jsonText);
+        try {
+            return object.getJSONArray("items").getJSONObject(0)
+                    .getJSONObject("snippet")
+                    .getJSONObject("thumbnails").
+                    getJSONObject("maxres").
+                    getString("url");
+        }catch (JSONException e){
+            return object.getJSONArray("items").getJSONObject(0)
+                    .getJSONObject("snippet")
+                    .getJSONObject("thumbnails").
+                    getJSONObject("high").
+                    getString("url");
+        }
+    }
+
+    public static String getUrlForVideo(String VideoID) throws IOException{
+        String url = "https://www.googleapis.com/youtube/v3/videos?key=AIzaSyDTUo8i0oVCD8lR8Ajap54GV19je9r5Z7s&part=snippet&id=" + VideoID;
+        return getStringURL(url);
+    }
+
+    public static String readAll(Reader rd) throws IOException {
+        StringBuilder stringBuilder = new StringBuilder();
+        int cp;
+        while ((cp = rd.read()) != -1) {
+            stringBuilder.append((char) cp);
+        }
+        return stringBuilder.toString();
+    }
 }

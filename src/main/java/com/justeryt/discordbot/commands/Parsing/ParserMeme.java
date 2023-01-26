@@ -3,6 +3,8 @@ package com.justeryt.discordbot.commands.Parsing;
 import com.justeryt.discordbot.commands.Utils.EmbedCreate;
 import com.justeryt.discordbot.commands.types.ServerCommand;
 import net.dv8tion.jda.api.entities.*;
+import net.dv8tion.jda.api.entities.channel.middleman.AudioChannel;
+import net.dv8tion.jda.api.entities.channel.middleman.MessageChannel;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -31,7 +33,7 @@ public class ParserMeme implements ServerCommand {
                 Elements jpg = doc.select("img[src$=jpg]");
                 Element infoJpg = jpg.get(random.nextInt(jpg.size()));
                 String imgUrl = infoJpg.attr("src"); // Ссылка на картинку
-                String Title = infoJpg.attr("alt"); // Заголовок к картинки
+                String Title = infoJpg.attr("alt"); // Заголовок к картинкам
                 EmbedCreate.createParser(Title, imgUrl, textChannel);
 
             } catch (IOException e) {

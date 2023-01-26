@@ -1,13 +1,11 @@
 package com.justeryt.discordbot.commands.Listener;
 
 import com.justeryt.discordbot.commands.Utils.EmbedCreate;
-import net.dv8tion.jda.api.entities.AudioChannel;
-import net.dv8tion.jda.api.entities.BaseGuildMessageChannel;
 import net.dv8tion.jda.api.entities.Member;
-import net.dv8tion.jda.api.entities.TextChannel;
-import net.dv8tion.jda.api.events.guild.voice.GuildVoiceJoinEvent;
+import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
+import net.dv8tion.jda.api.entities.channel.middleman.AudioChannel;
+import net.dv8tion.jda.api.events.guild.voice.GuildVoiceUpdateEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
 
@@ -23,9 +21,9 @@ public class onJoin extends ListenerAdapter {
     private final long Maksim = 370241725597351936L;
 
     @Override
-    public void onGuildVoiceJoin(@NotNull GuildVoiceJoinEvent event) {
+    public void onGuildVoiceUpdate(GuildVoiceUpdateEvent event) {
         Member member = event.getMember();
-        BaseGuildMessageChannel textChannel = event.getGuild().getDefaultChannel();
+        TextChannel textChannel = event.getGuild().getDefaultChannel().asTextChannel();
         AudioChannel voiceChannel = Objects.requireNonNull(member.getVoiceState()).getChannel();
         if (textChannel != null) {
             if (voiceChannel != null) {

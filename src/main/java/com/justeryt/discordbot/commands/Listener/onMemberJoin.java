@@ -1,10 +1,9 @@
 package com.justeryt.discordbot.commands.Listener;
 
 import com.justeryt.discordbot.commands.Utils.EmbedCreate;
-import net.dv8tion.jda.api.entities.BaseGuildMessageChannel;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Role;
-import net.dv8tion.jda.api.entities.TextChannel;
+import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.events.guild.member.GuildMemberJoinEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
@@ -15,7 +14,7 @@ public class onMemberJoin extends ListenerAdapter {
     @Override
     public void onGuildMemberJoin(@NotNull GuildMemberJoinEvent event) {
         Member member = event.getMember();
-        BaseGuildMessageChannel textChannel = event.getGuild().getDefaultChannel();
+        TextChannel textChannel = event.getGuild().getDefaultChannel().asTextChannel();
         assert textChannel != null;
         if(!member.getUser().isBot()) {
             EmbedCreate.createEmbedOnMemberJoin("🎉🎉🎉Встречайте нового пользователя!!!🎉🎉🎉", "Пользователь:" + member.getUser().getName(),
