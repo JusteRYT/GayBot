@@ -5,6 +5,7 @@ import com.justeryt.discordbot.commands.Listener.onMemberJoin;
 import com.justeryt.discordbot.commands.Listener.onReadyBot;
 import com.justeryt.discordbot.commands.commands.CommandManager;
 import com.justeryt.discordbot.commands.music.AudioManager;
+import com.justeryt.discordbot.commands.music.Track;
 import com.justeryt.discordbot.resource.LoadToken;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager;
@@ -37,6 +38,7 @@ public class Main extends ListenerAdapter {
     public static AudioPlayerManager audioPlayerManager;
     private static AudioManager audioManager;
     public static StopWatch stopWatch = new StopWatch();
+    public static Track track;
 
     public static void main(String[] args) throws IOException {
         //Вставляем ключ от бота (Нельзя проебать, а то заного его придется делать)
@@ -51,6 +53,7 @@ public class Main extends ListenerAdapter {
         jdaBuilder.setChunkingFilter(ChunkingFilter.ALL);
         jdaBuilder.enableCache(CacheFlag.ONLINE_STATUS);
         jda = jdaBuilder.build();
+        track = new Track();
         //команды
         registerCommands();
         //Анимированный статус
@@ -79,6 +82,9 @@ public class Main extends ListenerAdapter {
             return jda;
         }
         return null;
+    }
+    public static Track getTrack(){
+        return track;
     }
 
     public static AudioPlayerManager getAudioPlayerManager() {
@@ -124,7 +130,7 @@ public class Main extends ListenerAdapter {
     }
 
     public static String getURLImagePlaylist(String videoID) throws IOException {
-        String URl = "https://www.googleapis.com/youtube/v3/playlists?part=snippet&id=" + videoID + "&key=AIzaSyDTUo8i0oVCD8lR8Ajap54GV19je9r5Z7s";
+        String URl = String.format("https://www.googleapis.com/youtube/v3/playlists?part=snippet&id=%s&key=%s",videoID,LoadToken.getApiKey());
         return getStringURL(URl);
     }
 
@@ -148,9 +154,14 @@ public class Main extends ListenerAdapter {
         }
     }
 
-    public static String getUrlForVideo(String VideoID) throws IOException{
-        String url = "https://www.googleapis.com/youtube/v3/videos?key=AIzaSyDTUo8i0oVCD8lR8Ajap54GV19je9r5Z7s&part=snippet&id=" + VideoID;
-        return getStringURL(url);
+    public static String getUrlForVideo(String VideoID){
+        try {
+            String url = "https://www.googleapis.com/youtube/v3/videos?key=AIzaSyDTUo8i0oVCD8lR8Ajap54GV19je9r5Z7s&part=snippet&id=" + VideoID;
+            return getStringURL(url);
+        }catch (IOException e){
+            System.out.println("Не получилось преобразовать url в Main.getUrlForVideo");
+        }
+        return null;
     }
 
     public static String readAll(Reader rd) throws IOException {
