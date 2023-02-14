@@ -11,6 +11,6 @@ import net.dv8tion.jda.api.entities.channel.middleman.MessageChannel;
 public class TimeCommand implements ServerCommand {
     @Override
     public void performCommand(String[] arguments, Guild guild, Member member, MessageChannel textChannel, Message message, AudioChannel voiceChannel) {
-        EmbedCreate.createEmbed("⌚Время работы: " + Utils.formatUltraLongDuration(Main.getTime()), textChannel);
+        EmbedCreate.createEmbed("⌚Время работы: " + Utils.bestFormatDuration(Main.getTime()), textChannel);
     }
 }
