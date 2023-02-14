@@ -18,20 +18,20 @@ public class RollPos implements ServerCommand {
         if (voiceChannel != null) {
             ArrayList<String> list = Main.getList();
             for (int i = 0; i < 5; i++) {
-                if (voiceChannel.getMembers().size() <= 6) {
-                    try {
+                try {
+                    if (!voiceChannel.getMembers().get(i).getUser().isBot()) {
                         list.add(voiceChannel.getMembers().get(i).getUser().getName());
-                    } catch (IndexOutOfBoundsException e) {
+                    } else {
                         list.add("Пусто");
                     }
-                } else {
-                    EmbedCreate.createEmbed("В голосовом чате много народа 💢",textChannel);
+                } catch (IndexOutOfBoundsException e) {
+                    list.add("Пусто");
                 }
             }
             Collections.shuffle(list);
             EmbedCreate.createRollPos(list.get(0), list.get(1), list.get(2), list.get(3), list.get(4), textChannel);
         } else {
-            EmbedCreate.createEmbed("Должен быть, хотя бы один еблан в голосовом канале📛", textChannel);
+            EmbedCreate.createEmbed("Должен быть хотя бы один еблан в голосовом канале📛", textChannel);
         }
     }
 }
