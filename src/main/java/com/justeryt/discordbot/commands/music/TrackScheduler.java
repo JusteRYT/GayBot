@@ -14,7 +14,6 @@ import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 
 
 import java.awt.*;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
@@ -26,8 +25,9 @@ public class TrackScheduler extends AudioEventAdapter {
     private final AudioPlayer player;
     private final BlockingDeque<AudioTrack> queue;
     private TextChannel textChannel;
+    private static ArrayList<String> urltitle;
     private static final float[] BASS_BOOST = {
-            0,2f,
+            0, 2f,
             0.15f,
             0.1f,
             0.05f,
@@ -52,6 +52,7 @@ public class TrackScheduler extends AudioEventAdapter {
         this.equalizerFactory = new EqualizerFactory();
         this.player.setFilterFactory(equalizerFactory);
         this.player.setFrameBufferDuration(500);
+        urltitle = Main.getList();
     }
 
     @Override
@@ -70,14 +71,19 @@ public class TrackScheduler extends AudioEventAdapter {
     @Override
     public void onTrackStart(AudioPlayer player, AudioTrack track) {
         super.onTrackStart(player, track);
-        String time = Utils.formatLongDuration(track.getInfo().length);
-        long millisecond = track.getInfo().length;
-        try {
+        setTitleUrl(track.getInfo().title, track.getInfo().uri);
+        if (track.getDuration() < 175800000) {
+            String time = Utils.bestFormatDuration(track.getInfo().length);
+            long millisecond = track.getInfo().length;
             EmbedCreate.createEmbedTrackScheduler("Сейчас ебашит: " + track.getInfo().title, "Длительность: " + time,
                     "GayBot", Main.getIcon(), textChannel, Main.getUrlForVideo(getLink(track)), Color.orange, millisecond);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+        } else {
+            String time = Utils.bestFormatDuration(track.getInfo().length, track.getIdentifier());
+            long millisecond = track.getInfo().length;
+            EmbedCreate.createEmbedTrackScheduler("Сейчас ебашит: " + track.getInfo().title, "Длительность: " + time,
+                    "GayBot", Main.getIcon(), textChannel, Main.getUrlForVideo(getLink(track)), Color.orange, millisecond);
         }
+
     }
 
     @Override
@@ -160,7 +166,7 @@ public class TrackScheduler extends AudioEventAdapter {
 
     public void Bass(float percentage) {
         final float multiplier = percentage / 100.00f;
-        for (int i = 0; i < BASS_BOOST.length; i++){
+        for (int i = 0; i < BASS_BOOST.length; i++) {
             equalizerFactory.setGain(i, BASS_BOOST[i] * multiplier);
         }
     }
@@ -169,9 +175,22 @@ public class TrackScheduler extends AudioEventAdapter {
         String link = track.getInfo().uri;
         return link.split("v=")[1];
     }
-    public void setTextChannel(TextChannel textChannel){
+
+    public void setTextChannel(TextChannel textChannel) {
         this.textChannel = textChannel;
     }
 
+    public static ArrayList<String> getTitle() {
+        return urltitle;
+    }
+
+    public static void setTitleUrl(String title, String url) {
+        if (urltitle.size() < 10) {
+            urltitle.add(String.format("[%s](%s)",title,url));
+        } else {
+            urltitle.remove(0);
+            urltitle.add(String.format("[%s](%s)",title,url));
+        }
+    }
 }
 
