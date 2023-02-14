@@ -5,6 +5,9 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.entities.channel.middleman.MessageChannel;
+import net.dv8tion.jda.api.interactions.components.ActionRow;
+import net.dv8tion.jda.api.interactions.components.buttons.Button;
+
 import java.awt.*;
 import java.time.Instant;
 import java.util.concurrent.TimeUnit;
@@ -35,7 +38,7 @@ public abstract class EmbedCreate {
     }
 
     public static void createEmbedTrackScheduler(String setTitle, String Description, String Footer, String Icon,
-                                                 MessageChannel textChannel, String Image, Color color, Long time) {
+                                                 MessageChannel textChannel, String Image, Color color, long time) {
         EmbedBuilder embedBuilder = AccessEmbed();
         embedBuilder.setTitle(setTitle);
         embedBuilder.setDescription(Description);
@@ -213,7 +216,7 @@ public abstract class EmbedCreate {
         embedBuilder.setTitle("Профиль игрока: " + title);
         embedBuilder.setDescription(String.format("**Роли: ** *%s* **|** *%s*", core, supp));
         embedBuilder.setThumbnail(thumbnail);
-        embedBuilder.addField("Сколько всего игр:", String.format("Матчей: *%s* **|** Винрейт: *%s*",AllMatch, AllMatchWinrate), false);
+        embedBuilder.addField("Сколько всего игр:", String.format("Матчей: *%s* **|** Винрейт: *%s*", AllMatch, AllMatchWinrate), false);
         embedBuilder.addField("*1 top pick hero:*", String.format("**Герой:** *%s* \n **Матчей:** *%s* \n **Винрейт:** *%s*", nameFirstPers, valuematch, WinRate1), false);
         embedBuilder.addField("*2 top pick hero:*", String.format("**Герой:** *%s* \n **Матчей:** *%s* \n **Винрейт:** *%s*", nameFirstPers2, valuematch2, WinRate2), false);
         embedBuilder.addField("*3 top pick hero:*", String.format("**Герой:** *%s* \n **Матчей:** *%s* \n **Винрейт:** *%s*", nameFirstPers3, valuematch3, WinRate3), false);
@@ -244,16 +247,18 @@ public abstract class EmbedCreate {
         embedBuilder.setTimestamp(Instant.now());
         textChannel.sendMessageEmbeds(embedBuilder.build()).queue(message -> message.delete().queueAfter(100, TimeUnit.SECONDS));
     }
-    public static void EmbedCreateRoll (String member, int procent, MessageChannel textChannel){
+
+    public static void EmbedCreateRoll(String member, int procent, MessageChannel textChannel) {
         EmbedBuilder embedBuilder = AccessEmbed();
         embedBuilder.setTitle("Пользователь: " + member);
-        embedBuilder.addField("Процент: ", procent + "%",false);
+        embedBuilder.addField("Процент: ", procent + "%", false);
         embedBuilder.setFooter("GayBot", Main.getIcon());
         embedBuilder.setColor(Color.orange);
         embedBuilder.setTimestamp(Instant.now());
         textChannel.sendMessageEmbeds(embedBuilder.build()).queue(message -> message.delete().queueAfter(20, TimeUnit.SECONDS));
     }
-    public static void createembedRollGame(String slovo, MessageChannel textChannel){
+
+    public static void createembedRollGame(String slovo, MessageChannel textChannel) {
         EmbedBuilder embedBuilder = AccessEmbed();
         embedBuilder.setTitle("На основе рандома выбрана следующая игра!!!");
         embedBuilder.setImage("https://media.tenor.com/v0ygh6Q-qtMAAAAi/khersi-dance.gif");
@@ -263,7 +268,8 @@ public abstract class EmbedCreate {
         embedBuilder.setTimestamp(Instant.now());
         textChannel.sendMessageEmbeds(embedBuilder.build()).queue(message -> message.delete().queueAfter(20, TimeUnit.SECONDS));
     }
-    public static void createRollPos(String person1,String person2,String person3,String person4,String person5,MessageChannel textChannel){
+
+    public static void createRollPos(String person1, String person2, String person3, String person4, String person5, MessageChannel textChannel) {
         EmbedBuilder embedBuilder = AccessEmbed();
         embedBuilder.setTitle("🎉Распределение по ролям!!!🎉");
         embedBuilder.setDescription("Вот что получилось:");
@@ -276,24 +282,55 @@ public abstract class EmbedCreate {
         embedBuilder.setFooter("GayBot", Main.getIcon());
         embedBuilder.setColor(Color.orange);
         embedBuilder.setTimestamp(Instant.now());
-        textChannel.sendMessageEmbeds(embedBuilder.build()).queue();
+        textChannel.sendMessageEmbeds(embedBuilder.build()).queue(message -> message.delete().queueAfter(20,TimeUnit.SECONDS));
     }
-    public static void createVersion(String title, String addfield, String addfield1, MessageChannel textChannel){
+
+    public static void createVersion(String title, String addfield, String addfield1, MessageChannel textChannel) {
         EmbedBuilder embedBuilder = AccessEmbed();
         embedBuilder.setTitle(title);
         embedBuilder.setDescription("Лог изменений:");
+        embedBuilder.addField("1.13: ", addfield, false);
         embedBuilder.addField("1.12: ", addfield1, false);
-        embedBuilder.addField("1.11: ", addfield,false);
         embedBuilder.setFooter("GayBot", Main.getIcon());
         embedBuilder.setColor(Color.orange);
         embedBuilder.setTimestamp(Instant.now());
         textChannel.sendMessageEmbeds(embedBuilder.build()).queue(message -> message.delete().queueAfter(20, TimeUnit.SECONDS));
     }
-    public static String WonOrNote(String text){
-        if(text.equals("Поражение")){
+
+    public static void createChoiceVideo(String argument, String name, String name1, String name2, String name3, String name4, MessageChannel textChannel) {
+        EmbedBuilder embedBuilder = AccessEmbed();
+        embedBuilder.setTitle("Вот что я нашёл по вашему запросу: " + argument);
+        embedBuilder.addField("Трек 1:", name, false);
+        embedBuilder.addField("Трек 2:", name1, false);
+        embedBuilder.addField("Трек 3:", name2, false);
+        embedBuilder.addField("Трек 4:", name3, false);
+        embedBuilder.addField("Трек 5:", name4, false);
+        embedBuilder.setFooter("GayBot", Main.getIcon());
+        embedBuilder.setColor(Color.orange);
+        embedBuilder.setTimestamp(Instant.now());
+        textChannel.sendMessageEmbeds(embedBuilder.build()).addComponents(ActionRow.of(
+                Button.primary("Choice 1", "1️⃣"),
+                Button.primary("Choice 2", "2️⃣"),
+                Button.primary("Choice 3", "3️⃣"),
+                Button.primary("Choice 4", "4️⃣"),
+                Button.primary("Choice 5", "5️⃣"))).queue(message -> message.delete().queueAfter(20,TimeUnit.SECONDS));
+    }
+
+    public static void createHistoryEmbed(String name, MessageChannel textChannel) {
+        EmbedBuilder embedBuilder = AccessEmbed();
+        embedBuilder.setTitle("История произведение треков");
+        embedBuilder.addField("Название: ", name, false);
+        embedBuilder.setFooter("GayBot", Main.getIcon());
+        embedBuilder.setColor(Color.orange);
+        embedBuilder.setTimestamp(Instant.now());
+        textChannel.sendMessageEmbeds(embedBuilder.build()).queue(message -> message.delete().queueAfter(20,TimeUnit.SECONDS));
+    }
+
+    public static String WonOrNote(String text) {
+        if (text.equals("Поражение")) {
             return "📛";
         }
-        if(text.equals("Победа")){
+        if (text.equals("Победа")) {
             return "✅";
         }
         return null;
