@@ -1,9 +1,9 @@
 package com.justeryt.discordbot.commands.commands;
 
 import com.justeryt.discordbot.Main;
-import com.justeryt.discordbot.commands.ListMusic.TrackList;
 import com.justeryt.discordbot.commands.Utils.EmbedCreate;
 import com.justeryt.discordbot.commands.Utils.Utils;
+import com.justeryt.discordbot.commands.music.Track;
 import com.justeryt.discordbot.commands.types.ServerCommand;
 import com.justeryt.discordbot.commands.music.MusicController;
 import com.justeryt.discordbot.commands.music.TrackScheduler;
@@ -20,12 +20,14 @@ import net.dv8tion.jda.api.managers.AudioManager;
 
 import java.awt.*;
 import java.io.IOException;
+import java.util.List;
 
 public class PlayCommand implements ServerCommand {
 
     @Override
     public void performCommand(String[] arguments, Guild guild, Member member, MessageChannel textChannel, Message message, AudioChannel voiceChannel) {
-        if (arguments.length == 2) { //! play <url>
+        Track track = Main.getTrack();
+        if (arguments[1].startsWith("https")) { //! play <url>
             GuildVoiceState voiceState;
             if ((voiceState = member.getVoiceState()) != null) {
                 if ((voiceChannel = voiceState.getChannel()) != null) {
@@ -36,67 +38,50 @@ public class PlayCommand implements ServerCommand {
                     player.addListener(scheduler);
                     AudioManager audioManager = voiceState.getGuild().getAudioManager();
                     audioManager.openAudioConnection(voiceChannel);
+                    audioManager.setSelfDeafened(true); //Бот не будет слушать вас
                     StringBuilder builder = Main.getStringBuilder();
                     for (int i = 1; i < arguments.length; i++) builder.append(arguments[i]).append(" ");
-                    String rawLink = builder.toString().trim().replace("]", "").replace("[", "");
-                    if (rawLink.equals("gachi")) {
-                        rawLink = TrackList.getGachiLink();
+                    final String url = builder.toString().trim().replace("]", "").replace("[", "");
 
-                    }
-                    if (rawLink.equals("GachiRadio")) {
-                        rawLink = TrackList.getGachiRadio();
-
-                    }
-                    if (rawLink.equals("phonk")) {
-                        rawLink = TrackList.getPhonkLink();
-                    }
-                    if (rawLink.equals("my")) {
-                        rawLink = TrackList.getMyPlaylist();
-                    }
-                    if (rawLink.equals("mashup")) {
-                        rawLink = TrackList.getOxxxyLink();
-                    }
-                    if (!rawLink.startsWith("https")) {
-                        rawLink = "ytsearch: " + rawLink;
-                    }
-
-                    final String url = rawLink;
                     audioPlayerManager.loadItem(url, new AudioLoadResultHandler() {
                         @Override
                         public void trackLoaded(AudioTrack audioTrack) {
                             if (audioTrack != null) {
-                                try {
-                                    EmbedCreate.createEmbedTrackLoaded("▶Трек загружен: " + audioTrack.getInfo().title,
-                                            Main.getUrlForVideo(getURL(url)), member.getUser().getName(),
-                                            Utils.formatLongDuration(audioTrack.getDuration()), textChannel);
-                                } catch (IOException e) {
-                                    throw new RuntimeException(e);
-                                }
                                 scheduler.addToQueue(audioTrack);
+                                if (audioTrack.getDuration() < 175800000) {
+                                    EmbedCreate.createEmbedTrackLoaded("▶Трек загружен: " + audioTrack.getInfo().title,
+                                            Main.getUrlForVideo(audioTrack.getIdentifier()), member.getUser().getName(),
+                                            Utils.bestFormatDuration(audioTrack.getDuration()), textChannel);
+                                } else {
+                                    EmbedCreate.createEmbedTrackLoaded("▶Трек загружен: " + audioTrack.getInfo().title,
+                                            Main.getUrlForVideo(audioTrack.getIdentifier()), member.getUser().getName(),
+                                            Utils.bestFormatDuration(audioTrack.getDuration(), audioTrack.getIdentifier()), textChannel);
+                                }
+
                             }
                         }
 
                         @Override
                         public void playlistLoaded(AudioPlaylist audioPlaylist) {
-                            if (audioPlaylist != null) {
-                                long time = 0;
-                                for (int i = 0; i < audioPlaylist.getTracks().size(); i++) {
-                                    if (!audioPlaylist.getTracks().isEmpty()) {
-                                        time = time + audioPlaylist.getTracks().get(i).getDuration();
+                            try {
+                                if (audioPlaylist != null) {
+                                    long time = 0;
+                                    for (int i = 0; i < audioPlaylist.getTracks().size(); i++) {
+                                        if (!audioPlaylist.getTracks().isEmpty()) {
+                                            time = time + audioPlaylist.getTracks().get(i).getDuration();
+                                        }
                                     }
-                                }
-                                int cost = audioPlaylist.getTracks().size();
-                                try {
+                                    int cost = audioPlaylist.getTracks().size();
                                     EmbedCreate.createEmbedPlaylistLoad("▶Аудиоплейлист загружен: " + audioPlaylist.getName(),
                                             "🎵Длительность: " + Utils.formatLongDuration(time),
                                             "GayBot", Main.getIcon(), Color.ORANGE, textChannel, cost,
                                             Main.getURLImagePlaylist(getUrlPlayList(url)));
-                                } catch (IOException e) {
-                                    throw new RuntimeException(e);
                                 }
                                 for (AudioTrack audioTrack : audioPlaylist.getTracks()) {
                                     scheduler.addToQueue(audioTrack);
                                 }
+                            } catch (IOException e) {
+                                EmbedCreate.createEmbed("Не удалось получить картинку плейлиста📛", textChannel);
                             }
                         }
 
@@ -119,11 +104,19 @@ public class PlayCommand implements ServerCommand {
             } else {
                 EmbedCreate.createEmbed("❌Ты должен быть в голосовом чате дебил, а потом написать плей... еблан", textChannel);
             }
+        } else {
+            try {
+                StringBuilder builder = Main.getStringBuilder();
+                for (int i = 1; i < arguments.length; i++) builder.append(arguments[i]).append("+");
+                String response = builder.toString().trim().replace("]", "").replace("[", "");
+                track.getJsonResponse(response);
+                List<String> title = track.getSearchVideoTitle();
+                EmbedCreate.createChoiceVideo(response, title.get(0),
+                        title.get(1), title.get(2), title.get(3), title.get(4), textChannel);
+            } catch (IOException e) {
+                EmbedCreate.createEmbed("Не удалось получить запрос от YoutubeApi", textChannel);
+            }
         }
-    }
-
-    public static String getURL(String url) {
-        return url.split("v=")[1];
     }
     public static String getUrlPlayList(String url) {
         return url.split("list=")[1];
