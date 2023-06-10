@@ -3,7 +3,9 @@ package com.justeryt.discordbot.commands.Parsing;
 import com.justeryt.discordbot.Main;
 import com.justeryt.discordbot.commands.Utils.EmbedCreate;
 import com.justeryt.discordbot.commands.types.ServerCommand;
-import net.dv8tion.jda.api.entities.*;
+import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.channel.middleman.AudioChannel;
 import net.dv8tion.jda.api.entities.channel.middleman.MessageChannel;
 import org.jsoup.Jsoup;
@@ -20,9 +22,9 @@ public class DotaBuffInfo implements ServerCommand {
             if (arguments.length == 2) {
                 long id = Long.parseLong(arguments[1]);
                 Document document1 = Jsoup.connect("https://www.dotabuff.com/players/" + id).userAgent("Chrome/4.0.249.0")
-                        .referrer("https://www,google.com").get();
+                        .referrer("https://www.google.com").get();
                 Document document = Jsoup.connect("https://ru.dotabuff.com/players/" + id).userAgent("Chrome/4.0.249.0")
-                        .referrer("https://www,google.com").get();
+                        .referrer("https://www.google.com").get();
                 Elements position = document.getElementsByClass("label");
                 Elements allMatch = document.getElementsByTag("td");
                 Elements MostPopularPickHero1 = document1.getElementsByClass("r-table r-only-mobile-5 heroes-overview").
