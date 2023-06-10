@@ -1,8 +1,11 @@
 package com.justeryt.discordbot.commands.commands;
+
 import com.justeryt.discordbot.Main;
 import com.justeryt.discordbot.commands.Utils.EmbedCreate;
 import com.justeryt.discordbot.commands.types.ServerCommand;
-import net.dv8tion.jda.api.entities.*;
+import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.channel.middleman.AudioChannel;
 import net.dv8tion.jda.api.entities.channel.middleman.MessageChannel;
 
@@ -17,7 +20,7 @@ public class RollGameCommand implements ServerCommand {
             ArrayList<String> list = new ArrayList<>(Arrays.asList(arguments).subList(1, arguments.length));
             Random random = Main.getRandom();
             String Choice = list.get(random.nextInt(list.size()));
-            EmbedCreate.createembedRollGame(Choice, textChannel);
+            EmbedCreate.createEmbedRollGame(Choice, textChannel);
         }else {
             EmbedCreate.createEmbed("Что я тебе зарандомлю, ты даже нечего не написал!!!💢",textChannel);
         }
