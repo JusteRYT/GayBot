@@ -46,7 +46,7 @@ public class Main extends ListenerAdapter {
         //Статус бота (Онлайн, спящий или оффлайн)
         jdaBuilder.setStatus(OnlineStatus.ONLINE);
         //Статус бота (Во что играет или просто цитатка)
-        jdaBuilder.setActivity(Activity.playing("Привет я твой персональный бот!"));
+        jdaBuilder.setActivity(Activity.watching("Привет я твой персональный бот!"));
         jdaBuilder.addEventListeners(new onJoin(), new onMemberJoin(), new onReadyBot());
         jdaBuilder.enableIntents(GatewayIntent.GUILD_MEMBERS, GatewayIntent.GUILD_MESSAGES, GatewayIntent.GUILD_PRESENCES, GatewayIntent.MESSAGE_CONTENT);
         jdaBuilder.setMemberCachePolicy(MemberCachePolicy.ALL);
