@@ -11,21 +11,20 @@ import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackEndReason;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
-
+import net.dv8tion.jda.api.entities.channel.middleman.MessageChannel;
 
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
-import java.util.concurrent.BlockingDeque;
-import java.util.concurrent.LinkedBlockingDeque;
-
 
 public class TrackScheduler extends AudioEventAdapter {
     private final AudioPlayer player;
-    private final BlockingDeque<AudioTrack> queue;
+    public static ArrayList<String> history;
+    private final ArrayList<AudioTrack> queue;
     private TextChannel textChannel;
     private static ArrayList<String> urltitle;
+    public int currentIndex;
     private static final float[] BASS_BOOST = {
             0, 2f,
             0.15f,
@@ -47,12 +46,14 @@ public class TrackScheduler extends AudioEventAdapter {
 
     public TrackScheduler(AudioPlayer player, Guild guild) {
         this.player = player;
-        this.queue = new LinkedBlockingDeque<>();
+        this.queue = new ArrayList<>();
         this.textChannel = guild.getDefaultChannel().asTextChannel();
         this.equalizerFactory = new EqualizerFactory();
         this.player.setFilterFactory(equalizerFactory);
         this.player.setFrameBufferDuration(500);
         urltitle = Main.getList();
+        this.history = new ArrayList<>();
+        this.currentIndex = 0;
     }
 
     @Override
@@ -70,18 +71,22 @@ public class TrackScheduler extends AudioEventAdapter {
 
     @Override
     public void onTrackStart(AudioPlayer player, AudioTrack track) {
+        history.add(track.getInfo().title);
+        removeQueue();
         super.onTrackStart(player, track);
         setTitleUrl(track.getInfo().title, track.getInfo().uri);
         if (track.getDuration() < 175800000) {
             String time = Utils.bestFormatDuration(track.getInfo().length);
             long millisecond = track.getInfo().length;
-            EmbedCreate.createEmbedTrackScheduler("Сейчас ебашит: " + track.getInfo().title, "Длительность: " + time,
-                    "GayBot", Main.getIcon(), textChannel, Main.getUrlForVideo(getLink(track)), Color.orange, millisecond);
+            EmbedCreate.createEmbedTrackScheduler(track.getInfo().title, "Длительность: " + time,
+                    "GayBot", Main.getIcon(), textChannel, Main.getUrlForVideo(getLink(track)), Color.orange, millisecond, track.getInfo().uri,
+                    track.getInfo().author);
         } else {
             String time = Utils.bestFormatDuration(track.getInfo().length, track.getIdentifier());
             long millisecond = track.getInfo().length;
-            EmbedCreate.createEmbedTrackScheduler("Сейчас ебашит: " + track.getInfo().title, "Длительность: " + time,
-                    "GayBot", Main.getIcon(), textChannel, Main.getUrlForVideo(getLink(track)), Color.orange, millisecond);
+            EmbedCreate.createEmbedTrackScheduler(track.getInfo().title, "Длительность: " + time,
+                    "GayBot", Main.getIcon(), textChannel, Main.getUrlForVideo(getLink(track)), Color.orange, millisecond, track.getInfo().uri,
+                    track.getInfo().author);
         }
 
     }
@@ -90,6 +95,7 @@ public class TrackScheduler extends AudioEventAdapter {
     public void onTrackEnd(AudioPlayer player, AudioTrack track, AudioTrackEndReason endReason) {
         super.onTrackEnd(player, track, endReason);
         if (endReason.mayStartNext) {
+            currentIndex++;
             startNextTrack(true);
         }
     }
@@ -108,28 +114,67 @@ public class TrackScheduler extends AudioEventAdapter {
 
 
     public void addToQueue(AudioTrack audioTrack) {
-        queue.addLast(audioTrack);
+        if (queue.isEmpty()) {
+            currentIndex = 0;
+        }
+        queue.add(audioTrack);
         startNextTrack(true);
     }
 
+    public void removeQueue() {
+        if (currentIndex >= 200) {
+            int trackToRemove = 150;
+            int newCurrentIndex = currentIndex - trackToRemove;
+            for (int i = 0; i < trackToRemove; i++) {
+                queue.remove(0);
+            }
+            currentIndex = Math.max(0, newCurrentIndex);
+        }
+    }
+
     public void startNextTrack(boolean noInterrupt) {
-        AudioTrack next = queue.pollFirst();
-        if (next != null) {
-            if (!player.startTrack(next, noInterrupt)) {
-                queue.addFirst(next);
+        if (currentIndex >= 0 && currentIndex < queue.size()) {
+            AudioTrack next = queue.get(currentIndex).makeClone();
+            if (next != null) {
+                if (!player.startTrack(next, noInterrupt)) {
+                    queue.set(currentIndex, next);
+                }
+            } else {
+                player.stopTrack();
+            }
+        }
+        if (currentIndex > queue.size()) {
+            EmbedCreate.createEmbed("В очереди не осталось треков", textChannel);
+        }
+    }
+
+    public static void history(MessageChannel textChannel) {
+        StringBuilder stringBuilder = new StringBuilder();
+        int k = 1;
+        for (int i = history.size() - 1; i > -1; i--, k++) {
+            stringBuilder.append(String.format("Трек %d: %s\n", k, history.get(i)));
+        }
+        EmbedCreate.createHistoryEmbed(stringBuilder.toString(), textChannel);
+    }
+
+    public void previous() {
+        if (currentIndex > -1) {
+            currentIndex--;
+            AudioTrack audioTrack = queue.get(currentIndex).makeClone();
+            if (audioTrack != null) {
+                player.playTrack(audioTrack);
             }
         } else {
-            player.stopTrack();
+            EmbedCreate.createEmbed("Нет треков в очереди", textChannel);
         }
     }
 
     public void drainQueue() {
-        LinkedBlockingDeque<AudioTrack> drainQueue = new LinkedBlockingDeque<>();
-        queue.drainTo(drainQueue);
+        queue.clear();
     }
 
-
     public void skip() {
+        currentIndex++;
         startNextTrack(false);
     }
 
@@ -137,9 +182,7 @@ public class TrackScheduler extends AudioEventAdapter {
         ArrayList<AudioTrack> list = getList();
         Collections.shuffle(list);
         queue.clear();
-        for (AudioTrack track : list) {
-            queue.offer(track);
-        }
+        queue.addAll(list);
     }
 
     public ArrayList<AudioTrack> getList() {
@@ -155,8 +198,7 @@ public class TrackScheduler extends AudioEventAdapter {
         player.setVolume(volume);
     }
 
-
-    public void stop() {
+    public void pause() {
         player.setPaused(true);
     }
 
@@ -186,10 +228,10 @@ public class TrackScheduler extends AudioEventAdapter {
 
     public static void setTitleUrl(String title, String url) {
         if (urltitle.size() < 10) {
-            urltitle.add(String.format("[%s](%s)",title,url));
+            urltitle.add(String.format("[%s](%s)", title, url));
         } else {
             urltitle.remove(0);
-            urltitle.add(String.format("[%s](%s)",title,url));
+            urltitle.add(String.format("[%s](%s)", title, url));
         }
     }
 }
