@@ -3,8 +3,10 @@ package com.justeryt.discordbot.commands.Utils;
 import com.justeryt.discordbot.Main;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.OnlineStatus;
+import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.entities.channel.middleman.MessageChannel;
+import net.dv8tion.jda.api.entities.emoji.Emoji;
 import net.dv8tion.jda.api.interactions.components.ActionRow;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
 
@@ -14,6 +16,7 @@ import java.util.concurrent.TimeUnit;
 
 public abstract class EmbedCreate {
     public MessageChannel textChannel;
+    private static final Guild guildEmoji = Main.getJda().getGuildById(403639391265882115L);
 
     private static EmbedBuilder AccessEmbed() {
         return new EmbedBuilder();
@@ -25,7 +28,7 @@ public abstract class EmbedCreate {
         em.setColor(Color.orange);
         em.setFooter("GayBot", Main.getIcon());
         em.setTimestamp(Instant.now());
-        textChannel.sendMessageEmbeds(em.build()).queue(message -> message.delete().queueAfter(20, TimeUnit.SECONDS));
+        textChannel.sendMessageEmbeds(em.build()).queue(message -> message.delete().queueAfter(10, TimeUnit.SECONDS));
     }
 
     public static void createEmbedClear(String SetTitle, MessageChannel textChannel) {
@@ -37,16 +40,30 @@ public abstract class EmbedCreate {
         textChannel.sendMessageEmbeds(em.build()).queue(message -> message.delete().queueAfter(15, TimeUnit.SECONDS));
     }
 
-    public static void createEmbedTrackScheduler(String setTitle, String Description, String Footer, String Icon,
-                                                 MessageChannel textChannel, String Image, Color color, long time) {
+    public static void createEmbedTrackScheduler(String title, String Description, String Footer, String Icon,
+                                                 MessageChannel textChannel, String Image, Color color, long time,
+                                                 String url, String author) {
+        Emoji pauseEmoji = guildEmoji.getEmojisByName("pause", true).get(0);
+        Emoji stopEmoji = guildEmoji.getEmojisByName("stop", true).get(0);
+        Emoji nextEmoji = guildEmoji.getEmojisByName("next",true).get(0);
+        Emoji mixEmoji = guildEmoji.getEmojisByName("shuffle", true).get(0);
+        Emoji backEmoji = guildEmoji.getEmojisByName("back", true).get(0);
         EmbedBuilder embedBuilder = AccessEmbed();
-        embedBuilder.setTitle(setTitle);
+        embedBuilder.setAuthor("Играет");
+        embedBuilder.setTitle(title,url);
         embedBuilder.setDescription(Description);
+        embedBuilder.addField("Название канала", author, true);
         embedBuilder.setFooter(Footer, Icon);
-        embedBuilder.setImage(Image);
+        embedBuilder.setThumbnail(Image);
         embedBuilder.setColor(color);
         embedBuilder.setTimestamp(Instant.now());
-        textChannel.sendMessageEmbeds(embedBuilder.build()).queue(message -> message.delete().queueAfter(time, TimeUnit.MILLISECONDS));
+        textChannel.sendMessageEmbeds(embedBuilder.build()).addActionRow(
+                Button.secondary("Previous", backEmoji),
+                Button.secondary("PauseOrPlay", pauseEmoji),
+                Button.secondary("Stop", stopEmoji),
+                Button.secondary("Next", nextEmoji),
+                Button.secondary("Shuffle", mixEmoji))
+                .queue(message -> message.delete().queueAfter(time, TimeUnit.MILLISECONDS));
     }
 
     public static void createEmbedTrackLoaded(String setTitle, String Thunmbail, String addField, String addField1, MessageChannel textChannel) {
@@ -81,6 +98,7 @@ public abstract class EmbedCreate {
         embedBuilder.setColor(Color.orange);
         embedBuilder.setFooter(Footer, Icon);
         embedBuilder.setTimestamp(Instant.now());
+        textChannel.sendTyping().completeAfter(2,TimeUnit.SECONDS);
         textChannel.sendMessageEmbeds(embedBuilder.build()).queue(message -> message.delete().queueAfter(time, TimeUnit.SECONDS));
     }
 
@@ -245,6 +263,7 @@ public abstract class EmbedCreate {
         embedBuilder.setFooter("GayBot", Main.getIcon());
         embedBuilder.setColor(Color.orange);
         embedBuilder.setTimestamp(Instant.now());
+        textChannel.sendTyping().completeAfter(2,TimeUnit.SECONDS);
         textChannel.sendMessageEmbeds(embedBuilder.build()).queue(message -> message.delete().queueAfter(100, TimeUnit.SECONDS));
     }
 
@@ -258,7 +277,7 @@ public abstract class EmbedCreate {
         textChannel.sendMessageEmbeds(embedBuilder.build()).queue(message -> message.delete().queueAfter(20, TimeUnit.SECONDS));
     }
 
-    public static void createembedRollGame(String slovo, MessageChannel textChannel) {
+    public static void createEmbedRollGame(String slovo, MessageChannel textChannel) {
         EmbedBuilder embedBuilder = AccessEmbed();
         embedBuilder.setTitle("На основе рандома выбрана следующая игра!!!");
         embedBuilder.setImage("https://media.tenor.com/v0ygh6Q-qtMAAAAi/khersi-dance.gif");
@@ -297,7 +316,13 @@ public abstract class EmbedCreate {
         textChannel.sendMessageEmbeds(embedBuilder.build()).queue(message -> message.delete().queueAfter(20, TimeUnit.SECONDS));
     }
 
-    public static void createChoiceVideo(String argument, String name, String name1, String name2, String name3, String name4, MessageChannel textChannel) {
+    public static void createChoiceVideo(String argument, String name, String name1, String name2, String name3,
+                                         String name4, MessageChannel textChannel) {
+        Emoji emojiOne = guildEmoji.getEmojisByName("one", true).get(0);
+        Emoji emojiTwo = guildEmoji.getEmojisByName("two", true).get(0);
+        Emoji emojiThree = guildEmoji.getEmojisByName("three", true).get(0);
+        Emoji emojiFour = guildEmoji.getEmojisByName("four", true).get(0);
+        Emoji emojiFive = guildEmoji.getEmojisByName("five", true).get(0);
         EmbedBuilder embedBuilder = AccessEmbed();
         embedBuilder.setTitle("Вот что я нашёл по вашему запросу: " + argument);
         embedBuilder.addField("Трек 1:", name, false);
@@ -309,11 +334,11 @@ public abstract class EmbedCreate {
         embedBuilder.setColor(Color.orange);
         embedBuilder.setTimestamp(Instant.now());
         textChannel.sendMessageEmbeds(embedBuilder.build()).addComponents(ActionRow.of(
-                Button.primary("Choice 1", "1️⃣"),
-                Button.primary("Choice 2", "2️⃣"),
-                Button.primary("Choice 3", "3️⃣"),
-                Button.primary("Choice 4", "4️⃣"),
-                Button.primary("Choice 5", "5️⃣"))).queue(message -> message.delete().queueAfter(20,TimeUnit.SECONDS));
+                Button.secondary("Choice 1", emojiOne),
+                Button.secondary("Choice 2", emojiTwo),
+                Button.secondary("Choice 3", emojiThree),
+                Button.secondary("Choice 4", emojiFour),
+                Button.secondary("Choice 5", emojiFive))).queue(message -> message.delete().queueAfter(20,TimeUnit.SECONDS));
     }
 
     public static void createHistoryEmbed(String name, MessageChannel textChannel) {
