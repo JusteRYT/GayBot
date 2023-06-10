@@ -1,6 +1,8 @@
 package com.justeryt.discordbot.commands.commands;
 
+import com.justeryt.discordbot.Main;
 import com.justeryt.discordbot.commands.Utils.EmbedCreate;
+import com.justeryt.discordbot.commands.music.TrackScheduler;
 import com.justeryt.discordbot.commands.types.ServerCommand;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.entities.channel.middleman.AudioChannel;
@@ -14,6 +16,7 @@ public class LeaveCommand implements ServerCommand {
         }else {
             guild.getAudioManager().closeAudioConnection();
             EmbedCreate.createEmbed("🙋Я ливнул пидорасы!!!", textChannel);
+            Main.getAudioManager().getMusicController(voiceChannel.getGuild().getIdLong()).getScheduler().drainQueue();
         }
 
     }
