@@ -8,7 +8,9 @@ import com.justeryt.discordbot.commands.Parsing.ParsingNewsSteam;
 import com.justeryt.discordbot.commands.Utils.EmbedCreate;
 import com.justeryt.discordbot.commands.music.Track;
 import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.entities.*;
+import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.channel.middleman.AudioChannel;
 import net.dv8tion.jda.api.entities.channel.middleman.MessageChannel;
 import net.dv8tion.jda.api.events.guild.GuildReadyEvent;
@@ -26,6 +28,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 public class CommandManager extends ListenerAdapter {
 
@@ -41,7 +44,7 @@ public class CommandManager extends ListenerAdapter {
     private final LeaveCommand leaveCommand;
     private final RemoveCommand removeCommand;
     private final ResumeCommand resumeCommand;
-    private final StopCommand stopCommand;
+    private final PauseCommand pauseCommand;
     private final JoinCommand joinCommand;
     private final NowPlayingCommand nowPlayingCommand;
     private final MuteCommand muteCommand;
@@ -60,6 +63,9 @@ public class CommandManager extends ListenerAdapter {
     private final TimeCommand timeCommand;
     private final HowManyGuildCommand howManyGuildCommand;
     private final HistoryCommand historyCommand;
+    private final PreviousCommand previousCommand;
+    private final PlayOrNot playOrNot;
+    private final StopCommand stopCommand;
 
     public CommandManager() {
         this.helpCommands = new HelpCommands();
@@ -74,7 +80,7 @@ public class CommandManager extends ListenerAdapter {
         this.leaveCommand = new LeaveCommand();
         this.removeCommand = new RemoveCommand();
         this.resumeCommand = new ResumeCommand();
-        this.stopCommand = new StopCommand();
+        this.pauseCommand = new PauseCommand();
         this.joinCommand = new JoinCommand();
         this.nowPlayingCommand = new NowPlayingCommand();
         this.muteCommand = new MuteCommand();
@@ -93,13 +99,18 @@ public class CommandManager extends ListenerAdapter {
         this.timeCommand = new TimeCommand();
         this.howManyGuildCommand = new HowManyGuildCommand();
         this.historyCommand = new HistoryCommand();
+        this.previousCommand = new PreviousCommand();
+        this.playOrNot = new PlayOrNot();
+        this.stopCommand = new StopCommand();
     }
+
     @Override
     public void onMessageReceived(@NotNull MessageReceivedEvent event) {
         if (!event.getMember().getUser().isBot()) {
             String[] arguments = event.getMessage().getContentRaw().split(" ");
             Guild guild = event.getGuild();
             Member member = event.getMember();
+            event.getChannel().sendTyping().queue();
             MessageChannel textChannel = event.getChannel();
             Message message = event.getMessage();
             AudioChannel voiceChannel = event.getGuild().getSelfMember().getVoiceState().getChannel();
@@ -141,7 +152,7 @@ public class CommandManager extends ListenerAdapter {
                     resumeCommand.performCommand(arguments, guild, member, textChannel, message, voiceChannel);
                     break;
                 case "!stop":
-                    stopCommand.performCommand(arguments, guild, member, textChannel, message, voiceChannel);
+                    pauseCommand.performCommand(arguments, guild, member, textChannel, message, voiceChannel);
                     break;
                 case "!join":
                     joinCommand.performCommand(arguments, guild, member, textChannel, message, voiceChannel);
@@ -197,9 +208,16 @@ public class CommandManager extends ListenerAdapter {
                 case "!history":
                     historyCommand.performCommand(arguments, guild, member, textChannel, message, voiceChannel);
                     break;
+                case "!previous":
+                    previousCommand.performCommand(arguments, guild, member, textChannel, message, voiceChannel);
+                    break;
+                case "!pause":
+                    pauseCommand.performCommand(arguments, guild, member, textChannel, message, voiceChannel);
+                    break;
             }
         }
     }
+
     @Override
     public void onSlashCommandInteraction(@NotNull SlashCommandInteractionEvent event) {
         String command = event.getName();
@@ -207,9 +225,10 @@ public class CommandManager extends ListenerAdapter {
         String[] arguments = new String[2];
         Guild guild = event.getGuild();
         Member member = event.getMember();
-        AudioChannel audioChannel = event.getGuild().getSelfMember().getVoiceState().getChannel();
+        AudioChannel audioChannel = member.getVoiceState().getChannel();
         MessageChannel messageChannel = event.getMessageChannel();
-        Message message = null;
+        Message message = event.getMessageChannel().getHistory().getChannel().getHistory().getMessageById(event.getId());
+        System.out.println(message);
         embedBuilder.setFooter("GayBot", Main.getIcon());
         embedBuilder.setColor(Color.orange);
         switch (command) {
@@ -229,8 +248,114 @@ public class CommandManager extends ListenerAdapter {
                 event.reply("Выполняю!").queue();
                 helpCommands.performCommand(arguments, guild, member, messageChannel, message, audioChannel);
             }
+            case "pause" -> {
+                event.reply("Выполняю!").queue();
+                pauseCommand.performCommand(arguments, guild, member, messageChannel, message, audioChannel);
+            }
+            case "resume" -> {
+                event.reply("Выполняю!").queue();
+                resumeCommand.performCommand(arguments, guild, member, messageChannel, message, audioChannel);
+            }
+            case "bass" -> {
+                String value = Arrays.toString(event.getOption("value").getAsString().split(""));
+                arguments[0] = "!bass";
+                arguments[1] = value;
+                bassCommand.performCommand(arguments, guild, member, messageChannel, message, audioChannel);
+                event.reply("Выполняю!").queue();
+            }
+            case "clear" -> {
+                String value = Arrays.toString(event.getOption("value").getAsString().split(" "));
+                arguments[0] = "!clear";
+                arguments[1] = value;
+                clearCommands.performCommand(arguments, guild, member, messageChannel, message, audioChannel);
+                event.reply("Выполняю!").queue();
+            }
+            case "servers" -> {
+                howManyGuildCommand.performCommand(arguments, guild, member, messageChannel, message, audioChannel);
+                event.reply("Выполняю!").queue();
+            }
+            case "jail" -> {
+                String people = Arrays.toString(event.getOption("people").getAsString().split(" "));
+                arguments[0] = "!jail";
+                arguments[1] = people;
+                jailCommand.performCommand(arguments, guild, member, messageChannel, message, audioChannel);
+                event.reply("Выполняю!").queue();
+            }
+            case "kick" -> {
+                String people = Arrays.toString(event.getOption("people").getAsString().split(" "));
+                arguments[0] = "!kick";
+                arguments[1] = people;
+                kickCommand.performCommand(arguments, guild, member, messageChannel, message, audioChannel);
+                event.reply("Выполняю!").queue();
+            }
+            case "leave" -> {
+                leaveCommand.performCommand(arguments, guild, member, messageChannel, message, audioChannel);
+                event.reply("Выполняю!").queue();
+            }
+            case "mute" -> {
+                String people = Arrays.toString(event.getOption("people").getAsString().split(" "));
+                arguments[0] = "!mute";
+                arguments[1] = people;
+                muteCommand.performCommand(arguments, guild, member, messageChannel, message, audioChannel);
+                event.reply("Выполняю!").queue();
+            }
+            case "unmute" -> {
+                String people = Arrays.toString(event.getOption("people").getAsString().split(" "));
+                arguments[0] = "!unmute";
+                arguments[1] = people;
+                unMuteCommand.performCommand(arguments, guild, member, messageChannel, message, audioChannel);
+                event.reply("Выполняю!").queue();
+            }
+            case "playnow" -> {
+                arguments[0] = "!nowplay";
+                nowPlayingCommand.performCommand(arguments, guild, member, messageChannel, message, audioChannel);
+                event.reply("Выполняю!").queue();
+            }
+            case "remove" -> {
+                removeCommand.performCommand(arguments, guild, member, messageChannel, message, audioChannel);
+                event.reply("Выполняю!").queue();
+            }
+            case "roll" -> {
+                rollCommand.performCommand(arguments, guild, member, messageChannel, message, audioChannel);
+                event.reply("Выполняю!").queue();
+            }
+            case "rollpos" -> {
+                rollPos.performCommand(arguments, guild, member, messageChannel, message, audioChannel);
+                event.reply("Выполняю!").queue();
+            }
+            case "shuffle" -> {
+                shuffleCommand.performCommand(arguments, guild, member, messageChannel, message, audioChannel);
+                event.reply("Выполняю!").queue();
+            }
+            case "skip" -> {
+                skipCommand.performCommand(arguments, guild, member, messageChannel, message, audioChannel);
+                event.reply("Выполняю!").queue();
+            }
+            case "time" -> {
+                timeCommand.performCommand(arguments, guild, member, messageChannel, message, audioChannel);
+                event.reply("Выполняю!").queue();
+            }
+            case "userinfo" -> {
+                String people = Arrays.toString(event.getOption("people").getAsString().split(" "));
+                arguments[0] = "!userinfo";
+                arguments[1] = people;
+                userInfoCommand.performCommand(arguments, guild, member, messageChannel, message, audioChannel);
+                event.reply("Выполняю!").queue();
+            }
+            case "version" -> {
+                versionCommand.performCommand(arguments, guild, member, messageChannel, message, audioChannel);
+                event.reply("Выполняю!").queue();
+            }
+            case "volume" -> {
+                String value = Arrays.toString(event.getOption("value").getAsString().split(" "));
+                arguments[0] = "!volume";
+                arguments[1] = value;
+                volumeCommand.performCommand(arguments, guild, member, messageChannel, message, audioChannel);
+                event.reply("Выполняю!").queue();
+            }
         }
     }
+
     @Override
     public void onGuildReady(@NotNull GuildReadyEvent event) {
         List<CommandData> commandData = new ArrayList<>();
@@ -239,11 +364,40 @@ public class CommandManager extends ListenerAdapter {
                 "Ссылка на музыку", true));
         commandData.add(Commands.slash("help", "Помощь такому уебану как ты"));
         commandData.add(Commands.slash("test", "test"));
+        commandData.add(Commands.slash("stop", "Остановить трек"));
+        commandData.add(Commands.slash("resume", "Продолжить воспроизведение"));
+        commandData.add(Commands.slash("bass", "Бассуха").
+                addOption(OptionType.STRING, "value", "количество дыцыбел", true));
+        commandData.add(Commands.slash("clear", "Очистить чат").
+                addOption(OptionType.STRING, "value", "Количество сообщений", true));
+        commandData.add(Commands.slash("servers", "Количество серверов"));
+        commandData.add(Commands.slash("jail", "Поместить плебея в тюрьму")
+                .addOption(OptionType.STRING, "people", "Чел", true));
+        commandData.add(Commands.slash("join", "Присоединиться к серверу"));
+        commandData.add(Commands.slash("kick", "Кикнуть чела")
+                .addOption(OptionType.STRING, "people", "Чел", true));
+        commandData.add(Commands.slash("leave", "Бот ливнет с чата"));
+        commandData.add(Commands.slash("mute", "Замутить чела")
+                .addOption(OptionType.STRING, "people", "Чел", true));
+        commandData.add(Commands.slash("playnow", "Какая музыка сейчас играет"));
+        commandData.add(Commands.slash("remove", "Удалить очередь"));
+        commandData.add(Commands.slash("roll", "Рандомное число")
+                .addOption(OptionType.STRING, "value", "число", true));
+        commandData.add(Commands.slash("rollpos", "Рандом позиций в доте"));
+        commandData.add(Commands.slash("shuffle", "Перемешивание очереди"));
+        commandData.add(Commands.slash("skip", "Пропуск трека"));
+        commandData.add(Commands.slash("time", "Время работы бота"));
+        commandData.add(Commands.slash("userinfo", "Информация о человеке")
+                .addOption(OptionType.STRING, "people", "чел", true));
+        commandData.add(Commands.slash("version", "Версия бота"));
+        commandData.add(Commands.slash("volume", "Громкость")
+                .addOption(OptionType.STRING, "value", "количество громкости", true));
         event.getGuild().updateCommands().addCommands(commandData).queue();
     }
+
     @Override
     public void onButtonInteraction(@NotNull ButtonInteractionEvent event) {
-        String[] arguments = new String[2];
+        String[] arguments;
         Guild guild = event.getGuild();
         Member member = event.getMember();
         AudioChannel audioChannel = event.getGuild().getSelfMember().getVoiceState().getChannel();
@@ -255,45 +409,45 @@ public class CommandManager extends ListenerAdapter {
             List<String> title = track.getSearchVideoId();
             if (event.getComponentId().equals("Choice 1")) {
                 if (audioChannel1 != null) {
-                    event.getMessage().editMessageComponents(event.getMessage().getComponents().get(0).asDisabled()).queue();
+                    arguments = new String[2];
                     arguments[0] = "!play";
                     arguments[1] = title.get(0);
                     playCommand.performCommand(arguments, guild, member, messageChannel, message, audioChannel);
-                    event.reply("✅Запускаю").queue();
+                    event.getMessage().delete().queue();
+                    event.reply("✅Запускаю").queue(interactionHook -> interactionHook.deleteOriginal().queue());
                 } else {
                     event.reply("📛Вас нет в голосовом канале").queue();
                 }
             }
             if (event.getComponentId().equals("Choice 2")) {
                 if (audioChannel1 != null) {
-                    event.getMessage().editMessageComponents(event.getMessage().getComponents().get(0).asDisabled()).queue();
+                    arguments = new String[2];
                     arguments[0] = "!play";
                     arguments[1] = title.get(1);
-                    System.out.println(Arrays.toString(arguments));
                     playCommand.performCommand(arguments, guild, member, messageChannel, message, audioChannel);
-                    event.reply("✅Запускаю").queue();
+                    event.reply("✅Запускаю").queue(interactionHook -> interactionHook.deleteOriginal().queue());
                 } else {
                     event.reply("📛Вас нет в голосовом канале").queue();
                 }
             }
             if (event.getComponentId().equals("Choice 3")) {
                 if (audioChannel1 != null) {
-                    event.getMessage().editMessageComponents(event.getMessage().getComponents().get(0).asDisabled()).queue();
+                    arguments = new String[2];
                     arguments[0] = "!play";
                     arguments[1] = title.get(2);
                     playCommand.performCommand(arguments, guild, member, messageChannel, message, audioChannel);
-                    event.reply("✅Запускаю").queue();
+                    event.reply("✅Запускаю").queue(interactionHook -> interactionHook.deleteOriginal().queue());
                 } else {
                     event.reply("📛Вас нет в голосовом канале").queue();
                 }
             }
             if (event.getComponentId().equals("Choice 4")) {
                 if (audioChannel1 != null) {
-                    event.getMessage().editMessageComponents(event.getMessage().getComponents().get(0).asDisabled()).queue();
+                    arguments = new String[2];
                     arguments[0] = "!play";
                     arguments[1] = title.get(3);
                     playCommand.performCommand(arguments, guild, member, messageChannel, message, audioChannel);
-                    event.reply("✅Запускаю").queue();
+                    event.reply("✅Запускаю").queue(interactionHook -> interactionHook.deleteOriginal().queue());
                 } else {
                     event.reply("📛Вас нет в голосовом канале").queue();
                 }
@@ -301,13 +455,46 @@ public class CommandManager extends ListenerAdapter {
             if (event.getComponentId().equals("Choice 5")) {
                 if (audioChannel1 != null) {
                     event.getMessage().editMessageComponents(event.getMessage().getComponents().get(0).asDisabled()).queue();
+                    arguments = new String[2];
                     arguments[0] = "!play";
                     arguments[1] = title.get(4);
                     playCommand.performCommand(arguments, guild, member, messageChannel, message, audioChannel);
-                    event.reply("✅Запускаю").queue();
+                    event.reply("✅Запускаю").queue(interactionHook -> interactionHook.deleteOriginal().queue());
                 } else {
                     event.reply("📛Вас нет в голосовом канале").queue();
                 }
+            }
+            if (event.getComponentId().equals("Next")) {
+                if (audioChannel1 != null) {
+                    arguments = new String[1];
+                    arguments[0] = "!skip";
+                    skipCommand.performCommand(arguments, guild, member, messageChannel, message, audioChannel);
+                    event.getMessage().delete().queue();
+                }
+            }
+            if (event.getComponentId().equals("PauseOrPlay")) {
+                arguments = new String[1];
+                playOrNot.performCommand(arguments, guild, member, messageChannel, message, audioChannel);
+                event.reply("Выполнено").queue(interactionHook -> interactionHook.deleteOriginal().queueAfter(1, TimeUnit.SECONDS));
+            }
+            if (event.getComponentId().equals("Stop")) {
+                arguments = new String[1];
+                arguments[0] = "!resume";
+                stopCommand.performCommand(arguments, guild, member, messageChannel, message, audioChannel);
+                event.getMessage().delete().queue();
+                event.reply("Выполнено").queue(interactionHook -> interactionHook.deleteOriginal().queueAfter(1, TimeUnit.SECONDS));
+            }
+            if (event.getComponentId().equals("Previous")) {
+                arguments = new String[1];
+                arguments[0] = "!previous";
+                previousCommand.performCommand(arguments, guild, member, messageChannel, message, audioChannel);
+                event.getMessage().delete().queue();
+            }
+            if (event.getComponentId().equals("Shuffle")) {
+                arguments = new String[1];
+                arguments[0] = "!shuffle";
+                shuffleCommand.performCommand(arguments, guild, member, messageChannel, message, audioChannel);
+                event.reply("выполнено").queue(interactionHook -> interactionHook.deleteOriginal().queueAfter(1, TimeUnit.SECONDS));
             }
         } catch (IOException e) {
             EmbedCreate.createEmbed("Не удалось получить JSON", messageChannel);
