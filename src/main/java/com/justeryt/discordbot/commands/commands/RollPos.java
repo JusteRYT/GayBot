@@ -20,7 +20,7 @@ public class RollPos implements ServerCommand {
             for (int i = 0; i < 5; i++) {
                 try {
                     if (!voiceChannel.getMembers().get(i).getUser().isBot()) {
-                        list.add(voiceChannel.getMembers().get(i).getUser().getName());
+                        list.add(voiceChannel.getMembers().get(i).getEffectiveName());
                     } else {
                         list.add("Пусто");
                     }
@@ -29,6 +29,7 @@ public class RollPos implements ServerCommand {
                 }
             }
             Collections.shuffle(list);
+            System.out.println(list);
             EmbedCreate.createRollPos(list.get(0), list.get(1), list.get(2), list.get(3), list.get(4), textChannel);
         } else {
             EmbedCreate.createEmbed("Должен быть хотя бы один еблан в голосовом канале📛", textChannel);
