@@ -328,8 +328,8 @@ public abstract class EmbedCreate {
         EmbedBuilder embedBuilder = AccessEmbed();
         embedBuilder.setTitle(title);
         embedBuilder.setDescription("Лог изменений:");
-        embedBuilder.addField("1.14: ", addfield, false);
-        embedBuilder.addField("1.13: ", addfield1, false);
+        embedBuilder.addField("1.14.1: ", addfield, false);
+        embedBuilder.addField("1.14: ", addfield1, false);
         embedBuilder.setFooter("GayBot", Main.getIcon());
         embedBuilder.setColor(Color.orange);
         embedBuilder.setTimestamp(Instant.now());
