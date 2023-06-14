@@ -37,13 +37,17 @@ public class DotaBuffInfo implements ServerCommand {
                 Elements MatchMost = document1.getElementsByClass("r-fluid r-10 r-line-graph");
                 Elements WinOrNot = document.getElementsByClass("r-table r-only-mobile-5 performances-overview");
                 Elements KDA = document1.getElementsByClass("r-table r-only-mobile-5 performances-overview");
-                Elements thunmbailRank = document1.getElementsByClass("rank-tier-base");
                 Elements name = document1.getElementsByClass("header-content-title");
-                String rank = thunmbailRank.get(0).getElementsByTag("img").attr("src");
+                String rankText = document.getElementsByClass("rank-tier-wrapper").attr("title").replaceAll("Место: ", "");
+                String thunmbailRank = document1.getElementsByClass("rank-tier-wrapper").attr("title");
                 String namePlayer = name.text().replace("Overview", "");
                 List<String> pos = Main.getList();
                 pos.add(position.get(0).text());//Кор
-                pos.add(position.get(6).text());//Сапп
+                if (position.size() >= 7) {
+                    pos.add(position.get(6).text());//Сапп
+                } else {
+                    pos.add("Поддержка 0%");
+                }
                 List<String> Matches = Main.getList();
                 Matches.add(allMatch.get(1).text());//Количестов матчей
                 Matches.add(allMatch.get(2).text());//Винрейт матчей
@@ -100,7 +104,7 @@ public class DotaBuffInfo implements ServerCommand {
                 KDAGame.add(KDA.get(0).getElementsByClass("r-body").get(39).text());
                 KDAGame.add(KDA.get(0).getElementsByClass("r-body").get(44).text());
                 KDAGame.add(KDA.get(0).getElementsByClass("r-body").get(49).text());
-                EmbedCreate.createDotaBuff(namePlayer, rank, pos.get(0), pos.get(1), PickHero.get(0), PickHero.get(3), PickHero.get(6),
+                EmbedCreate.createDotaBuff(namePlayer, thunmbailRank, pos.get(0), pos.get(1), PickHero.get(0), PickHero.get(3), PickHero.get(6),
                         PickHero.get(1), PickHero.get(4), PickHero.get(7), PickHero.get(2), PickHero.get(5), PickHero.get(8),
                         nameCharacter.get(0), WinOrNotGame.get(0), KDAGame.get(0), nameCharacter.get(1), WinOrNotGame.get(1),
                         KDAGame.get(1), nameCharacter.get(2), WinOrNotGame.get(2), KDAGame.get(2),
@@ -111,18 +115,18 @@ public class DotaBuffInfo implements ServerCommand {
                         nameCharacter.get(7), WinOrNotGame.get(7), KDAGame.get(7),
                         nameCharacter.get(8), WinOrNotGame.get(8), KDAGame.get(8),
                         nameCharacter.get(9), WinOrNotGame.get(9), KDAGame.get(9),
-                        Matches.get(0), Matches.get(1),
+                        Matches.get(0), Matches.get(1), rankText,
                         textChannel);
             } else {
                 EmbedCreate.createEmbed("💢Введите так !dotabuff id", textChannel);
             }
         } catch (Exception exception) {
-            if(exception instanceof IOException){
+            if (exception instanceof IOException) {
                 EmbedCreate.createEmbed("💢Не удалось загрузить страницу", textChannel);
-            } else if (exception instanceof  IndexOutOfBoundsException) {
+            } else if (exception instanceof IndexOutOfBoundsException) {
                 EmbedCreate.createEmbed("📛Приватная страница", textChannel);
-            }else {
-                EmbedCreate.createEmbed(String.valueOf(exception),textChannel);
+            } else {
+                EmbedCreate.createEmbed(String.valueOf(exception), textChannel);
             }
         }
     }
