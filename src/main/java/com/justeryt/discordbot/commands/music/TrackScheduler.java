@@ -17,6 +17,7 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
+import java.util.List;
 
 public class TrackScheduler extends AudioEventAdapter {
     private final AudioPlayer player;
@@ -25,6 +26,7 @@ public class TrackScheduler extends AudioEventAdapter {
     private TextChannel textChannel;
     private static ArrayList<String> urltitle;
     public int currentIndex;
+    public static int page;
     private static final float[] BASS_BOOST = {
             0, 2f,
             0.15f,
@@ -54,6 +56,7 @@ public class TrackScheduler extends AudioEventAdapter {
         urltitle = Main.getList();
         this.history = new ArrayList<>();
         this.currentIndex = 0;
+        this.page = 0;
     }
 
     @Override
@@ -112,7 +115,6 @@ public class TrackScheduler extends AudioEventAdapter {
         startNextTrack(false);
     }
 
-
     public void addToQueue(AudioTrack audioTrack) {
         if (queue.isEmpty()) {
             currentIndex = 0;
@@ -134,13 +136,18 @@ public class TrackScheduler extends AudioEventAdapter {
 
     public void startNextTrack(boolean noInterrupt) {
         if (currentIndex >= 0 && currentIndex < queue.size()) {
-            AudioTrack next = queue.get(currentIndex).makeClone();
-            if (next != null) {
-                if (!player.startTrack(next, noInterrupt)) {
-                    queue.set(currentIndex, next);
+            if (currentIndex > 0) {
+                AudioTrack next = queue.get(currentIndex).makeClone();
+                if (next != null) {
+                    if (!player.startTrack(next, noInterrupt)) {
+                        queue.set(currentIndex, next);
+                    }
+                } else {
+                    player.stopTrack();
                 }
-            } else {
-                player.stopTrack();
+            } else{
+                AudioTrack next = queue.get(currentIndex).makeClone();
+                player.startTrack(next, noInterrupt );
             }
         }
         if (currentIndex > queue.size()) {
@@ -148,13 +155,23 @@ public class TrackScheduler extends AudioEventAdapter {
         }
     }
 
-    public static void history(MessageChannel textChannel) {
-        StringBuilder stringBuilder = new StringBuilder();
-        int k = 1;
-        for (int i = history.size() - 1; i > -1; i--, k++) {
-            stringBuilder.append(String.format("Трек %d: %s\n", k, history.get(i)));
+    public static void history(MessageChannel textChannel, int pageNumber) {
+        String track = history.get(history.size() - 1);
+        List<String> reversedTracks = new ArrayList<>(history);
+        Collections.reverse(reversedTracks);
+        int tracksPerPage = 10; // Количество треков на странице
+        int totalTracks = history.size(); // Общее количество треков в истории
+
+        int totalPages = (int) Math.ceil((double) totalTracks / tracksPerPage); // Общее количество страниц
+        int startIndex = Math.max((pageNumber - 1) * tracksPerPage, 0); // Индекс начала текущей страницы
+        int endIndex = Math.min(startIndex + tracksPerPage, totalTracks); // Индекс конца текущей страницы
+        if (startIndex >= history.size()) {
+            // Достигнут конец истории, нет дополнительных треков для отображения
+            return;
         }
-        EmbedCreate.createHistoryEmbed(stringBuilder.toString(), textChannel);
+
+        List<String> tracksToShow = reversedTracks.subList(startIndex, endIndex);
+        EmbedCreate.createHistoryEmbed(tracksToShow, startIndex, track, textChannel, totalPages, pageNumber);
     }
 
     public void previous() {
