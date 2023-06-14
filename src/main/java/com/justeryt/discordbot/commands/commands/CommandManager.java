@@ -66,6 +66,7 @@ public class CommandManager extends ListenerAdapter {
     private final PreviousCommand previousCommand;
     private final PlayOrNot playOrNot;
     private final StopCommand stopCommand;
+    public int currentPage;
 
     public CommandManager() {
         this.helpCommands = new HelpCommands();
@@ -102,6 +103,7 @@ public class CommandManager extends ListenerAdapter {
         this.previousCommand = new PreviousCommand();
         this.playOrNot = new PlayOrNot();
         this.stopCommand = new StopCommand();
+        this.currentPage = 1;
     }
 
     @Override
@@ -110,108 +112,140 @@ public class CommandManager extends ListenerAdapter {
             String[] arguments = event.getMessage().getContentRaw().split(" ");
             Guild guild = event.getGuild();
             Member member = event.getMember();
-            event.getChannel().sendTyping().queue();
             MessageChannel textChannel = event.getChannel();
             Message message = event.getMessage();
             AudioChannel voiceChannel = event.getGuild().getSelfMember().getVoiceState().getChannel();
             switch (arguments[0]) {
                 case "!help":
+                    event.getChannel().sendTyping().queue();
                     helpCommands.performCommand(arguments, guild, member, textChannel, message, voiceChannel);
                     break;
                 case "!clear":
+                    event.getChannel().sendTyping().queue();
                     clearCommands.performCommand(arguments, guild, member, textChannel, message, voiceChannel);
                     break;
                 case "!kick":
+                    event.getChannel().sendTyping().queue();
                     kickCommand.performCommand(arguments, guild, member, textChannel, message, voiceChannel);
                     break;
                 case "!test":
+                    event.getChannel().sendTyping().queue();
                     permission.performCommand(arguments, guild, member, textChannel, message, voiceChannel);
                     break;
                 case "!play":
+                    event.getChannel().sendTyping().queue();
                     playCommand.performCommand(arguments, guild, member, textChannel, message, voiceChannel);
                     break;
                 case "!info":
+                    event.getChannel().sendTyping().queue();
                     userInfoCommand.performCommand(arguments, guild, member, textChannel, message, voiceChannel);
                     break;
                 case "!skip":
+                    event.getChannel().sendTyping().queue();
                     skipCommand.performCommand(arguments, guild, member, textChannel, message, voiceChannel);
                     break;
                 case "!shuffle":
+                    event.getChannel().sendTyping().queue();
                     shuffleCommand.performCommand(arguments, guild, member, textChannel, message, voiceChannel);
                     break;
                 case "!volume":
+                    event.getChannel().sendTyping().queue();
                     volumeCommand.performCommand(arguments, guild, member, textChannel, message, voiceChannel);
                     break;
                 case "!leave":
+                    event.getChannel().sendTyping().queue();
                     leaveCommand.performCommand(arguments, guild, member, textChannel, message, voiceChannel);
                     break;
                 case "!remove":
+                    event.getChannel().sendTyping().queue();
                     removeCommand.performCommand(arguments, guild, member, textChannel, message, voiceChannel);
                     break;
                 case "!resume":
+                    event.getChannel().sendTyping().queue();
                     resumeCommand.performCommand(arguments, guild, member, textChannel, message, voiceChannel);
                     break;
                 case "!stop":
+                    event.getChannel().sendTyping().queue();
                     pauseCommand.performCommand(arguments, guild, member, textChannel, message, voiceChannel);
                     break;
                 case "!join":
+                    event.getChannel().sendTyping().queue();
                     joinCommand.performCommand(arguments, guild, member, textChannel, message, voiceChannel);
                     break;
                 case "!nowplay":
+                    event.getChannel().sendTyping().queue();
                     nowPlayingCommand.performCommand(arguments, guild, member, textChannel, message, voiceChannel);
                     break;
                 case "!mute":
+                    event.getChannel().sendTyping().queue();
                     muteCommand.performCommand(arguments, guild, member, textChannel, message, voiceChannel);
                     break;
                 case "!unmute":
+                    event.getChannel().sendTyping().queue();
                     unMuteCommand.performCommand(arguments, guild, member, textChannel, message, voiceChannel);
                     break;
                 case "!version":
+                    event.getChannel().sendTyping().queue();
                     versionCommand.performCommand(arguments, guild, member, textChannel, message, voiceChannel);
                     break;
                 case "!bass":
+                    event.getChannel().sendTyping().queue();
                     bassCommand.performCommand(arguments, guild, member, textChannel, message, voiceChannel);
                     break;
                 case "!kickVoice":
+                    event.getChannel().sendTyping().queue();
                     kickVoiceCommand.performCommand(arguments, guild, member, textChannel, message, voiceChannel);
                     break;
                 case "!jail":
+                    event.getChannel().sendTyping().queue();
                     jailCommand.performCommand(arguments, guild, member, textChannel, message, voiceChannel);
                     break;
                 case "!meme":
+                    event.getChannel().sendTyping().queue();
                     parserMeme.performCommand(arguments, guild, member, textChannel, message, voiceChannel);
                     break;
                 case "!steam":
+                    event.getChannel().sendTyping().queue();
                     parsingNews.performCommand(arguments, guild, member, textChannel, message, voiceChannel);
                     break;
                 case "!dota":
+                    event.getChannel().sendTyping().queue();
                     parsingNewsDota.performCommand(arguments, guild, member, textChannel, message, voiceChannel);
                     break;
                 case "!dotabuff":
+                    event.getChannel().sendTyping().queue();
                     dotaBuffInfo.performCommand(arguments, guild, member, textChannel, message, voiceChannel);
                     break;
                 case "!roll":
+                    event.getChannel().sendTyping().queue();
                     rollCommand.performCommand(arguments, guild, member, textChannel, message, voiceChannel);
                     break;
                 case "!rollgame":
+                    event.getChannel().sendTyping().queue();
                     rollGameCommand.performCommand(arguments, guild, member, textChannel, message, voiceChannel);
                     break;
                 case "!rollpos":
+                    event.getChannel().sendTyping().queue();
                     rollPos.performCommand(arguments, guild, member, textChannel, message, voiceChannel);
                     break;
                 case "!time":
+                    event.getChannel().sendTyping().queue();
                     timeCommand.performCommand(arguments, guild, member, textChannel, message, voiceChannel);
                     break;
                 case "!servers":
+                    event.getChannel().sendTyping().queue();
                     howManyGuildCommand.performCommand(arguments, guild, member, textChannel, message, voiceChannel);
                     break;
                 case "!history":
+                    event.getChannel().sendTyping().queue();
                     historyCommand.performCommand(arguments, guild, member, textChannel, message, voiceChannel);
                     break;
                 case "!previous":
+                    event.getChannel().sendTyping().queue();
                     previousCommand.performCommand(arguments, guild, member, textChannel, message, voiceChannel);
                     break;
                 case "!pause":
+                    event.getChannel().sendTyping().queue();
                     pauseCommand.performCommand(arguments, guild, member, textChannel, message, voiceChannel);
                     break;
             }
@@ -495,6 +529,60 @@ public class CommandManager extends ListenerAdapter {
                 arguments[0] = "!shuffle";
                 shuffleCommand.performCommand(arguments, guild, member, messageChannel, message, audioChannel);
                 event.reply("выполнено").queue(interactionHook -> interactionHook.deleteOriginal().queueAfter(1, TimeUnit.SECONDS));
+            }
+
+            if (event.getComponentId().equals("prev")){
+                event.reply("выполнено").queue(interactionHook -> interactionHook.deleteOriginal().queueAfter(1, TimeUnit.SECONDS));
+                if (currentPage > 1) {
+                    currentPage--;
+                }
+                TrackScheduler.history(messageChannel, currentPage);
+            }
+            if (event.getComponentId().equals("next")){
+                event.reply("выполнено").queue(interactionHook -> interactionHook.deleteOriginal().queueAfter(1, TimeUnit.SECONDS));
+                currentPage++;
+                TrackScheduler.history(messageChannel, currentPage);
+            }
+            if (event.getComponentId().equals("delete")){
+                event.reply("Выполнено").queue(interactionHook -> interactionHook.deleteOriginal().queueAfter(1, TimeUnit.SECONDS));
+                event.getMessage().delete().queue();
+            }
+            if (event.getComponentId().equals("history")){
+                arguments = new String[1];
+                arguments[0] = "!history";
+                historyCommand.performCommand(arguments, guild, member, messageChannel, message, audioChannel);
+                event.reply("выполнено").queue(interactionHook -> interactionHook.deleteOriginal().queueAfter(1, TimeUnit.SECONDS));
+            }
+            if (event.getComponentId().equals("repeat")){
+                event.reply("выполнено").queue(interactionHook -> interactionHook.deleteOriginal().queueAfter(1, TimeUnit.SECONDS));
+            }
+            if (event.getComponentId().equals("down")){
+                arguments = new String[2];
+                arguments[0] = "!volume";
+                if (volumeCommand.getVolume() > 0) {
+                    arguments[1] = String.valueOf(volumeCommand.getVolume() - 20);
+                } else {
+                    arguments[1] = String.valueOf(volumeCommand.getVolume());
+                }
+                volumeCommand.performCommand(arguments, guild, member, messageChannel, message, audioChannel);
+                event.reply("выполнено").queue(interactionHook -> interactionHook.deleteOriginal().queueAfter(1, TimeUnit.SECONDS));
+            }
+            if (event.getComponentId().equals("up")){
+                arguments = new String[2];
+                arguments[0] = "!volume";
+                if (volumeCommand.getVolume() < 100) {
+                    arguments[1] = String.valueOf(volumeCommand.getVolume() + 20);
+                } else {
+                    arguments[1] = String.valueOf(volumeCommand.getVolume());
+                }
+                volumeCommand.performCommand(arguments, guild, member, messageChannel, message, audioChannel);
+                event.reply("выполнено").queue(interactionHook -> interactionHook.deleteOriginal().queueAfter(1, TimeUnit.SECONDS));
+            }
+            if (event.getComponentId().equals("leave")){
+                arguments = new String[1];
+                leaveCommand.performCommand(arguments, guild, member, messageChannel, message, audioChannel);
+                event.reply("выполнено").queue(interactionHook -> interactionHook.deleteOriginal().queueAfter(1, TimeUnit.SECONDS));
+                event.getMessage().delete().queue();
             }
         } catch (IOException e) {
             EmbedCreate.createEmbed("Не удалось получить JSON", messageChannel);
