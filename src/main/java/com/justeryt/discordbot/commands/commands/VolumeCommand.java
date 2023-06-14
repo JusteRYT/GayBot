@@ -11,6 +11,7 @@ import net.dv8tion.jda.api.entities.channel.middleman.AudioChannel;
 import net.dv8tion.jda.api.entities.channel.middleman.MessageChannel;
 
 public class VolumeCommand implements ServerCommand {
+     public static int volume = 100;
     @Override
     public void performCommand(String[] arguments, Guild guild, Member member, MessageChannel textChannel, Message message, AudioChannel voiceChannel) {
         try {
@@ -20,16 +21,21 @@ public class VolumeCommand implements ServerCommand {
                     AudioPlayer player = musicController.getAudioPlayer();
                     TrackScheduler scheduler = musicController.getScheduler();
                     player.addListener(scheduler);
-                    int volume = Integer.parseInt(arguments[1]);
                     scheduler.setVolume(volume);
-                    if (volume >= 50 & volume <= 100) {
-                        EmbedCreate.createEmbed("🔊Громкость вот такая: " + volume, textChannel);
-                    }
-                    if (volume <= 49 & volume >= 20) {
-                        EmbedCreate.createEmbed("🔉Громкость вот такая: " + volume, textChannel);
-                    }
-                    if (volume <= 19 & volume >= 0) {
-                        EmbedCreate.createEmbed("🔈Громкость вот такая: " + volume, textChannel);
+                    if(volume >= 0 && volume <= 100) {
+                        volume = Integer.parseInt(arguments[1]);
+                        System.out.println(volume);
+                        if (volume >= 50 & volume <= 100) {
+                            EmbedCreate.createEmbed("🔊Громкость вот такая: " + volume, textChannel);
+                        }
+                        if (volume <= 49 & volume >= 20) {
+                            EmbedCreate.createEmbed("🔉Громкость вот такая: " + volume, textChannel);
+                        }
+                        if (volume <= 19 & volume >= 0) {
+                            EmbedCreate.createEmbed("🔈Громкость вот такая: " + volume, textChannel);
+                        }
+                    } else {
+                        EmbedCreate.createEmbed("Громкость не может быть ниже 0 или больше 100", textChannel);
                     }
                 } else {
                     EmbedCreate.createEmbed("📛Я не в голосовом канале, ебень", textChannel);
@@ -45,5 +51,9 @@ public class VolumeCommand implements ServerCommand {
         } catch (NumberFormatException e) {
             EmbedCreate.createEmbed("Ну ты еблан, цыфры от букв не отличаешь 🤦‍♂️", textChannel);
         }
+    }
+
+    public  int getVolume() {
+        return volume;
     }
 }
