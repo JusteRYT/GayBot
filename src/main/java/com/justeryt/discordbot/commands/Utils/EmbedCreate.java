@@ -1,6 +1,7 @@
 package com.justeryt.discordbot.commands.Utils;
 
 import com.justeryt.discordbot.Main;
+import com.justeryt.discordbot.commands.Parsing.Rank;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.entities.Guild;
@@ -12,11 +13,17 @@ import net.dv8tion.jda.api.interactions.components.buttons.Button;
 
 import java.awt.*;
 import java.time.Instant;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 public abstract class EmbedCreate {
     public MessageChannel textChannel;
-    private static final Guild guildEmoji = Main.getJda().getGuildById(403639391265882115L);
+    private static final Guild guildEmoji;
+
+    static {
+        assert Main.getJda() != null;
+        guildEmoji = Main.getJda().getGuildById(403639391265882115L);
+    }
 
     private static EmbedBuilder AccessEmbed() {
         return new EmbedBuilder();
@@ -28,7 +35,7 @@ public abstract class EmbedCreate {
         em.setColor(Color.orange);
         em.setFooter("GayBot", Main.getIcon());
         em.setTimestamp(Instant.now());
-        textChannel.sendMessageEmbeds(em.build()).queue(message -> message.delete().queueAfter(10, TimeUnit.SECONDS));
+        textChannel.sendMessageEmbeds(em.build()).queue(message -> message.delete().submitAfter(5, TimeUnit.SECONDS));
     }
 
     public static void createEmbedClear(String SetTitle, MessageChannel textChannel) {
@@ -45,12 +52,17 @@ public abstract class EmbedCreate {
                                                  String url, String author) {
         Emoji pauseEmoji = guildEmoji.getEmojisByName("pause", true).get(0);
         Emoji stopEmoji = guildEmoji.getEmojisByName("stop", true).get(0);
-        Emoji nextEmoji = guildEmoji.getEmojisByName("next",true).get(0);
+        Emoji nextEmoji = guildEmoji.getEmojisByName("next", true).get(0);
         Emoji mixEmoji = guildEmoji.getEmojisByName("shuffle", true).get(0);
         Emoji backEmoji = guildEmoji.getEmojisByName("back", true).get(0);
+        Emoji gitHub = guildEmoji.getEmojisByName("history", true).get(0);
+        Emoji repeat = guildEmoji.getEmojisByName("repeat", true).get(0);
+        Emoji upVolume = guildEmoji.getEmojisByName("up", true).get(0);
+        Emoji downVolume = guildEmoji.getEmojisByName("down", true).get(0);
+        Emoji leave = guildEmoji.getEmojisByName("leave", true).get(0);
         EmbedBuilder embedBuilder = AccessEmbed();
         embedBuilder.setAuthor("Играет");
-        embedBuilder.setTitle(title,url);
+        embedBuilder.setTitle(title, url);
         embedBuilder.setDescription(Description);
         embedBuilder.addField("Название канала", author, true);
         embedBuilder.setFooter(Footer, Icon);
@@ -62,8 +74,13 @@ public abstract class EmbedCreate {
                 Button.secondary("PauseOrPlay", pauseEmoji),
                 Button.secondary("Stop", stopEmoji),
                 Button.secondary("Next", nextEmoji),
-                Button.secondary("Shuffle", mixEmoji))
-                .queue(message -> message.delete().queueAfter(time, TimeUnit.MILLISECONDS));
+                Button.secondary("Shuffle", mixEmoji)).addActionRow(
+                Button.secondary("history", gitHub),
+                Button.secondary("repeat", repeat),
+                Button.secondary("down", downVolume),
+                Button.secondary("up", upVolume),
+                Button.danger("leave", leave)
+        ).queue(message -> message.delete().submitAfter(time, TimeUnit.MILLISECONDS));
     }
 
     public static void createEmbedTrackLoaded(String setTitle, String Thunmbail, String addField, String addField1, MessageChannel textChannel) {
@@ -98,7 +115,7 @@ public abstract class EmbedCreate {
         embedBuilder.setColor(Color.orange);
         embedBuilder.setFooter(Footer, Icon);
         embedBuilder.setTimestamp(Instant.now());
-        textChannel.sendTyping().completeAfter(2,TimeUnit.SECONDS);
+        textChannel.sendTyping().completeAfter(2, TimeUnit.SECONDS);
         textChannel.sendMessageEmbeds(embedBuilder.build()).queue(message -> message.delete().queueAfter(time, TimeUnit.SECONDS));
     }
 
@@ -228,12 +245,14 @@ public abstract class EmbedCreate {
                                       String nameCharacter8, String WonAndLose8, String KDA8,
                                       String nameCharacter9, String WonAndLose9, String KDA9,
                                       String nameCharacter10, String WonAndLose10, String KDA10,
-                                      String AllMatch, String AllMatchWinrate,
+                                      String AllMatch, String AllMatchWinrate, String rankText,
                                       MessageChannel textChannel) {
+        Rank rank = new Rank();
+        String result = rank.extractRank(thumbnail);
         EmbedBuilder embedBuilder = AccessEmbed();
         embedBuilder.setTitle("Профиль игрока: " + title);
-        embedBuilder.setDescription(String.format("**Роли: ** *%s* **|** *%s*", core, supp));
-        embedBuilder.setThumbnail(thumbnail);
+        embedBuilder.setDescription(String.format("**Роли: ** *%s* **|** *%s*\n **Ранг:** %s", core, supp, rankText));
+        embedBuilder.setThumbnail(rank.getRankImages().get(result));
         embedBuilder.addField("Сколько всего игр:", String.format("Матчей: *%s* **|** Винрейт: *%s*", AllMatch, AllMatchWinrate), false);
         embedBuilder.addField("*1 top pick hero:*", String.format("**Герой:** *%s* \n **Матчей:** *%s* \n **Винрейт:** *%s*", nameFirstPers, valuematch, WinRate1), false);
         embedBuilder.addField("*2 top pick hero:*", String.format("**Герой:** *%s* \n **Матчей:** *%s* \n **Винрейт:** *%s*", nameFirstPers2, valuematch2, WinRate2), false);
@@ -250,7 +269,8 @@ public abstract class EmbedCreate {
                         **8 Матч:** *%s* | %s | KDA: *%s*\s
                         **9 Матч:** *%s* | %s | KDA: *%s*\s
                         **10 Матч:** *%s* | %s | KDA: *%s*\s
-                        """, nameCharacter, WonOrNote(WonAndLose), KDA,
+                        """,
+                nameCharacter, WonOrNote(WonAndLose), KDA,
                 nameCharacter2, WonOrNote(WonAndLose2), KDA2,
                 nameCharacter3, WonOrNote(WonAndLose3), KDA3,
                 nameCharacter4, WonOrNote(WonAndLose4), KDA4,
@@ -263,7 +283,7 @@ public abstract class EmbedCreate {
         embedBuilder.setFooter("GayBot", Main.getIcon());
         embedBuilder.setColor(Color.orange);
         embedBuilder.setTimestamp(Instant.now());
-        textChannel.sendTyping().completeAfter(2,TimeUnit.SECONDS);
+        textChannel.sendTyping().completeAfter(2, TimeUnit.SECONDS);
         textChannel.sendMessageEmbeds(embedBuilder.build()).queue(message -> message.delete().queueAfter(100, TimeUnit.SECONDS));
     }
 
@@ -301,15 +321,15 @@ public abstract class EmbedCreate {
         embedBuilder.setFooter("GayBot", Main.getIcon());
         embedBuilder.setColor(Color.orange);
         embedBuilder.setTimestamp(Instant.now());
-        textChannel.sendMessageEmbeds(embedBuilder.build()).queue(message -> message.delete().queueAfter(20,TimeUnit.SECONDS));
+        textChannel.sendMessageEmbeds(embedBuilder.build()).queue(message -> message.delete().queueAfter(20, TimeUnit.SECONDS));
     }
 
     public static void createVersion(String title, String addfield, String addfield1, MessageChannel textChannel) {
         EmbedBuilder embedBuilder = AccessEmbed();
         embedBuilder.setTitle(title);
         embedBuilder.setDescription("Лог изменений:");
-        embedBuilder.addField("1.13: ", addfield, false);
-        embedBuilder.addField("1.12: ", addfield1, false);
+        embedBuilder.addField("1.14: ", addfield, false);
+        embedBuilder.addField("1.13: ", addfield1, false);
         embedBuilder.setFooter("GayBot", Main.getIcon());
         embedBuilder.setColor(Color.orange);
         embedBuilder.setTimestamp(Instant.now());
@@ -338,25 +358,38 @@ public abstract class EmbedCreate {
                 Button.secondary("Choice 2", emojiTwo),
                 Button.secondary("Choice 3", emojiThree),
                 Button.secondary("Choice 4", emojiFour),
-                Button.secondary("Choice 5", emojiFive))).queue(message -> message.delete().queueAfter(20,TimeUnit.SECONDS));
+                Button.secondary("Choice 5", emojiFive))).queue(message -> message.delete().submitAfter(20, TimeUnit.SECONDS));
     }
 
-    public static void createHistoryEmbed(String name, MessageChannel textChannel) {
+    public static void createHistoryEmbed(List<String> tracks, int startIndex, String track, MessageChannel textChannel
+            , int totalPage, int CurrentPage) {
+        Emoji emojiNext = guildEmoji.getEmojisByName("vpered", true).get(0);
+        Emoji emojiPrev = guildEmoji.getEmojisByName("nazad", true).get(0);
+        Emoji emojiKorzina = guildEmoji.getEmojisByName("korzina", true).get(0);
         EmbedBuilder embedBuilder = AccessEmbed();
-        embedBuilder.setTitle("История произведение треков");
-        embedBuilder.addField("Название: ", name, false);
-        embedBuilder.setFooter("GayBot", Main.getIcon());
+        embedBuilder.setDescription("Сейчас играет: " + track);
+        embedBuilder.setTitle("История треков");
+        embedBuilder.setFooter(String.format("Страница %d из %d", CurrentPage, totalPage));
         embedBuilder.setColor(Color.orange);
-        embedBuilder.setTimestamp(Instant.now());
-        textChannel.sendMessageEmbeds(embedBuilder.build()).queue(message -> message.delete().queueAfter(20,TimeUnit.SECONDS));
+        for (int i = 0; i < tracks.size(); i++) {
+            embedBuilder.addField("Трек " + (startIndex + i + 1), tracks.get(i), false);
+        }
+        textChannel.sendMessageEmbeds(embedBuilder.build()).queue(message -> {
+            message.editMessageComponents(ActionRow.of(Button.secondary("prev", emojiPrev),
+                    Button.secondary("next", emojiNext), Button.danger("delete", emojiKorzina))).queue();
+        });
+
+
     }
 
-    public static String WonOrNote(String text) {
+    public static Emoji WonOrNote(String text) {
+        Emoji win = guildEmoji.getEmojisByName("win", true).get(0);
+        Emoji lose = guildEmoji.getEmojisByName("lose", true).get(0);
         if (text.equals("Поражение")) {
-            return "📛";
+            return lose;
         }
         if (text.equals("Победа")) {
-            return "✅";
+            return win;
         }
         return null;
     }
