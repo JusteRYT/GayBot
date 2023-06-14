@@ -1,6 +1,11 @@
 package com.justeryt.discordbot.commands.Listener;
 
+import com.justeryt.discordbot.Main;
 import com.justeryt.discordbot.commands.Utils.EmbedCreate;
+import com.justeryt.discordbot.commands.Utils.RandomWords;
+import com.justeryt.discordbot.commands.music.MusicController;
+import com.justeryt.discordbot.commands.music.TrackScheduler;
+import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.entities.channel.middleman.AudioChannel;
@@ -25,67 +30,70 @@ public class onJoin extends ListenerAdapter {
         Member member = event.getMember();
         TextChannel textChannel = event.getGuild().getDefaultChannel().asTextChannel();
         AudioChannel voiceChannel = Objects.requireNonNull(member.getVoiceState()).getChannel();
-        if (textChannel != null) {
+        if (!(event.getEntity().getId().equals(event.getJDA().getSelfUser().getId()) && event.getChannelLeft() != null)) {
             if (voiceChannel != null) {
                 if (member.getIdLong() == Guzanov) {
                     EmbedCreate.createEmbedOnJoin("Зашёл мистер Гузанов, мойте очко и протрите яички",
-                            member.getUser().getName(),
-                            "**Это мистер Гузанчик, грязные яички обслуживаются в первую очередь**", member.getUser().getAvatarUrl(),
+                            member.getEffectiveName(),
+                            RandomWords.generateInsult(), member.getUser().getAvatarUrl(),
                             "Зашёл на канал: " + voiceChannel.getName(), textChannel);
-                }
-                if (member.getIdLong() == Vashkevich) {
+                } else if (member.getIdLong() == Vashkevich) {
                     EmbedCreate.createEmbedOnJoin("**Покровитель молодых женских писек**",
-                            member.getUser().getName(),
-                            "**Готовьте жопки, надзиратель уже тут: **", member.getUser().getAvatarUrl(),
+                            member.getEffectiveName(),
+                            RandomWords.generateInsult(), member.getUser().getAvatarUrl(),
                             "Зашёл на канал: " + voiceChannel.getName(), textChannel);
-                }
-                if (member.getIdLong() == Brazilcev) {
+                } else if (member.getIdLong() == Brazilcev) {
                     EmbedCreate.createEmbedOnJoin("**Патаму шта дора дура!!!**",
-                            member.getUser().getName(),
-                            "**Вот он, тайный поклонник доры: **", member.getUser().getAvatarUrl(),
+                            member.getEffectiveName(),
+                            RandomWords.generateInsult(), member.getUser().getAvatarUrl(),
                             "Зашёл на канал: " + voiceChannel.getName(), textChannel);
-                }
-                if (member.getIdLong() == Ancverg) {
+                } else if (member.getIdLong() == Ancverg) {
                     EmbedCreate.createEmbedOnJoin("**Авсюнинский мачо**",
-                            member.getUser().getName(),
-                            "**Анальный укротитель в дискорде, всем неотраханым просьба зайти и получить свою порцию удовольствия от: **"
+                            member.getEffectiveName(),
+                            RandomWords.generateInsult()
                             , member.getUser().getAvatarUrl(), "Зашёл на канал: " + voiceChannel.getName(),
                             textChannel);
-                }
-                if (member.getIdLong() == Laxno) {
+                } else if (member.getIdLong() == Laxno) {
                     EmbedCreate.createEmbedOnJoin("**Вот он немеций люфтвафен и автор мейнкампфа майнкрафта, называйте как хотите**",
-                            member.getUser().getName(),
-                            "**Вот он, наш рыбак, танкист и просто дестройер мамкиных писек:  **"
+                            member.getEffectiveName(),
+                            RandomWords.generateInsult()
                             , member.getUser().getAvatarUrl(), "Зашёл на канал: " + voiceChannel.getName(),
                             textChannel);
-                }
-                if (member.getIdLong() == Roma) {
+                } else if (member.getIdLong() == Roma) {
                     EmbedCreate.createEmbedOnJoin("**С этим парнем шутки плохи: **",
-                            member.getUser().getName(),
-                            "**Он подчинил себе рой пчелок и потихоньку захватывает мир😅**"
+                            member.getEffectiveName(),
+                            RandomWords.generateInsult()
                             , member.getUser().getAvatarUrl(), "Зашёл на канал: " + voiceChannel.getName(),
                             textChannel);
-                }
-                if (member.getIdLong() == marycya) {
+                } else if (member.getIdLong() == marycya) {
                     EmbedCreate.createEmbedOnJoin("**💕💕💕Это моя любимая Марусечка💕💕💕**",
-                            member.getUser().getName(),
-                            "**Вот кто свет моих очей:  **"
+                            member.getEffectiveName(),
+                            RandomWords.generateInsult()
                             , member.getUser().getAvatarUrl(), "Зашёл на канал: " + voiceChannel.getName(),
                             textChannel);
-                }
-                if (member.getIdLong() == Dima) {
+                } else if (member.getIdLong() == Dima) {
                     EmbedCreate.createEmbedOnJoin("**Ну вы поглядите на него, с портфелем в туфлях и поганяло коронное: **",
-                            member.getUser().getName(), "**Когда то он малолетнюю дочь увел у отца и трахнул под забором, " +
-                                    "так что парни бойтесь**", member.getUser().getAvatarUrl(), "Зашёл на канал: " + voiceChannel.getName()
+                            member.getEffectiveName(), RandomWords.generateInsult(), member.getUser().getAvatarUrl(), "Зашёл на канал: " + voiceChannel.getName()
                             , textChannel);
-                }
-                if (member.getIdLong() == Maksim){
+                } else if (member.getIdLong() == Maksim) {
                     EmbedCreate.createEmbedOnJoin("**Если вы близнецы, то он вас взорвет. Ведь это самый жесткий террорист" +
-                            "в России.**[Осуждаю]", member.getUser().getName(), "**Далеко далеко в горах кто то трахнул овцу," +
-                            "так вот, это был Максимка, наш Альфа самец.**", member.getUser().getAvatarUrl(), "Зашёл на канал: " +
+                            "в России.**[Осуждаю]", member.getEffectiveName(), RandomWords.generateInsult(), member.getUser().getAvatarUrl(), "Зашёл на канал: " +
                             voiceChannel.getName(), textChannel);
+                } else {
+                    if (!member.getUser().isBot()) {
+                        EmbedCreate.createEmbedOnJoin("Смотри кто зашёл", member.getEffectiveName(),
+                                RandomWords.generateInsult(), member.getAvatarUrl(), "Зашёл на канал: " +
+                                        voiceChannel.getName(), textChannel);
+                        System.out.println(member.getUser().isBot());
+                    }
                 }
             }
+        } else {
+            MusicController musicController = Main.getAudioManager().getMusicController(event.getGuild().getIdLong());
+            AudioPlayer player = musicController.getAudioPlayer();
+            TrackScheduler scheduler = new TrackScheduler(player, event.getGuild());
+            scheduler.drainQueue();
+            player.stopTrack();
         }
     }
 }
