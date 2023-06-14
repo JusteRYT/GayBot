@@ -15,12 +15,11 @@ public class onMemberJoin extends ListenerAdapter {
     public void onGuildMemberJoin(@NotNull GuildMemberJoinEvent event) {
         Member member = event.getMember();
         TextChannel textChannel = event.getGuild().getDefaultChannel().asTextChannel();
-        assert textChannel != null;
         if(!member.getUser().isBot()) {
-            EmbedCreate.createEmbedOnMemberJoin("🎉🎉🎉Встречайте нового пользователя!!!🎉🎉🎉", "Пользователь:" + member.getUser().getName(),
+            EmbedCreate.createEmbedOnMemberJoin("🎉🎉🎉Встречайте нового пользователя!!!🎉🎉🎉", "Пользователь:" + member.getEffectiveName(),
                     member.getUser().getAvatarUrl(),getRoles(member.getRoles()), textChannel);
         } else {
-            EmbedCreate.createEmbedOnMemberJoin("🎉🎉🎉Встречайте нового Бота>!!!🎉🎉🎉", "Ботяра:" + member.getUser().getName(),
+            EmbedCreate.createEmbedOnMemberJoin("🎉🎉🎉Встречайте нового Бота>!!!🎉🎉🎉", "Ботяра:" + member.getEffectiveName(),
                     member.getUser().getAvatarUrl(),getRoles(member.getRoles()), textChannel);
         }
     }
