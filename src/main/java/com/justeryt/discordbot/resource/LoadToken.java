@@ -6,7 +6,7 @@ import java.io.*;
 import java.util.Map;
 
 public class LoadToken {
-    public static String filename = "testconfig.yml";
+    public static String filename = "config.yml";
     public static Yaml yaml = new Yaml();
 
     public static String getToken() throws FileNotFoundException {

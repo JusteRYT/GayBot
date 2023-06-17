@@ -16,6 +16,7 @@ public class JoinCommand implements ServerCommand {
                 if ((voiceChannel = guildVoiceState.getChannel()) != null) {
                     AudioManager audioManager = guildVoiceState.getGuild().getAudioManager();
                     audioManager.openAudioConnection(voiceChannel);
+                    audioManager.setSelfDeafened(true);
                     EmbedCreate.createEmbed("😅Я подключился к каналу: " + voiceChannel.getName(), textChannel);
                 } else {
                     EmbedCreate.createEmbed("😡Ты не в голосовом канале сучка!", textChannel);
