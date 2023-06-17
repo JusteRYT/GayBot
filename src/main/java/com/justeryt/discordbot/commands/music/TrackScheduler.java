@@ -9,6 +9,7 @@ import com.sedmelluq.discord.lavaplayer.player.event.AudioEventAdapter;
 import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackEndReason;
+import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.entities.channel.middleman.MessageChannel;
@@ -155,7 +156,7 @@ public class TrackScheduler extends AudioEventAdapter {
         }
     }
 
-    public static void history(MessageChannel textChannel, int pageNumber) {
+    public static void history(MessageChannel textChannel, int pageNumber, String messageId) {
         String track = history.get(history.size() - 1);
         List<String> reversedTracks = new ArrayList<>(history);
         Collections.reverse(reversedTracks);
@@ -171,7 +172,12 @@ public class TrackScheduler extends AudioEventAdapter {
         }
 
         List<String> tracksToShow = reversedTracks.subList(startIndex, endIndex);
-        EmbedCreate.createHistoryEmbed(tracksToShow, startIndex, track, textChannel, totalPages, pageNumber);
+        EmbedBuilder embedBuilder = new EmbedBuilder();
+        embedBuilder.setTitle("Заголовок Embed");
+        textChannel.retrieveMessageById(messageId).queue(message -> {
+            EmbedCreate.createHistoryEmbed(tracksToShow, startIndex, track, textChannel, totalPages, pageNumber, message);
+        });
+
     }
 
     public void previous() {
