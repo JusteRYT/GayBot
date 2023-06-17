@@ -67,6 +67,7 @@ public class CommandManager extends ListenerAdapter {
     private final PreviousCommand previousCommand;
     private final PlayOrNot playOrNot;
     private final StopCommand stopCommand;
+    private final GPT gpt;
     public int currentPage;
 
     public CommandManager() {
@@ -104,6 +105,7 @@ public class CommandManager extends ListenerAdapter {
         this.previousCommand = new PreviousCommand();
         this.playOrNot = new PlayOrNot();
         this.stopCommand = new StopCommand();
+        this.gpt = new GPT();
         this.currentPage = 1;
     }
 
@@ -249,6 +251,11 @@ public class CommandManager extends ListenerAdapter {
                     event.getChannel().sendTyping().queue();
                     pauseCommand.performCommand(arguments, guild, member, textChannel, message, voiceChannel);
                     break;
+                case "!gpt":
+                    event.getChannel().sendTyping().queue();
+                    gpt.performCommand(arguments, guild, member, textChannel, message, voiceChannel);
+                    break;
+
             }
         }
     }
@@ -537,12 +544,12 @@ public class CommandManager extends ListenerAdapter {
                 if (currentPage > 1) {
                     currentPage--;
                 }
-                TrackScheduler.history(messageChannel, currentPage);
+                TrackScheduler.history(messageChannel, currentPage, event.getMessageId());
             }
             if (event.getComponentId().equals("next")){
                 event.reply("выполнено").queue(interactionHook -> interactionHook.deleteOriginal().queueAfter(1, TimeUnit.SECONDS));
                 currentPage++;
-                TrackScheduler.history(messageChannel, currentPage);
+                TrackScheduler.history(messageChannel, currentPage, event.getMessageId());
             }
             if (event.getComponentId().equals("delete")){
                 event.reply("Выполнено").queue(interactionHook -> interactionHook.deleteOriginal().queueAfter(1, TimeUnit.SECONDS));
@@ -554,8 +561,20 @@ public class CommandManager extends ListenerAdapter {
                 historyCommand.performCommand(arguments, guild, member, messageChannel, message, audioChannel);
                 event.reply("выполнено").queue(interactionHook -> interactionHook.deleteOriginal().queueAfter(1, TimeUnit.SECONDS));
             }
-            if (event.getComponentId().equals("repeat")){
+            if (event.getComponentId().equals("bass")){
+                if (!(BassCommand.getPrecent() == 200)){
+                arguments = new String[2];
+                arguments[0] = "!bass";
+                arguments[1] = "200";
+                bassCommand.performCommand(arguments, guild, member, messageChannel, message, audioChannel);
                 event.reply("выполнено").queue(interactionHook -> interactionHook.deleteOriginal().queueAfter(1, TimeUnit.SECONDS));
+                } else {
+                    arguments = new String[2];
+                    arguments[0] = "!bass";
+                    arguments[1] = "0";
+                    bassCommand.performCommand(arguments, guild, member, messageChannel, message, audioChannel);
+                    event.reply("выполнено").queue(interactionHook -> interactionHook.deleteOriginal().queueAfter(1, TimeUnit.SECONDS));
+                }
             }
             if (event.getComponentId().equals("down")){
                 arguments = new String[2];
