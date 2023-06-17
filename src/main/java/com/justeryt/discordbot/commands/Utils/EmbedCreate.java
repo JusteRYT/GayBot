@@ -5,6 +5,7 @@ import com.justeryt.discordbot.commands.Parsing.Rank;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.entities.channel.middleman.MessageChannel;
 import net.dv8tion.jda.api.entities.emoji.Emoji;
@@ -56,7 +57,7 @@ public abstract class EmbedCreate {
         Emoji mixEmoji = guildEmoji.getEmojisByName("shuffle", true).get(0);
         Emoji backEmoji = guildEmoji.getEmojisByName("back", true).get(0);
         Emoji gitHub = guildEmoji.getEmojisByName("history", true).get(0);
-        Emoji repeat = guildEmoji.getEmojisByName("repeat", true).get(0);
+        Emoji bass = guildEmoji.getEmojisByName("bass", true).get(0);
         Emoji upVolume = guildEmoji.getEmojisByName("up", true).get(0);
         Emoji downVolume = guildEmoji.getEmojisByName("down", true).get(0);
         Emoji leave = guildEmoji.getEmojisByName("leave", true).get(0);
@@ -76,7 +77,7 @@ public abstract class EmbedCreate {
                 Button.secondary("Next", nextEmoji),
                 Button.secondary("Shuffle", mixEmoji)).addActionRow(
                 Button.secondary("history", gitHub),
-                Button.secondary("repeat", repeat),
+                Button.secondary("bass", bass),
                 Button.secondary("down", downVolume),
                 Button.secondary("up", upVolume),
                 Button.danger("leave", leave)
@@ -110,13 +111,16 @@ public abstract class EmbedCreate {
 
     public static void createEmbedHelp(String setTitle, String Description, String Footer, MessageChannel textChannel, String Icon, int time) {
         EmbedBuilder embedBuilder = AccessEmbed();
+        Emoji gitHub = guildEmoji.getEmojisByName("github", true).get(0);
         embedBuilder.setTitle(setTitle);
         embedBuilder.setDescription(Description);
         embedBuilder.setColor(Color.orange);
         embedBuilder.setFooter(Footer, Icon);
         embedBuilder.setTimestamp(Instant.now());
         textChannel.sendTyping().completeAfter(2, TimeUnit.SECONDS);
-        textChannel.sendMessageEmbeds(embedBuilder.build()).queue(message -> message.delete().queueAfter(time, TimeUnit.SECONDS));
+        textChannel.sendMessageEmbeds(embedBuilder.build()).addComponents(ActionRow.of(
+                Button.secondary("gitHub", gitHub)
+        )).queue(message -> message.delete().queueAfter(time, TimeUnit.SECONDS));
     }
 
     public static void createEmbedUserInfo(String setTitle, String Thunmbail, String addField, String addField1, String addField2
@@ -328,8 +332,8 @@ public abstract class EmbedCreate {
         EmbedBuilder embedBuilder = AccessEmbed();
         embedBuilder.setTitle(title);
         embedBuilder.setDescription("Лог изменений:");
-        embedBuilder.addField("1.14.1: ", addfield, false);
-        embedBuilder.addField("1.14: ", addfield1, false);
+        embedBuilder.addField("1.15: ", addfield, false);
+        embedBuilder.addField("1.14.1: ", addfield1, false);
         embedBuilder.setFooter("GayBot", Main.getIcon());
         embedBuilder.setColor(Color.orange);
         embedBuilder.setTimestamp(Instant.now());
@@ -362,24 +366,26 @@ public abstract class EmbedCreate {
     }
 
     public static void createHistoryEmbed(List<String> tracks, int startIndex, String track, MessageChannel textChannel
-            , int totalPage, int CurrentPage) {
+            , int totalPage, int CurrentPage, Message message) {
         Emoji emojiNext = guildEmoji.getEmojisByName("vpered", true).get(0);
         Emoji emojiPrev = guildEmoji.getEmojisByName("nazad", true).get(0);
         Emoji emojiKorzina = guildEmoji.getEmojisByName("korzina", true).get(0);
         EmbedBuilder embedBuilder = AccessEmbed();
         embedBuilder.setDescription("Сейчас играет: " + track);
-        embedBuilder.setTitle("История треков");
         embedBuilder.setFooter(String.format("Страница %d из %d", CurrentPage, totalPage));
-        embedBuilder.setColor(Color.orange);
+
+        // Очистите существующие поля перед добавлением новых
+        embedBuilder.clearFields();
+
         for (int i = 0; i < tracks.size(); i++) {
             embedBuilder.addField("Трек " + (startIndex + i + 1), tracks.get(i), false);
         }
-        textChannel.sendMessageEmbeds(embedBuilder.build()).queue(message -> {
-            message.editMessageComponents(ActionRow.of(Button.secondary("prev", emojiPrev),
-                    Button.secondary("next", emojiNext), Button.danger("delete", emojiKorzina))).queue();
-        });
 
-
+        message.editMessageEmbeds(embedBuilder.build()).setActionRow(
+                        Button.secondary("prev", emojiPrev),
+                        Button.secondary("next", emojiNext),
+                        Button.danger("delete", emojiKorzina))
+                .queue();
     }
 
     public static Emoji WonOrNote(String text) {
