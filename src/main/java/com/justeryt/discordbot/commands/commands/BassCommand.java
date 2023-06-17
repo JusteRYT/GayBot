@@ -11,11 +11,12 @@ import net.dv8tion.jda.api.entities.channel.middleman.AudioChannel;
 import net.dv8tion.jda.api.entities.channel.middleman.MessageChannel;
 
 public class BassCommand implements ServerCommand {
+    public static float precent;
     @Override
     public void performCommand(String[] arguments, Guild guild, Member member, MessageChannel textChannel, Message message, AudioChannel voiceChannel) {
         try {
             if (arguments.length == 2) {
-                float precent = Float.parseFloat(arguments[1]);
+                precent = Float.parseFloat(arguments[1]);
                 if (voiceChannel != null) {
                     if (precent <= 200 & precent >= 0) {
                         MusicController musicController = Main.getAudioManager().getMusicController(voiceChannel.getGuild().getIdLong());
@@ -37,6 +38,10 @@ public class BassCommand implements ServerCommand {
         } catch (NumberFormatException e) {
             EmbedCreate.createEmbed("🤦‍♂️Ну ты дебил, можешь цифрами написать?!", textChannel);
         }
+    }
+
+    public static float getPrecent() {
+        return precent;
     }
 }
 
