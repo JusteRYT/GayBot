@@ -42,7 +42,6 @@ public class PlayCommand implements ServerCommand {
                         player.addListener(scheduler);
                         AudioManager audioManager = voiceState.getGuild().getAudioManager();
                         audioManager.openAudioConnection(voiceChannel);
-                        audioManager.setSelfDeafened(true); //Бот не будет слушать вас
                         StringBuilder builder = Main.getStringBuilder();
                         for (int i = 1; i < arguments.length; i++) builder.append(arguments[i]).append(" ");
                         final String url = builder.toString().trim().replace("]", "").replace("[", "");
