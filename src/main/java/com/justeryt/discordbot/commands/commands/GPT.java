@@ -9,7 +9,6 @@ import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.channel.middleman.AudioChannel;
 import net.dv8tion.jda.api.entities.channel.middleman.MessageChannel;
 
-import java.util.Arrays;
 
 public class GPT implements ServerCommand {
     @Override
@@ -17,7 +16,21 @@ public class GPT implements ServerCommand {
         StringBuilder builder = Main.getStringBuilder();
         for (int i = 1; i < arguments.length; i++) builder.append(arguments[i]).append(" ");
         String response = builder.toString().trim().replace("]", "").replace("[", "");
-        textChannel.sendMessage(MyChatGPT.generateChatGptResponse(response)).queue();
+       String generatedResponse = MyChatGPT.generateChatGptResponse(response);
+        String[] responseParts = generatedResponse.split(" ");
+        Message sentMessage = textChannel.sendMessage("...").complete();
+        for (String word : responseParts){
+            builder.append(word).append(" ");
+            sentMessage.editMessage(builder.toString()).submit();
+            try{
+                int delay = word.length() * 1000;
+                Thread.sleep(delay);
+            }catch (InterruptedException e){
+                textChannel.sendMessage(e.getMessage()).queue();
+            }
+        }
+        sentMessage.editMessage(builder.toString().replace("...","")).queue();
+        //textChannel.sendMessage(MyChatGPT.generateChatGptResponse(response)).queue(message1 -> message1.delete().submitAfter(60, TimeUnit.SECONDS));
     }
 }
 
