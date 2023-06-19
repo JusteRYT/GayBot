@@ -447,6 +447,7 @@ public class CommandManager extends ListenerAdapter {
         MessageChannel messageChannel = event.getMessageChannel();
         Message message = event.getMessage();
         Track track = Main.getTrack();
+        PlayOrNot.setEvent(event);
         try {
             List<String> title = track.getSearchVideoId();
             if (event.getComponentId().equals("Choice 1")) {
