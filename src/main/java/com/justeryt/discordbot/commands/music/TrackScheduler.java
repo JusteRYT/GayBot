@@ -55,9 +55,9 @@ public class TrackScheduler extends AudioEventAdapter {
         this.player.setFilterFactory(equalizerFactory);
         this.player.setFrameBufferDuration(500);
         urltitle = Main.getList();
-        this.history = new ArrayList<>();
+        history = new ArrayList<>();
         this.currentIndex = 0;
-        this.page = 0;
+        page = 0;
     }
 
     @Override
