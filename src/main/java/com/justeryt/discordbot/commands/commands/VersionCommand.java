@@ -10,11 +10,10 @@ public class VersionCommand implements ServerCommand {
     @Override
     public void performCommand(String[] arguments, Guild guild, Member member, MessageChannel textChannel, Message message, AudioChannel voiceChannel) {
         if (arguments.length == 1) {
-            EmbedCreate.createVersion("Версия:1.14.1",
+            EmbedCreate.createVersion("Версия:1.15.1",
                     """
-                            Добавлена анимация набора сообщений для chatGPT\s
                             Сделана изменение кнопки play на pause и в обратную сторону\s
-                            Фиксы фиксы и фиксы\s                                                    
+                            Фиксы фиксы и фиксы\s                                                   
                             """,
                     """
                             Добавлена история треков с кнопками, теперь ее можно пролистывать вперед назад\s
